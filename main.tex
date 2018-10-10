@@ -1,4 +1,4 @@
-\documentclass{beamer}
+\documentclass[10pt]{beamer}
 \usepackage{subfigure}
 \usepackage{amssymb, amsmath, amsfonts,verbatim}
 \usepackage{tikz}
@@ -15,7 +15,6 @@
 \newlength\figureheight
 \newlength\figurewidth
 
-
 \newcommand{\tikzdir}[1]{#1.tikz}
 \newcommand{\inputtikz}[1]{\input{\tikzdir{#1}}}
 
@@ -30,7 +29,6 @@
 \newcommand{\Ic}{{\mathcal I^c}}
 \newcommand{\J}{{\mathcal J}}
 \newcommand{\K}{{\mathcal K}}
-
 
 \DeclareMathOperator{\Smin}{Smin}
 \DeclareMathOperator{\Smid}{Smid}
@@ -47,34 +45,23 @@
 \DeclareMathOperator{\argmax}{arg\;max}
 \let\Tiny\tiny
 
-\mode<presentation>
-
 \title[Secure Info Fusion]{Secure Information Fusion in Cyber-Physical Systems}
 \author[Yilin Mo]{Yilin Mo}
-\institute[NTU]{
-  School of EEE\\ Nanyang Technological University\\
+\institute[Tsinghua]{
+  Department of Automation\\ Tsinghua University\\
 }
-\date[Dec 11, 2016]{Workshop on Rich Data Backed Control and Optimization for Smart Cities \\ \vspace{1cm}
-  \small Joint Work with Duo Han, Xinghua Liu, \\
-  Richard M. Murray, Lihua Xie and Emanuele Garone}
-\usetheme{CambridgeUS}
-\useinnertheme{circles}
-\useoutertheme{infolines}
-\definecolor{caltechcolor}{RGB}{0,52,120}
-\definecolor{mycolor1}{RGB}{1.00000,0.00000,1.00000}
-\usecolortheme[RGB={0,52,120}]{structure} 
-\setbeamercolor*{palette primary}{fg=caltechcolor!60!black,bg=gray!30!white}
-\setbeamercolor*{palette secondary}{fg=caltechcolor!70!black,bg=gray!15!white}
-\setbeamercolor*{palette tertiary}{bg=caltechcolor!80!black,fg=gray!10!white}
-\setbeamercolor*{palette quaternary}{fg=caltechcolor,bg=gray!5!white}
-\setbeamercolor{titlelike}{parent=palette primary,fg=caltechcolor}
+\date[Oct 11, 2018]{Oct 11th, 2018 \\ 
+  \small Joint Work with Duo Han, Xinghua Liu, Lihua Xie and Emanuele Garone}
+
+\usetheme[subsectionpage=none,block=fill]{metropolis}
+\definecolor{thupurple}{RGB}{102,8,116}
+\setbeamercolor{title separator}{fg=black!50}
+\setbeamercolor{frametitle}{bg=thupurple!70!black}
+ 
 
 \begin{document}
 
-\begin{frame}
-  \titlepage
-\end{frame}
-
+\maketitle 
 
 \section{Introduction}
 
@@ -85,7 +72,7 @@
       \begin{tikzpicture}[scale=0.45,transform shape,level distance=0cm,
         level 1 concept/.append style={sibling angle=120,minimum size = 3cm},
         ]
-        \path [draw=caltechcolor!50,fill=caltechcolor!20,thick,rounded corners] (-10,-4.5) rectangle (10,7);
+        \path [draw=thupurple!50,fill=thupurple!20,thick,rounded corners] (-10,-4.5) rectangle (10,7);
         \node at (-9,6) [anchor=north west] {\Huge Physical Space};
         \path[mindmap,concept color=black,text=white]
         node[concept] {\Huge CPS}
@@ -190,8 +177,8 @@
 %\end{frame}
 
 
-%\section{Secure State Estimation}
-%\frame{\tableofcontents[currentsection]}
+\section{Static State Estimation}
+
 \begin{frame}{Preliminary: Static State Estimation}
   \begin{enumerate}
   \item We assume that $x \in \mathbb R^n$ is the state that we want to estimate.
@@ -257,31 +244,19 @@
 \end{frame}
 
 \begin{frame}{Why not use bad data detection?}
-  \begin{figure}[ht]
-    \centering
-    \begin{tikzpicture}
-      \draw[thick,rounded corners,fill=white!30,draw=white!60] (-0.5,0) rectangle (8.5,3);
-
+  \begin{center}
+    \begin{tikzpicture}[scale=0.9]
       \draw[thick,rounded corners,fill=blue!30,draw=blue!60] (0,1) rectangle (3,2);
       \node at (1.5,1.5) {\begin{tabular}{c} Bad Data\\ Detection \end{tabular}};
-
       \draw[thick,rounded corners,fill=red!30,draw=red!60] (5,1) rectangle (8,2);
       \node at (6.5,1.5) {Estimation};
-
       \draw[thick,->] (-1.5,1.5)--(0,1.5);
       \node [anchor=east] at (-1.5,1.5) {Data};
-
       \draw[thick,->] (3,1.5) to (5,1.5);
-
-      % \draw[thick,->] (1.5,2) to [bend left] (6.5,2);
-      % \draw[thick,->] (6.5,1) to [bend left] (1.5,1);
-
       \draw[thick,->] (8,1.5) to (9,1.5);
-
       \node [anchor=west] at (9,1.5) {$\hat x$};
     \end{tikzpicture}
-    \caption{Bad Data Detection Scheme}
-  \end{figure}
+  \end{center}
   \begin{enumerate}
   \item A typical bad data detector will first compute $\hat x = Ky$ and then the residue $r = y - H\hat x$.
   \item The bad data detector will then remove the sensors with large residue.
@@ -290,11 +265,9 @@
 \end{frame}
 
 \begin{frame}{Why not use bad data detection?}
-  \begin{figure}[ht]
-    \centering
-    \begin{tikzpicture}
-      \draw[thick,rounded corners,fill=white!30,draw=white!60] (-0.5,0) rectangle (8.5,3);
+  \begin{center}
 
+    \begin{tikzpicture}[scale=0.9]
       \draw[thick,rounded corners,fill=red!30,draw=red!60] (0,1) rectangle (3,2);
       \node at (1.5,1.5) {Estimation};
 
@@ -313,8 +286,7 @@
 
       \node [anchor=west] at (9,1.5) {$\hat x$};
     \end{tikzpicture}
-    \caption{Bad Data Detection Scheme}
-  \end{figure}
+  \end{center}
   \begin{enumerate}
   \item A typical bad data detector will first compute $\hat x = Ky$ and then the residue $r = y - H\hat x$.
   \item The bad data detector will then remove the sensors with large residue.
@@ -489,7 +461,7 @@
       \end{align*}
     \end{enumerate}
   \end{theorem}
-  Roughly speaking $|\alpha_i H_i u|$ is the force from sensor $i$ on the direction $u$. The condition can be interpreted as the force from any $p$ sensors should be smaller than the remaining $m-p$ sensors on all direction.
+  Roughly speaking $|\alpha_i H_i u|$ is the maximum force from sensor $i$. The condition can be interpreted as the combined force from any $p$ sensors should be smaller than that of the remaining $m-p$ sensors.
 \end{frame}
 
 \begin{frame}{Necessary Condition For Resiliency}
@@ -628,6 +600,8 @@ at (axis cs:1.9,1.07) {$\text{     ~~~~~}\downarrow$};
     \end{center}
   \end{figure}
 \end{frame}
+\section{Dynamic State Estimation}
+%\frame{\tableofcontents[currentsection]}
 
 \begin{frame}{Dynamic State Estimation}
 \begin{enumerate}
@@ -1665,10 +1639,10 @@ One can prove the following:
 %  \end{itemize}
 %\end{frame}
 
-\begin{frame}
-  \begin{center}
-    \Huge{Thank You!}
-  \end{center}
+\begin{frame}[standout]
+  Thank you!
 \end{frame}
+
+
 
 \end{document}
