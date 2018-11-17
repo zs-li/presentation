@@ -1,4 +1,9 @@
 \documentclass[10pt]{beamer}
+
+\usepackage{xeCJK}
+\setCJKmainfont{Noto Sans CJK JP}
+\xeCJKsetup{PunctStyle=kaiming,CJKspace=true,CheckSingle=true} 
+
 \usepackage{subfigure}
 \usepackage{amssymb, amsmath, amsfonts,verbatim}
 \usepackage{tikz}
@@ -50,7 +55,7 @@
 \institute[Tsinghua]{
   Department of Automation\\ Tsinghua University\\
 }
-\date[Nov 13, 2018]{ Nov 13th, 2018\\ 
+\date[Nov 17, 2018]{ Nov 17th, 2018\\ 
   \small Joint Work with Bruno Sinopoli, Sean Weerakkody, Hanxiao Liu and Richard Murray}
 
 \usetheme[subsectionpage=none,block=fill]{metropolis}
@@ -65,6 +70,37 @@
 \maketitle 
 
 \section{Introduction}
+
+\begin{frame}{个人简介}
+  \begin{itemize}
+  \item  2003-2007  清华大学自动化系，学士学位
+  \item  2007-2012 Department of Electrical and Computer Engineering, Carnegie Mellon University, 博士学位, 论文题目:\,\textit{``Secure Detection, Estimation and Control of Cyber-Physical Systems''}
+  \item  2013-2013 Department of Electrical and Computer Engineering, Carnegie Mellon University, 博士后
+  \item  2013-2015 Department Computing+Mathematical Sciences, California Institute of Technology, 博士后
+  \item  2015-2018 School of Electrical and Electronic Engineering, Nanyang Technological University, 助理教授
+  \item 2017 获国家第14批青年千人
+  \item 2018 现任清华大学自动化系副教授
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Overview of My Research}
+\begin{block}{Networked Control System}
+  Understanding the interaction between control and communication.
+ \begin{itemize}
+  \item Kalman filtering with intermittent observation
+  \item Sensor/Actuator Scheduling: offline-schedules and event-based schedules.
+  \item Energy efficiency of consensus algorithm
+ \end{itemize}
+\end{block}
+\begin{block}{CPS Security}
+\begin{itemize}
+  \item Replay attack: we proposed countermeasures to Stuxnet one year before its discovery
+  \item Estimation/Control against Deception Attacks
+  \item Privacy of CPS
+  \item Applications in Smart Grids, Robotics, Autonomous Driving Vehicles.
+\end{itemize}
+\end{block}
+\end{frame}
 
 \begin{frame}{Cyber-Physical System}
   \begin{itemize}
@@ -155,26 +191,6 @@
 %  \item Information Fusion 
 %  \end{enumerate}
 %\end{frame}
-
-\begin{frame}{Overview of My Research in CPS}
-\begin{block}{Networked Control System}
-  Understanding the interaction between control and communication.
- \begin{itemize}
-  \item Kalman filtering with intermittent observation
-  \item Sensor/Actuator Scheduling: offline-schedules and event-based schedules.
-  \item Energy efficiency of consensus algorithm
- \end{itemize}
-\end{block}
-\begin{block}{CPS Security}
-\begin{itemize}
-  \item Replay attack: we proposed countermeasures to Stuxnet one year before its discovery
-  \item Estimation/Control against Deception Attacks
-  \item Privacy of CPS
-  \item Applications in Smart Grids, Robotics, Autonomous Driving Vehicles.
-\end{itemize}
-\end{block}
-\end{frame}
-
 \section{Physical Watermarking}
 \frame{\tableofcontents[currentsection]}
 
@@ -1041,3 +1057,9 @@
   \end{frame}
 
 \end{document}
+
+%%% Local Variables: 
+%%% coding: utf-8
+%%% mode: latex
+%%% TeX-engine: xetex
+%%% End: 
