@@ -50,12 +50,12 @@
 \DeclareMathOperator{\argmax}{arg\;max}
 \let\Tiny\tiny
 
-\title[Secure CPS]{Data-Driven Active Intrusion Detection for Cyber-Physical Systems}
-\author[Yilin Mo]{Yilin Mo}
+\title[Secure CPS]{基于数据驱动的主动入侵检测}
+\author[Yilin Mo]{莫一林}
 \institute[Tsinghua]{
-  Department of Automation\\ Tsinghua University\\
+  清华大学 自动化系
 }
-\date[Nov 25, 2018]{ Nov 25th, 2018\\ 
+\date[Nov 25, 2018]{ 人工智能与群体智能研讨会\\ 
   \small Joint Work with Hanxiao Liu, Jiaqi Yan and Karl H. Johansson}
 
 \usetheme[subsectionpage=none,block=fill]{metropolis}
@@ -116,7 +116,7 @@
     \centering
     \includegraphics[width=0.6\textwidth]{cert.jpg}
   \end{figure}
- In FY 2014, ICS-CERT (Industrial Control Systems Cyber Emergency Response Team) received and responded to 245 incidents as reported by asset owners and industry partners.
+ In FY 2014, ICS-CERT (Industrial Control Systems Cyber Emergency Response Team) received and responded to 245 incidents as reported by asset owners and industry partners. This number increased to 290 in FY 2016.
 \end{frame}
 
 
@@ -150,9 +150,9 @@
 
 \begin{frame}{How to deal with CPS security threats}
   \begin{exampleblock}{}
-    {\it `` If you know the enemy and know yourself, you need not fear the result of a hundred battles. If you know yourself but not the enemy, for every victory gained you will also suffer a defeat. If you know neither the enemy nor yourself, you will succumb in every battle.''}
+    {\it 知彼知己，百战不殆；不知彼而知己，一胜一负；不知彼不知己，每战必败}
     \vskip5mm
-    \hspace*\fill{ \small--- The Art of War }
+    \hspace*\fill{ \it\small--- 孙子兵法}
   \end{exampleblock}
 
   \begin{enumerate}
@@ -161,7 +161,7 @@
   \end{enumerate}
 \end{frame}
 
-\section{Physical Watermarking}
+\section{重放攻击与物理水印}
 
 \begin{frame}{Stuxnet}
   \begin{itemize}
@@ -205,7 +205,6 @@
 	\end{align*}
     \end{itemize}
   \end{frame}
-
 
   \begin{frame}{$\chi^2$ Failure Detector}
     \begin{itemize}
@@ -316,22 +315,30 @@
     \end{itemize}
   \end{frame}
 
-  \begin{frame}{Countermeasures: Authentication and Watermarking}
-    \begin{itemize}
-      \item We restrict the watermarking signal $\zeta(k)$ to be a zero-mean i.i.d. Gaussian process generated with covariance $U$.
-      \item The additional LQG cost incurred by $\zeta(k)$ is a linear function of $U$.
-	\begin{displaymath}
-	  \text{Additional LQG cost} = \tr(U\mathcal X).
-	\end{displaymath}
-      \item The KL divergence between ``compromised'' residue $z^c(k)$ and ``normal'' residue $z(k)$ is a convex functional $U$, which satisfies
-	\begin{displaymath}
-	  \frac{1}{2}\tr(U\mathcal P) \leq D_{KL}(z^c(k)||z(k))\leq \tr(U\mathcal P)-\frac{1}{2}\log(1+\tr(U\mathcal P)).
-	\end{displaymath}
-        Both the upper and lower bounds are increasing functions of $\tr(U\mathcal P)$.
-    \end{itemize}
-  \end{frame}
+\begin{frame}{System with Physical Watermarks}
+    \begin{figure}[htpb]
+      \begin{center}
+	\inputtikz{replaywithphywatermark}
+      \end{center}
+    \end{figure}
+\end{frame}
 
-  \begin{frame}{Countermeasures: Authentication and Watermarking}
+\begin{frame}{Impact on the LQG}
+  \begin{itemize}
+  \item We restrict the watermarking signal $\zeta(k)$ to be a zero-mean i.i.d. Gaussian process generated with covariance $U$.
+  \item The additional LQG cost incurred by $\zeta(k)$ is a linear function of $U$.
+    \begin{displaymath}
+      \text{Additional LQG cost} = \tr(U\mathcal X).
+    \end{displaymath}
+  \item The KL divergence between ``compromised'' residue $z^c(k)$ and ``normal'' residue $z(k)$ is a convex functional $U$, which satisfies
+    \begin{displaymath}
+      \frac{1}{2}\tr(U\mathcal P) \leq D_{KL}(z^c(k)||z(k))\leq \tr(U\mathcal P)-\frac{1}{2}\log(1+\tr(U\mathcal P)).
+    \end{displaymath}
+    Both the upper and lower bounds are increasing functions of $\tr(U\mathcal P)$.
+  \end{itemize}
+\end{frame}
+
+  \begin{frame}{Optimal Watermark Design}
     We consider maximizing the ``relaxed'' KL divergence, while satisfying LQG performance constraint.
     \begin{align*}
       &\mathop{\textrm{maximize}}\limits_{U}&

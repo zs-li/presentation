@@ -3,7 +3,7 @@ box/.style={rectangle, draw=caltechcolor!50,fill=caltechcolor!20,rounded corners
 point/.style={coordinate},
 every node/.append style={font=\small}
 ]
-\matrix[row sep = 10mm, column sep = 10mm]{
+\matrix[row sep = 10mm, column sep = 9mm]{
 %first row
 \node (p1) [point] {};&
 \node (p2) [circle,draw,inner sep=2pt] {};&
@@ -26,7 +26,7 @@ every node/.append style={font=\small}
 \node (estimator) [box] {Estimator};&
 \node (p8) [point] {};\\
 %fifth row
-&&&& \node (detector) [box] {Failure Detector}; \\
+\node (p9) [] {$\zeta(k)$}; &&&& \node (detector) [box] {Failure Detector}; \\
 };
 \draw [semithick,->] (plant) -- (sensor);
 %\draw [semithick,->] (sensor) -- (p3)--(p10);
@@ -38,6 +38,7 @@ every node/.append style={font=\small}
 \draw [semithick,->] (p2)--(plant);
 \draw [semithick,->] (p5)--(delay)-- node[midway,above]{$u^c(k-1)$}(p6)--(estimator);
 \draw [semithick,->] (p8)--(detector);
+\draw [semithick] (p9)--(p7);
 \draw [semithick] (p2.north)--(p2.south);
 \draw [semithick] (p2.east)--(p2.west);
 %\draw [semithick] (p10.north)--(p10.south);
