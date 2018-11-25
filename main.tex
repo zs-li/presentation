@@ -9,7 +9,8 @@
 \usepackage{tikz}
 \graphicspath{ {./} }
 \usetikzlibrary{matrix,arrows,fit,backgrounds,mindmap,plotmarks,decorations.pathreplacing}
-
+\usepackage{tkz-euclide}
+\usetkzobj{all}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.12}
 \pgfdeclarelayer{background}
@@ -311,7 +312,6 @@
       \item The watermarking signal $\zeta(k)$ acts as a ``challenge'' and the sensor measurement is the ``response''. 
       \item During normal operation, the ``challenge'' and ``response'' are correlated through the system dynamics, while the correlation cease to exist when the replay begins.
       \item The CPS will remain stable. However, we sacrifice LQG performance since the control is not optimal.
-      \item How to design the ``optimal'' watermarking signal?
     \end{itemize}
   \end{frame}
 
@@ -334,7 +334,7 @@
 \end{frame}
 
 \begin{frame}{Some Known Results}
-  \begin{enumerate}
+  \begin{itemize}
   \item Assuming the watermarking signal is i.i.d. zero mean Gaussian with covariance $U$.
   \item The optimal watermarking signal design problem can be written as
     \begin{align*}
@@ -347,7 +347,7 @@
   \item The above problem can be relaxed into an Semi-Definite Programming problem. The optimal solution can be derived analytically using generalized eigenvectors.
   \item Also there are results on how to find the optimal \textbf{stationary} zero mean Gaussian watermarking signal.
   \item What if the system is \textbf{unknown}?
-  \end{enumerate}
+  \end{itemize}
 \end{frame}
 
 \section{主动检测机制的在线学习}
@@ -415,12 +415,12 @@
   \begin{itemize}
   \item In the absence of the attack:  
     \begin{align*} 
-      y_{k} &=\textcolor{red}{\boxed{\sum_{t=0}^{k-1} CA^{t}B  \zeta_{k-1-t}}} + \textcolor{blue}{\boxed{\sum_{t=0}^{k-1}  CA^{t} w_{k-1-t}+v_{k} }}\\ 
-            &=\textcolor{red}{\gamma_{k-1}} +\textcolor{blue} {\vartheta_{k-1}},
+      y(k) &=\textcolor{red}{\boxed{\sum_{t=0}^{k-1} CA^{t}B  \zeta(k-1-t)}} + \textcolor{blue}{\boxed{\sum_{t=0}^{k-1}  CA^{t} w(k-1-t)+v(k) }}\\ 
+            &=\textcolor{red}{\gamma(k-1)} +\textcolor{blue} {\vartheta(k-1)},
     \end{align*}
   \item  In the presence of the attack:
     \begin{align*}
-      y_{k}' = y_{k-\Delta k} = \textcolor{red}{\gamma_{k-1-\Delta k}} + \textcolor{blue}{\vartheta_{k-1-\Delta k}}.
+      y^c(k) = y(k-\Delta k) = \textcolor{red}{\gamma(k-1-\Delta k)} + \textcolor{blue}{\vartheta(k-1-\Delta k)}.
     \end{align*}
   \item The KL divergence between ``compromised'' measurement $y^c(k)$ and ``normal'' measurement $y(k)$ is a convex function $U$, which satisfies
     \begin{displaymath}
@@ -446,17 +446,30 @@
   \end{block}
   \centering
   \begin{tikzpicture}
-    \draw[thick,thupurple!50] (0,0)--(15:4);
-    \draw[thick,thupurple!50] (0,0)--(60:4);
-    \draw[thick,thupurple!50] (70:3)--(5:3);
-    \fill[thupurple!20] (0,0)--(15:3)--(60:3)--(0,0);
+    \tkzDefPoint[label=-135:\scriptsize$O$](0,0){O}
+    \tkzDefPoint(15:3){A}
+    \tkzDefPoint(60:3){B}
+    \tkzDefShiftPoint[B](10:1){B1}
+    \tkzDefShiftPoint[B](190:1){B2}
+    \tkzDefPoint[label=\scriptsize PSD-cone](37.5:3.5){C}
+    \tkzFillPolygon[color=thupurple!20](A,B,O)
+    \tkzDrawPoints[color=thupurple!50](B)
+    \tkzDrawLines[color=thupurple!50,add=0 and 0.2](O,A O,B)
+    \tkzDrawLines[color=thupurple!50](A,B)
+    \tkzLabelSegments[pos=1.2,below](B,A){\scriptsize$\tr(U\mathcal X)=\delta$}
+    \foreach \i in {-0.5,0,...,1.5}{
+      \tkzDefShiftPoint[B1](-80:\i){b1}
+      \tkzDefShiftPoint[B2](-80:\i){b2}
+      \tkzDrawLines[color=black!50,dashed,add 0.5 and 0.5](b1,b2)
+    }
   \end{tikzpicture}
+
   The optimal $U = \alpha vv^T$ is a rank-$1$ matrix. 
 \end{frame}
 
 \begin{frame}{Online-Watermark Design: Watermark Generation}
-\begin{figure}[t]
-  \centering
+  \begin{figure}[t]
+    \centering
     \begin{tikzpicture}[scale=0.9]
       \draw[thick,rounded corners,fill=thupurple!30,draw=thupurple!60] (0,1) rectangle (3,2);
       \node at (1.5,1.5) {$\zeta(k)$ Generation};
@@ -465,26 +478,26 @@
       \draw[thick,->] (1.5,2) to [bend left] (5.5,2);
       \draw[thick,->] (5.5,1) to [bend left] (1.5,1);
     \end{tikzpicture}
-\end{figure}
-\begin{itemize}
-\item Generate the ``optimal'' $U$: 
+  \end{figure}
+  \begin{itemize}
+  \item Generate the ``optimal'' $U$: 
     \begin{align*}
       \hat U_k=&\mathop{\textrm{argmax}}\limits_{U}&
       & \tr (U\textcolor{thupurple}{\hat  P_k})\\
-      &\textrm{subject to}&
+               &\textrm{subject to}&
       & \tr (U\textcolor{thupurple}{\hat  X_k}) \leq \delta \\
-      &&& U \text{ is positive semidefinite.}
+               &&& U \text{ is positive semidefinite.}
     \end{align*}
-\item     Generate the watermark signal:
+  \item     Generate the watermark signal:
     \begin{align*}
       \zeta(k) = \hat U_k^{1/2} \phi(k),\,where\; \phi(k)\sim\mathcal N(0,I).
     \end{align*}
-\end{itemize}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{Online-Watermark Design: Inference}
-\begin{figure}[t]
-  \centering
+  \begin{figure}[t]
+    \centering
     \begin{tikzpicture}[scale=0.9]
       \draw[thick,rounded corners,fill=thupurple!30,draw=thupurple!60] (0,1) rectangle (3,2);
       \node at (1.5,1.5) {$\zeta(k)$ Generation};
@@ -493,41 +506,27 @@
       \draw[thick,->] (1.5,2) to [bend left] (5.5,2);
       \draw[thick,->] (5.5,1) to [bend left] (1.5,1);
     \end{tikzpicture}
-\end{figure}
-\begin{itemize}
-\item If we compute $y(k)\phi(k)^T$, we get
-  \begin{align*}
-    y(k+1)\phi(k)^T &= \textcolor{thupurple}{CBU_k^{1/2}\phi(k)\phi(k)^T}+ \sum_{t=1}^{k}H_t U_{k-t}^{1/2} \phi(k-t) \phi(k)^T \\
-    &+\sum_{t=0}^{k}  CA^{t} w(k-t)\phi(k)^T +v(k+1)\phi(k)^T.
-  \end{align*}
-\item One tentative way to infer $H_0$: 
-  \begin{align*}
-    H_0 \approx \text{the average of }y(k+1)\phi(k)^TU_{k}^{-1/2} . 
-  \end{align*}
-\item Similarly we can estimate all $H_t$, and further infer $\mathcal P$ and $\mathcal X$.
-\end{itemize} 
+  \end{figure}
+  \begin{itemize}
+  \item If we compute $y(k)\phi(k)^T$, we get
+    \begin{align*}
+      y(k+1)\phi(k)^T &= \textcolor{thupurple}{CBU_k^{1/2}\phi(k)\phi(k)^T}+ \sum_{t=1}^{k}H_t U_{k-t}^{1/2} \phi(k-t) \phi(k)^T \\
+                      &+\sum_{t=0}^{k}  CA^{t} w(k-t)\phi(k)^T +v(k+1)\phi(k)^T.
+    \end{align*}
+  \item One tentative way to infer $H_0$: 
+    \begin{align*}
+      H_0 \approx \text{the average of }y(k+1)\phi(k)^TU_{k}^{-1/2} . 
+    \end{align*}
+  \item Similarly we can estimate all $H_t$, and further infer $\mathcal P$ and $\mathcal X$.
+  \end{itemize} 
 \end{frame}
 
 \begin{frame}{Key Problems with the Naive Approach}
   \begin{itemize}
-  \item The ``optimal'' $U_k$ is rank 1 and not invertible
   \item There are infinitely $H_t$s we need to infer
+  \item The ``optimal'' $U_k$ is rank 1 and not invertible
   \end{itemize}
 \end{frame}
-
-\begin{frame}{Balance Exploration and Exploitation}
-  \begin{itemize}
-  \item Recall the structure of the optimal $U$ is $U = \alpha v v^T$.
-  \item The optimal watermark will input the signal to the most ``informative'' direction $v$: Pure \textcolor{red}{Exploitation}.
-  \item We could also consider classical system identification techniques, which use $U=I$: Pure \textcolor{blue}{Exploration}.
-  \item To achieve a balance, choose
-    \begin{align*}
-      \hat U_k = \text{``optimal'' } U + k^{-\alpha} I.
-    \end{align*}
-  \item More \textcolor{blue}{exploration} at the beginning and more \textcolor{red}{exploitation} towards the end.
-  \end{itemize}
-\end{frame}
-
 \begin{frame}{Infer all $H_t$ using finitely many $H_t$s}
   \begin{itemize}
   \item We can only store \textbf{finitely many} $H_t=CA^tB$s, but we need \textbf{all} $H_t$ to compute $\mathcal P$ and $\mathcal X$.
@@ -544,7 +543,7 @@
     \begin{align*}
       CA^nB =- \alpha_{n-1}CA^{n-1}B-\ldots-\alpha_1 CAB - \alpha_0 CB.
     \end{align*}
-\item As long as we know the characteristic polynomial of $A$, we can infer all $H_t$ from $H_0,\ldots, H_{n-1}$.
+  \item As long as we know the characteristic polynomial of $A$, we can infer all $H_t$ from $H_0,\ldots, H_{n-1}$.
   \end{itemize} 
 \end{frame}
 
@@ -584,6 +583,24 @@
     \end{align*}
   \end{itemize} 
 \end{frame}
+
+\begin{frame}{Balance Exploration and Exploitation}
+  \begin{itemize}
+  \item Recall the structure of the optimal $U$ is $U = \alpha v v^T$.
+  \item The optimal watermark will input the signal to the most ``informative'' direction $v$: Pure \textcolor{red}{Exploitation}.
+  \item We could also consider classical system identification techniques, which use $U=I$: Pure \textcolor{blue}{Exploration}.
+  \item To achieve a balance, choose
+    \begin{align*}
+      \hat U_k = \text{``optimal'' } U + k^{-\beta} I.
+    \end{align*}
+  \item More \textcolor{blue}{exploration} at the beginning and more \textcolor{red}{exploitation} towards the end.
+  \end{itemize}
+  \begin{theorem}
+    Assume that $0 < \beta <1$, then we have $\hat U_k$ converges to the optimal $U$ a.s.
+    
+  \end{theorem}
+\end{frame}
+
 
 
 \begin{frame}{Tennessee Eastman Process}
@@ -688,7 +705,7 @@
   \end{itemize}
   \begin{figure}[h!]
     \centering
-    \inputtikz{gng_te}
+     \inputtikz{gng_te}
   \end{figure}
 \end{frame}
 
