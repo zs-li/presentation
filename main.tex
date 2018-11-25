@@ -323,158 +323,260 @@
     \end{figure}
 \end{frame}
 
-\begin{frame}{Impact on the LQG}
+\begin{frame}{Active Detection of Replay Attack}
+  \setlength{\figureheight}{6cm}
+  \setlength{\figurewidth}{7cm}
+    \begin{figure}[htpb]
+      \begin{center}
+	\inputtikz{replay1}
+      \end{center}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Some Known Results}
+  \begin{enumerate}
+  \item Assuming the watermarking signal is i.i.d. zero mean Gaussian with covariance $U$.
+  \item The optimal watermarking signal design problem can be written as
+    \begin{align*}
+      &\mathop{\textrm{maximize}}\limits_{U}&
+      & Detection\;Performance\\
+      &\textrm{subject to}&
+      & Additional\;LQG\;Cost \leq \delta \\
+      &&& U \text{ is positive semidefinite.}
+    \end{align*}
+  \item The above problem can be relaxed into an Semi-Definite Programming problem. The optimal solution can be derived analytically using generalized eigenvectors.
+  \item Also there are results on how to find the optimal \textbf{stationary} zero mean Gaussian watermarking signal.
+  \item What if the system is \textbf{unknown}?
+  \end{enumerate}
+\end{frame}
+
+\section{主动检测机制的在线学习}
+
+\begin{frame}{System Diagram}
+  \begin{figure}[htpb]
+    \inputtikz{systemdiagram2}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Modified System Model}
+  \begin{figure}
+    \centering
+    \begin{tikzpicture}
+      \node (p1) at (0,0) {$\zeta(k)$};
+      \node [draw=thupurple!50,fill=thupurple!20,thick,rounded corners] (p2) at (3,0) {Unknown System};
+      \node [draw=thupurple!50,fill=thupurple!20,thick,rounded corners] (p3) at (7,0) {Failure Detector};
+      \draw [semithick,-stealth] (p1)--(p2);
+      \draw [semithick,-stealth] (p2)--node[above]{$y(k)$} (p3);
+    \end{tikzpicture}
+  \end{figure}
+  \begin{enumerate}
+  \item System Dynamics:
+  \begin{align*}
+    x(k+1) = A x(k) + B\zeta(k)+w(k), \;y(k)  &= C x(k) + v(k) . 
+  \end{align*}
+  \item LQG cost:
+	\begin{align*}
+		J = \lim_{T \to +\infty} \mathbb E\left [\frac{1}{T}\sum_{k=0}^{T-1} \begin{bmatrix}
+		y(k)\\
+		\zeta(k)
+		\end{bmatrix}^TX \begin{bmatrix}
+		y(k)\\
+		\zeta(k)
+		\end{bmatrix} \right ],
+	\end{align*}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Assumptions}
   \begin{itemize}
-  \item We restrict the watermarking signal $\zeta(k)$ to be a zero-mean i.i.d. Gaussian process generated with covariance $U$.
-  \item The additional LQG cost incurred by $\zeta(k)$ is a linear function of $U$.
+  \item The system is stable (or has been stabilized by some inner-loop controller).
+  \item $A$ has distinct eigenvalues.
+  \item We can observe $y(k)$, and we know the dimension of the $x(k)$.
+  \item The LQG weight matrix $X$ is known.
+  \item The noise are all zero mean i.i.d. Gaussian.
+  \end{itemize}
+  \textbf{No additional knowledge} on the $A,B,C$ matrices or the covariance of the noise is assumed.
+\end{frame}
+
+\begin{frame}{Impact on the Control Performance}
+  The additional LQG cost incurred by the watermarking signal is a linear function of $U$.
+  \begin{displaymath}
+    \text{Additional LQG cost} = \tr(U\mathcal X).
+  \end{displaymath}
+  where $\mathcal X$ is given by:
+  \begin{align*}
+  \mathcal X &\triangleq \sum_{k=0}^\infty\textcolor{thupurple}{\left(CA^kB\right)^T} X_{yy}\textcolor{thupurple}{\left(CA^kB\right)}+ \textcolor{thupurple}{\left(CB\right)^T}X_{y\phi} + X_{\phi y}\textcolor{thupurple}{CB}+ X_{\phi \phi}\\
+  &= \sum_{k=0}^\infty \textcolor{thupurple}{H_k^T} X_{yy}\textcolor{thupurple}{H_k}+ \textcolor{thupurple}{H_0^T}X_{y\phi} + X_{\phi y}\textcolor{thupurple}{H_0}+ X_{\phi \phi}.
+  \end{align*}
+\end{frame}
+
+
+\begin{frame}{Detecting Replay Attacks}
+  \begin{itemize}
+  \item In the absence of the attack:  
+    \begin{align*} 
+      y_{k} &=\textcolor{red}{\boxed{\sum_{t=0}^{k-1} CA^{t}B  \phi_{k-1-t}}} + \textcolor{blue}{\boxed{\sum_{t=0}^{k-1}  CA^{t} w_{k-1-t}+v_{k} + CA^k x_0\nonumber}}\\ 
+            &=\textcolor{red}{\gamma_{k-1}} +\textcolor{blue} {\vartheta_{k-1}},
+    \end{align*}
+  \item  In the presence of the attack:
+    \begin{align*}
+      y_{k}' = y_{k-\Delta k} = \textcolor{red}{\gamma_{k-1-\Delta k}} + \textcolor{blue}{\vartheta_{k-1-\Delta k}}.
+    \end{align*}
+  \item The KL divergence between ``compromised'' measurement $y^c(k)$ and ``normal'' measurement $y(k)$ is a convex function $U$, which satisfies
     \begin{displaymath}
-      \text{Additional LQG cost} = \tr(U\mathcal X).
+      \frac{1}{2}\tr(U\mathcal P) \leq D_{KL}(y^c(k)||y(k))\leq \tr(U\mathcal P)-\frac{1}{2}\log(1+\tr(U\mathcal P)).
     \end{displaymath}
-  \item The KL divergence between ``compromised'' residue $z^c(k)$ and ``normal'' residue $z(k)$ is a convex functional $U$, which satisfies
-    \begin{displaymath}
-      \frac{1}{2}\tr(U\mathcal P) \leq D_{KL}(z^c(k)||z(k))\leq \tr(U\mathcal P)-\frac{1}{2}\log(1+\tr(U\mathcal P)).
-    \end{displaymath}
-    Both the upper and lower bounds are increasing functions of $\tr(U\mathcal P)$.
+    Both the upper and lower bounds are increasing functions of $\tr(U\mathcal P)$, where
+    \begin{align*}
+    \mathcal P \triangleq\sum_{k=0}^\infty \textcolor{thupurple}{H_k^T\mathcal W^{-1}H_k},\\
+    \end{align*}
+    where $\mathcal W$ is the covariance of $\vartheta_{k-1}$.
   \end{itemize}
 \end{frame}
 
-  \begin{frame}{Optimal Watermark Design}
-    We consider maximizing the ``relaxed'' KL divergence, while satisfying LQG performance constraint.
+\begin{frame}{Optimal Watermark}
+  \begin{block}{Problem 1}
     \begin{align*}
       &\mathop{\textrm{maximize}}\limits_{U}&
-      & \tr (U\mathcal P)\\
+      & \tr (U\textcolor{thupurple}{\mathcal P})\\
       &\textrm{subject to}&
-      & \tr (U\mathcal X) \leq \delta \\
+      & \tr (U\textcolor{thupurple}{\mathcal X}) \leq \delta \\
       &&& U \text{ is positive semidefinite.}
     \end{align*}
-    Given matrices $\mathcal P$ and $\mathcal X$, one can prove that $U = \alpha v v^T$ is a rank $1$ matrix, where $v$ is a generalized eigenvector of $\mathcal P,\mathcal X$ and $\alpha >0$ is chosen such that $ \alpha v^T\mathcal X v =\delta$.
-  \end{frame}
+  \end{block}
+  \centering
+  \begin{tikzpicture}
+    \draw[thick,thupurple!50] (0,0)--(15:4);
+    \draw[thick,thupurple!50] (0,0)--(60:4);
+    \draw[thick,thupurple!50] (70:3)--(5:3);
+    \fill[thupurple!20] (0,0)--(15:3)--(60:3)--(0,0);
+  \end{tikzpicture}
+  The optimal $U = \alpha vv^T$ is a rank-$1$ matrix. 
+\end{frame}
 
-  \begin{frame}{Learning Based Watermarking Design}
-    \begin{itemize}
-    \item If we know all system parameters precisely, the watermarking signal design and detector design is trivial.
-    \item What if we do not know the parameters or only know rough estimates of the parameters?
-    \item We design a mechanism to combine system identification and watermarking design, assuming that we only knows the dimension of the system $n$.
-    \end{itemize}
-  \end{frame}
+\begin{frame}{Online-Watermark Design}
 
-  \begin{frame}{Tennessee Eastman Process}
-    Here, we apply the proposed technique to the Tennessee Eastman Process (TEP).\\~\\
-    \begin{itemize}
-    \item The TEP is created to provide a realistic industrial process for developing studying and evaluating process control technology. 
-    \item The Tennessee Eastman (TE) problem requires coordination of three unit operations: an exothermic, two-phase reactor, a flash separator and a reboiled  stripper.
-    \item There are 41 measured output variables (with added measurement noise) and 12 manipulated variables.
-    \item The original TE problem is very complex and the accurate model equations are not given by Eastman Chemical Company.   
-    \end{itemize}
-  \end{frame}
+\end{frame}
 
-  \begin{frame}{Simplified TEP Model}
-    Ricker (1993) proposed the following simplified TEP. The total volume is fixed. The reaction in the vapor phase is: $A+C\rightarrow D$.
-    \begin{columns}
-      \begin{column}{0.45\textwidth}
-        \begin{figure}
-          \includegraphics[width=0.9\textwidth]{simplifiedmodel.png}
-          \caption{The simplified process}
-        \end{figure}
-      \end{column}
-      \begin{column}{0.55\textwidth} 		
-        \begin{itemize}
-        \item The vessel: a combination of the reactor and separation system in the original TE Process;
-        \item Feed 1: A, C and trace amounts of an inert B;
-        \item Feed 2: pure A;
-        \item Stream 3: purge rate;
-        \item Stream 4: product rate;
-        \item Vapor: A, B, C;\\
-          Liquid: D.
-        \end{itemize}
-      \end{column}
-    \end{columns}
-  \end{frame}
+\begin{frame}{Online-Watermark Design}
 
-  \begin{frame}{Simplified TEP Model}
-    Ricker (1993) also provided a LTI dynamic model of the plant, and a corresponding robust controller with 4 outputs and 4 inputs.
-    \begin{block}{Simplified transfer-function model}
-      \begin{align*}
-        \textbf{y}= \begin{bmatrix}
-          F_4\\ 
-          P\\ 
-          y_{A3}\\
-          V_L 
-        \end{bmatrix}=\textbf{G}\textbf{u}=\begin{bmatrix}
-          g_{11} & 0 & 0 & g_{14}\\ 
-          g_{21} & 0 & g_{23} & 0\\ 
-          0 & g_{32} & 0 & 0\\ 
-          0 & 0 & 0 & g_{44} 
-        \end{bmatrix}\begin{bmatrix}
-          u_1\\ 
-          u_2\\ 
-          u_3\\ 
-          u_4
-        \end{bmatrix}
-      \end{align*}
-      For this model:\\
+\end{frame}
+
+\begin{frame}{Tennessee Eastman Process}
+  Here, we apply the proposed technique to the Tennessee Eastman Process (TEP).\\~\\
+  \begin{itemize}
+  \item The TEP is created to provide a realistic industrial process for developing studying and evaluating process control technology. 
+  \item The Tennessee Eastman (TE) problem requires coordination of three unit operations: an exothermic, two-phase reactor, a flash separator and a reboiled  stripper.
+  \item There are 41 measured output variables (with added measurement noise) and 12 manipulated variables.
+  \item The original TE problem is very complex and the accurate model equations are not given by Eastman Chemical Company.   
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Simplified TEP Model}
+  Ricker (1993) proposed the following simplified TEP. The total volume is fixed. The reaction in the vapor phase is: $A+C\rightarrow D$.
+  \begin{columns}
+    \begin{column}{0.45\textwidth}
+      \begin{figure}
+        \includegraphics[width=0.9\textwidth]{simplifiedmodel.png}
+        \caption{The simplified process}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.55\textwidth} 		
       \begin{itemize}
-      \item Four manipulated variables: changes of the $i$th valve position.
-      \item Four output variables: $F_4$: production rate, $P$: pressure,\\ $y_{A3}$: amount of A in purge, $V_L$: liquid inventory. 
-      \item The individual transfer functions: $g_{11},\, g_{14},\, g_{21},\, g_{32},\, g_{44}$ and $g_{23}$ are also given. 
+      \item The vessel: a combination of the reactor and separation system in the original TE Process;
+      \item Feed 1: A, C and trace amounts of an inert B;
+      \item Feed 2: pure A;
+      \item Stream 3: purge rate;
+      \item Stream 4: product rate;
+      \item Vapor: A, B, C;\\
+        Liquid: D.
       \end{itemize}
-    \end{block}
-  \end{frame}
+    \end{column}
+  \end{columns}
+\end{frame}
 
-  \begin{frame}{Simulation Results}
-    We apply the proposed technique to the simplified version of TE Process. \\~\\
-
-    Discretizing the simplified TEP model with sampling period $T_{sp} = 0.6s$, we can derive the system matrices $A$, $B$ and $C$, where  
+\begin{frame}{Simplified TEP Model}
+  Ricker (1993) also provided a LTI dynamic model of the plant, and a corresponding robust controller with 4 outputs and 4 inputs.
+  \begin{block}{Simplified transfer-function model}
+    \begin{align*}
+      \textbf{y}= \begin{bmatrix}
+        F_4\\ 
+        P\\ 
+        y_{A3}\\
+        V_L 
+      \end{bmatrix}=\textbf{G}\textbf{u}=\begin{bmatrix}
+        g_{11} & 0 & 0 & g_{14}\\ 
+        g_{21} & 0 & g_{23} & 0\\ 
+        0 & g_{32} & 0 & 0\\ 
+        0 & 0 & 0 & g_{44} 
+      \end{bmatrix}\begin{bmatrix}
+        u_1\\ 
+        u_2\\ 
+        u_3\\ 
+        u_4
+      \end{bmatrix}
+    \end{align*}
+    For this model:\\
     \begin{itemize}
-    \item $A$, $B$ and $C$ are sparse matrices.
-    \item The eigenvalues of A is 0.9418,  0.9418, 0.5488, 0.5488, 0.4493, 0.0907, 0.0025. 
+    \item Four manipulated variables: changes of the $i$th valve position.
+    \item Four output variables: $F_4$: production rate, $P$: pressure,\\ $y_{A3}$: amount of A in purge, $V_L$: liquid inventory. 
+    \item The individual transfer functions: $g_{11},\, g_{14},\, g_{21},\, g_{32},\, g_{44}$ and $g_{23}$ are also given. 
     \end{itemize}
-    ~\\
-    This system simulates a MIMO system with order $n = 7$ with  $p = 4$ inputs and $m = 4$ outputs. Moreover, the covariance matrices $Q = I_{7}$ and $ R = I_{4}$, $X = I_{8}$,  $\delta = 15$ ($13.13\%$ of the LQG cost $J = 114.22$), $\beta = \frac{1}{3}$.
-  \end{frame}
+  \end{block}
+\end{frame}
 
-  \begin{frame}
-    \frametitle{The Watermark Signal Design}
-    \begin{columns}
-      \begin{column}{0.6\textwidth}
-        \begin{figure}[h!]
-          \inputtikz{errU1_te}
-        \end{figure}
-      \end{column}
-      \begin{column}{0.4\textwidth}
-        \begin{itemize}
-        \item  $k^*$ denotes the update times, the update interval is $100$;
-        \item $U$: the optimal covariance of the watermark signal;
-        \item $U_k$: the estimation of $U$.
-        \end{itemize}
-      \end{column}
-    \end{columns}
-    ~\\
-    As time $k^*$ goes to infinity, $U_k$ converges to the optimal covariance of the watermark signal, $U$.
-  \end{frame}
+\begin{frame}{Simulation Results}
+  We apply the proposed technique to the simplified version of TE Process. \\~\\
 
-  \begin{frame}
-    \frametitle{The detection performance}
-    \begin{itemize}
-    \item $g_n$: the output of the $\chi^2$ detector designed with know parameters
-    \item $g$: the output of the $\chi^2$ detector when the parameters of the system are inferred through the learning technique. 
-    \end{itemize}
-    \begin{figure}[h!]
-      \centering
-      \inputtikz{gng_te}
-    \end{figure}
-  \end{frame}
-  \section{Conclusion}
+  Discretizing the simplified TEP model with sampling period $T_{sp} = 0.6s$, we can derive the system matrices $A$, $B$ and $C$, where  
+  \begin{itemize}
+  \item $A$, $B$ and $C$ are sparse matrices.
+  \item The eigenvalues of A is 0.9418,  0.9418, 0.5488, 0.5488, 0.4493, 0.0907, 0.0025. 
+  \end{itemize}
+  ~\\
+  This system simulates a MIMO system with order $n = 7$ with  $p = 4$ inputs and $m = 4$ outputs. Moreover, the covariance matrices $Q = I_{7}$ and $ R = I_{4}$, $X = I_{8}$,  $\delta = 15$ ($13.13\%$ of the LQG cost $J = 114.22$), $\beta = \frac{1}{3}$.
+\end{frame}
 
-  \begin{frame}{Conclusion}
-    \begin{itemize}
-    \item We consider the impact of replay attacks on a steady state control system and propose watermarking scheme to actively detect the presence of replay attack. For systems whose parameters are unknown, we design learning based mechanism to identify the parameters and design the watermarking signals simultaneously.
-    \end{itemize}
-  \end{frame}
+\begin{frame}
+  \frametitle{The Watermark Signal Design}
+  \begin{columns}
+    \begin{column}{0.6\textwidth}
+      \begin{figure}[h!]
+        % \inputtikz{errU1_te}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+      \begin{itemize}
+      \item  $k^*$ denotes the update times, the update interval is $100$;
+      \item $U$: the optimal covariance of the watermark signal;
+      \item $U_k$: the estimation of $U$.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  ~\\
+  As time $k^*$ goes to infinity, $U_k$ converges to the optimal covariance of the watermark signal, $U$.
+\end{frame}
 
-  \begin{frame}[standout]
-    Thank you!
-  \end{frame}
+\begin{frame}
+  \frametitle{The detection performance}
+  \begin{itemize}
+  \item $g_n$: the output of the $\chi^2$ detector designed with know parameters
+  \item $g$: the output of the $\chi^2$ detector when the parameters of the system are inferred through the learning technique. 
+  \end{itemize}
+  \begin{figure}[h!]
+    \centering
+    \inputtikz{gng_te}
+  \end{figure}
+\end{frame}
+\section{Conclusion}
+
+\begin{frame}{Conclusion}
+  We consider the impact of replay attacks on a steady state control system and propose watermarking scheme to actively detect the presence of replay attack. For systems whose parameters are unknown, we design learning based mechanism to identify the parameters and design the watermarking signals simultaneously.
+\end{frame}
+
+\begin{frame}[standout]
+  Thank you!
+\end{frame}
 
 \end{document}
 

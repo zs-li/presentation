@@ -19,10 +19,10 @@ xlabel={$k$},
 ymin=0, ymax=0.4,
 ylabel={$\beta^c(k)$},
 legend entries={
-$\mathcal Q = 0$,
-$\mathcal Q = 0.2$,
-$\mathcal Q = 0.4$,
-$\mathcal Q = 0.6$
+$U = 0$,
+$U = 0.2$,
+$U = 0.4$,
+$U = 0.6$
 },
 legend style={
 at={(1.1,0.5)},
