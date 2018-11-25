@@ -69,7 +69,7 @@
 
 \maketitle 
 
-\section{Introduction}
+\section{信息物理系统安全研究简介}
 
 \begin{frame}{Cyber-Physical System}
   \begin{itemize}
@@ -79,13 +79,13 @@
         level 1 concept/.append style={sibling angle=120,minimum size = 3cm},
         ]
         \path [draw=thupurple!50,fill=thupurple!20,thick,rounded corners] (-10,-4.5) rectangle (10,7);
-        \node at (-9,6) [anchor=north west] {\Huge Physical Space};
+        \node at (-9,6) [anchor=north west] {\Huge 物理空间};
         \path[mindmap,concept color=black,text=white]
         node[concept] {\Huge CPS}
         [clockwise from=330]
-        child[concept color=green!50!black] { node[concept](communication) {\huge Comm} }
-        child[concept color=red] { node[concept](control) {\huge Control} }
-        child[concept color=blue] { node[concept](computation) {\huge Comp} };
+        child[concept color=green!50!black] { node[concept](communication) {\huge 通讯} }
+        child[concept color=red] { node[concept](control) {\huge 控制} }
+        child[concept color=blue] { node[concept](computation) {\huge 计算} };
       \end{tikzpicture}
     \end{center}
   \item Applications: aerospace, chemical processes, civil infrastructure, energy, manufacturing and transportation. 
@@ -157,7 +157,7 @@
 
   \begin{enumerate}
   \item Intrusion detection and isolation
-  \item Resilient information fusion
+  \item Resilient information fusion and control
   \end{enumerate}
 \end{frame}
 
@@ -389,7 +389,7 @@
 
 \begin{frame}{Assumptions}
   \begin{itemize}
-  \item The system is stable (or has been stabilized by some inner-loop controller).
+  \item The system is stable (or has been stabilized by some inner-loop controller), controllable and observable.
   \item $A$ has distinct eigenvalues.
   \item We can observe $y(k)$, and we know the dimension of the $x(k)$.
   \item The LQG weight matrix $X$ is known.
@@ -415,7 +415,7 @@
   \begin{itemize}
   \item In the absence of the attack:  
     \begin{align*} 
-      y_{k} &=\textcolor{red}{\boxed{\sum_{t=0}^{k-1} CA^{t}B  \phi_{k-1-t}}} + \textcolor{blue}{\boxed{\sum_{t=0}^{k-1}  CA^{t} w_{k-1-t}+v_{k} + CA^k x_0\nonumber}}\\ 
+      y_{k} &=\textcolor{red}{\boxed{\sum_{t=0}^{k-1} CA^{t}B  \zeta_{k-1-t}}} + \textcolor{blue}{\boxed{\sum_{t=0}^{k-1}  CA^{t} w_{k-1-t}+v_{k} }}\\ 
             &=\textcolor{red}{\gamma_{k-1}} +\textcolor{blue} {\vartheta_{k-1}},
     \end{align*}
   \item  In the presence of the attack:
@@ -454,13 +454,137 @@
   The optimal $U = \alpha vv^T$ is a rank-$1$ matrix. 
 \end{frame}
 
-\begin{frame}{Online-Watermark Design}
-
+\begin{frame}{Online-Watermark Design: Watermark Generation}
+\begin{figure}[t]
+  \centering
+    \begin{tikzpicture}[scale=0.9]
+      \draw[thick,rounded corners,fill=thupurple!30,draw=thupurple!60] (0,1) rectangle (3,2);
+      \node at (1.5,1.5) {$\zeta(k)$ Generation};
+      \draw[thick,rounded corners,fill=red!30,draw=red!60] (4,1) rectangle (7,2);
+      \node at (5.5,1.5) {Inference};
+      \draw[thick,->] (1.5,2) to [bend left] (5.5,2);
+      \draw[thick,->] (5.5,1) to [bend left] (1.5,1);
+    \end{tikzpicture}
+\end{figure}
+\begin{itemize}
+\item Generate the ``optimal'' $U$: 
+    \begin{align*}
+      \hat U_k=&\mathop{\textrm{argmax}}\limits_{U}&
+      & \tr (U\textcolor{thupurple}{\hat  P_k})\\
+      &\textrm{subject to}&
+      & \tr (U\textcolor{thupurple}{\hat  X_k}) \leq \delta \\
+      &&& U \text{ is positive semidefinite.}
+    \end{align*}
+\item     Generate the watermark signal:
+    \begin{align*}
+      \zeta(k) = \hat U_k^{1/2} \phi(k),\,where\; \phi(k)\sim\mathcal N(0,I).
+    \end{align*}
+\end{itemize}
 \end{frame}
 
-\begin{frame}{Online-Watermark Design}
-
+\begin{frame}{Online-Watermark Design: Inference}
+\begin{figure}[t]
+  \centering
+    \begin{tikzpicture}[scale=0.9]
+      \draw[thick,rounded corners,fill=thupurple!30,draw=thupurple!60] (0,1) rectangle (3,2);
+      \node at (1.5,1.5) {$\zeta(k)$ Generation};
+      \draw[thick,rounded corners,fill=red!30,draw=red!60] (4,1) rectangle (7,2);
+      \node at (5.5,1.5) {Inference};
+      \draw[thick,->] (1.5,2) to [bend left] (5.5,2);
+      \draw[thick,->] (5.5,1) to [bend left] (1.5,1);
+    \end{tikzpicture}
+\end{figure}
+\begin{itemize}
+\item If we compute $y(k)\phi(k)^T$, we get
+  \begin{align*}
+    y(k+1)\phi(k)^T &= \textcolor{thupurple}{CBU_k^{1/2}\phi(k)\phi(k)^T}+ \sum_{t=1}^{k}H_t U_{k-t}^{1/2} \phi(k-t) \phi(k)^T \\
+    &+\sum_{t=0}^{k}  CA^{t} w(k-t)\phi(k)^T +v(k+1)\phi(k)^T.
+  \end{align*}
+\item One tentative way to infer $H_0$: 
+  \begin{align*}
+    H_0 \approx \text{the average of }y(k+1)\phi(k)^TU_{k}^{-1/2} . 
+  \end{align*}
+\item Similarly we can estimate all $H_t$, and further infer $\mathcal P$ and $\mathcal X$.
+\end{itemize} 
 \end{frame}
+
+\begin{frame}{Key Problems with the Naive Approach}
+  \begin{itemize}
+  \item The ``optimal'' $U_k$ is rank 1 and not invertible
+  \item There are infinitely $H_t$s we need to infer
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Balance Exploration and Exploitation}
+  \begin{itemize}
+  \item Recall the structure of the optimal $U$ is $U = \alpha v v^T$.
+  \item The optimal watermark will input the signal to the most ``informative'' direction $v$: Pure \textcolor{red}{Exploitation}.
+  \item We could also consider classical system identification techniques, which use $U=I$: Pure \textcolor{blue}{Exploration}.
+  \item To achieve a balance, choose
+    \begin{align*}
+      \hat U_k = \text{``optimal'' } U + k^{-\alpha} I.
+    \end{align*}
+  \item More \textcolor{blue}{exploration} at the beginning and more \textcolor{red}{exploitation} towards the end.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Infer all $H_t$ using finitely many $H_t$s}
+  \begin{itemize}
+  \item We can only store \textbf{finitely many} $H_t=CA^tB$s, but we need \textbf{all} $H_t$ to compute $\mathcal P$ and $\mathcal X$.
+  \item Solution: Cayley-Hamilton Theorem: 
+    \begin{align*}
+      p(A) = A^n + \alpha_{n-1}A^{n-1}+\ldots+\alpha_1 A + \alpha_0 I = 0     
+    \end{align*}
+    where $p(x)$ is the characteristic polynomial of $A$. 
+  \item We can compute $A^n$ as
+    \begin{align*}
+      A^n =- \alpha_{n-1}A^{n-1}-\ldots-\alpha_1 A - \alpha_0 I.
+    \end{align*}
+  \item Similarly, we have
+    \begin{align*}
+      CA^nB =- \alpha_{n-1}CA^{n-1}B-\ldots-\alpha_1 CAB - \alpha_0 CB.
+    \end{align*}
+\item As long as we know the characteristic polynomial of $A$, we can infer all $H_t$ from $H_0,\ldots, H_{n-1}$.
+  \end{itemize} 
+\end{frame}
+
+\begin{frame}{Infer the Characteristic Polynomial}
+  \begin{itemize}
+  \item Since the system is controllable and observable, $p(A) = 0$ is equivalent to:
+    \begin{align*}
+      \begin{bmatrix}
+        C\\
+        CA\\
+        \cdots\\
+        CA^{n-1}
+      \end{bmatrix}p(A)\begin{bmatrix}
+        B&AB&\cdots&A^{n-1}B
+      \end{bmatrix}=0.
+    \end{align*}
+  \item The above equation is equivalent to
+    \begin{align*}
+      \mathcal H   \begin{bmatrix}
+        \alpha_0I\\
+        \cdots\\
+        \alpha_{n-1}I
+      \end{bmatrix} + \begin{bmatrix}
+        H_n\\
+        \cdots\\
+        H_{3n-2} 
+      \end{bmatrix} = 0    ,
+    \end{align*}
+    where $\mathcal H$ is the Hankel matrix
+    \begin{align*}
+      \mathcal H \triangleq \begin{bmatrix}
+        H_{0} & H_{1} &\cdots & H_{n-1}\\
+        H_{1} & H_{2} &\cdots & H_{n}\\
+        \vdots & \vdots &\ddots & \vdots \\
+        H_{2n-2} & H_{2n-1} &\cdots & H_{3n-3}\\
+      \end{bmatrix}. 
+    \end{align*}
+  \end{itemize} 
+\end{frame}
+
 
 \begin{frame}{Tennessee Eastman Process}
   Here, we apply the proposed technique to the Tennessee Eastman Process (TEP).\\~\\
@@ -542,40 +666,40 @@
   \begin{columns}
     \begin{column}{0.6\textwidth}
       \begin{figure}[h!]
-        % \inputtikz{errU1_te}
+         \inputtikz{errU1_te}
       \end{figure}
     \end{column}
     \begin{column}{0.4\textwidth}
       \begin{itemize}
-      \item  $k^*$ denotes the update times, the update interval is $100$;
       \item $U$: the optimal covariance of the watermark signal;
       \item $U_k$: the estimation of $U$.
       \end{itemize}
     \end{column}
   \end{columns}
   ~\\
-  As time $k^*$ goes to infinity, $U_k$ converges to the optimal covariance of the watermark signal, $U$.
+  As time $k$ goes to infinity, $U_k$ converges to the optimal covariance of the watermark signal, $U$.
 \end{frame}
 
 \begin{frame}
   \frametitle{The detection performance}
   \begin{itemize}
-  \item $g_n$: the output of the $\chi^2$ detector designed with know parameters
-  \item $g$: the output of the $\chi^2$ detector when the parameters of the system are inferred through the learning technique. 
+  \item $g_n$: the output of the failure detector designed with know parameters
+  \item $g$: the output of the failure detector when the parameters of the system are inferred through the learning technique. 
   \end{itemize}
   \begin{figure}[h!]
     \centering
     \inputtikz{gng_te}
   \end{figure}
 \end{frame}
-\section{Conclusion}
+
+\section{结论}
 
 \begin{frame}{Conclusion}
   We consider the impact of replay attacks on a steady state control system and propose watermarking scheme to actively detect the presence of replay attack. For systems whose parameters are unknown, we design learning based mechanism to identify the parameters and design the watermarking signals simultaneously.
 \end{frame}
 
 \begin{frame}[standout]
-  Thank you!
+  感谢各位老师同学聆听，请大家批评指正！
 \end{frame}
 
 \end{document}
