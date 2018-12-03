@@ -1,5 +1,6 @@
 \documentclass[10pt]{beamer}
 
+
 \usepackage{xeCJK}
 \setCJKmainfont{Noto Sans CJK SC}
 \xeCJKsetup{PunctStyle=kaiming,CJKspace=true,CheckSingle=true} 
@@ -59,14 +60,14 @@
   清华大学 自动化系
 }
 \date[Dec 5th, 2018]{Dec 5th, 2018}
-  
+
 
 \usetheme[subsectionpage=none,block=fill]{metropolis}
 \definecolor{thupurple}{RGB}{102,8,116}
 \definecolor{caltechcolor}{RGB}{102,8,116}
 \setbeamercolor{title separator}{fg=black!50}
 \setbeamercolor{frametitle}{bg=thupurple!70!black}
- 
+
 
 \begin{document}
 
@@ -187,47 +188,228 @@
   \Huge Keep pushing.
 \end{frame}
 
-\begin{frame}{信息物理系统}
-  \begin{itemize}
-  \item Cyber-Physical Systems (CPSs) refer to the embedding of computation, communication and control into physical spaces.
+\section{分布式一致性算法}
+\begin{frame}{集中式 v.s. 分布式算法}
+  \begin{figure}[<+htpb+>]
     \begin{center}
-      \begin{tikzpicture}[scale=0.45,transform shape,level distance=0cm,
-        level 1 concept/.append style={sibling angle=120,minimum size = 3cm},
-        ]
-        \path [draw=thupurple!50,fill=thupurple!20,thick,rounded corners] (-10,-4.5) rectangle (10,7);
-        \node at (-9,6) [anchor=north west] {\Huge 物理空间};
-        \path[mindmap,concept color=black,text=white]
-        node[concept] {\Huge CPS}
-        [clockwise from=330]
-        child[concept color=green!50!black] { node[concept](communication) {\huge 通讯} }
-        child[concept color=red] { node[concept](control) {\huge 控制} }
-        child[concept color=blue] { node[concept](computation) {\huge 计算} };
-      \end{tikzpicture}
+      \includegraphics[width=0.50\textwidth]{centralized.png}
     \end{center}
-  \item Applications: aerospace, chemical processes, civil infrastructure, energy, manufacturing and transportation. 
+  \end{figure}
+  分布式算法的好处：可靠、可扩展
+\end{frame}
+
+\begin{frame}{分布式平均一致性算法}
+  \begin{center}
+    \begin{tikzpicture}
+      \node (n4) at (0,0) [circle,draw=thupurple!50,fill=thupurple!20,thick] {4};
+      \node (n1) at (0,1.5cm) [circle,draw=thupurple!50,fill=thupurple!20,thick] {1};
+      \node (n3) at (1.5cm,0) [circle,draw=thupurple!50,fill=thupurple!20,thick] {3};
+      \node (n2) at (1.5cm,1.5cm) [circle,draw=thupurple!50,fill=thupurple!20,thick] {2};
+      \draw [semithick] (n1)--(n2)--(n3)--(n4)--(n1);
+    \end{tikzpicture}
+  \end{center}
+  \begin{itemize}
+  \item 4个节点，每个节点具有初始值$x_i(0)$。
+  \item 目标: 计算初始值的平均值。
+  \item 每次迭代，各节点使用如下的方程更新自身状态:
+    \begin{align*}
+      x_i(k+1) =  \frac{1}{3}x_{i}(k) + \sum_{j\in \mathcal N(i)} \frac{1}{3} x_{j}(k).  
+    \end{align*}
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Stuxnet}
+\begin{frame}{状态轨迹}
+  \begin{figure}[ht]
+    \centering
+    \input{consensus1.tex}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{分布式平均一致性理论}
+  \begin{itemize}
+  \item 假设系统的拓扑可以由$G = \{V,\,E\}$表示。
+  \item 节点更新方程：
+    \begin{displaymath}
+      x_i(k+1) = a_{ii} x_{i}(k) + \sum_{j\in \mathcal N(i)} a_{ij} x_{j}(k).  
+    \end{displaymath}
+  \item 矩阵表示：
+    \begin{displaymath}
+      x(k+1) = A x(k),
+    \end{displaymath}
+  \item 以下条件为达成平均一致性的充要条件:
+    \begin{enumerate}
+    \item[(A1)] $A$有一个特征值是$1$，其他所有特征值在单位圆内。 
+    \item[(A2)] $\mathbf 1$是对应特征值$1$的左特征向量和右特征向量。
+    \end{enumerate}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{平均一致性的应用}
+  \begin{itemize}
+  \item 需求相应;
+  \item 多机器人队型控制;
+  \item 社交网络;
+  \item 时钟同步;
+  \item 分布式定位;
+  \item 分布式估计;
+  \item 分布式优化;
+  \item \dots
+  \end{itemize}
+\end{frame}
+
+\section{分布式算法中的安全问题}
+\begin{frame}{安全隐患}
+  \begin{itemize}
+  \item 恶意节点：不遵守更新方程 
+    \begin{displaymath}
+      x_i(k+1) = a_{ii} x_{i}(k) + \sum_{j\in \mathcal N(i)} a_{ij} x_{j}(k)+\textcolor{red}{u_i(k)}.
+    \end{displaymath}
+
+    \emph{(Pasqualetti, Bicchi and Bullo, 2012)}: 当图$G$足够联通时，好的节点可以辨识出恶意节点
+
+  \item 好奇节点：遵守更新方程，但是尝试推测其他节点的状态
+  \item 恶意+好奇节点：Open Problem 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Example}
+  \begin{center}
+    \begin{tikzpicture}
+      \node (n4) at (0,0) [circle,draw=thupurple!50,fill=thupurple!20,thick] {4};
+      \node (n1) at (0,1.5cm) [circle,draw=thupurple!50,fill=thupurple!20,thick] {1};
+      \node (n3) at (1.5cm,0) [circle,draw=thupurple!50,fill=thupurple!20,thick] {3};
+      \node (n2) at (1.5cm,1.5cm) [circle,draw=thupurple!50,fill=thupurple!20,thick] {2};
+      \draw [semithick] (n1)--(n2)--(n3)--(n4)--(n1);
+    \end{tikzpicture}
+  \end{center}
+  \begin{itemize}
+  \item 第一次迭代:节点$4$可以得到$x_1(0)$以及$x_3(0)$.
+  \item 第二次迭代:节点$4$可以得到$x_1(1)$:
+    \begin{align*}
+      x_1(1) =\frac{1}{3}\left(\underbrace{x_1(0)+x_4(0)}_{known}+x_2(0)\right).
+    \end{align*}
+  \item 对于一般系统，判断节点$i$能否准确推测节点$j$的初始值，涉及到线性系统的可观性理论
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{方案1}
+  \begin{figure}[ht]
+    \begin{center}
+      \begin{tikzpicture}[scale=0.9]
+        \node [label=above:$k:$] at (-1.5,0) {};
+        \node [label=above:$0$] at (0,0) {};
+        \node [label=above:$1$] at (3,0) {};
+        \node [label=above:$2$] at (6,0) {};
+        \node [label=above:$3$] at (9,0) {};
+        \node []   at (-1.5,-1) {噪声:};
+        \node [] (n0) at (0,-1){$v_i(0)$}; 
+        \node [] (n1) at (3,-1){$ v_i(1)$}; 
+        \node [] (n2) at (6,-1){$ v_i(2)$}; 
+        \node [] (n3) at (9,-1){$ v_i(3)$}; 
+        \draw [->,thick] (n0)--(n1);
+        \draw [->,thick] (n1)--(n2);
+        \draw [->,thick] (n2)--(n3);
+      \end{tikzpicture}
+    \end{center}
+  \end{figure}
+\end{frame}
+\begin{frame}{状态轨迹}
+  \begin{figure}[ht]
+    \centering
+    \input{consensus2.tex}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}{方案2}
+  \begin{figure}[ht]
+    \begin{center}
+      \begin{tikzpicture}[scale=0.9]
+        \node [label=above:$k:$] at (-1.5,0) {};
+        \node [label=above:$0$] at (0,0) {};
+        \node [label=above:$1$] at (3,0) {};
+        \node [label=above:$2$] at (6,0) {};
+        \node [label=above:$3$] at (9,0) {};
+        \node [] at (-1.5,-1) {噪声:};
+        \node [] (n0) at (0,-1){$v_i(0)$}; 
+        \node [] (n1) at (3,-1){$\varphi v_i(1)$}; 
+        \node [] (n2) at (6,-1){$\varphi^2 v_i(2)$}; 
+        \node [] (n3) at (9,-1){$\varphi^3 v_i(3)$}; 
+        \draw [->,thick] (n0)--(n1);
+        \draw [->,thick] (n1)--(n2);
+        \draw [->,thick] (n2)--(n3);
+      \end{tikzpicture}
+    \end{center}
+  \end{figure}
+\end{frame}
+\begin{frame}{状态轨迹}
+  \begin{figure}[ht]
+    \centering
+    \input{consensus3.tex}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}{方案3}
+  \begin{figure}[ht]
+    \begin{center}
+      \begin{tikzpicture}[scale=0.9]
+        \node [label=above:$k:$] at (-1.5,0) {};
+        \node [label=above:$0$] at (0,0) {};
+        \node [label=above:$1$] at (3,0) {};
+        \node [label=above:$2$] at (6,0) {};
+        \node [label=above:$3$] at (9,0) {};
+        \node []   at (-1.5,-1) {噪声:};
+        \node [] (n0) at (0,-1){$v_i(0)$}; 
+        \node [] (n1) at (3,-1){$\begin{array}{c}\textcolor{red}{\varphi v_i(1)}\\+\\- v_i(0)\end{array}$}; 
+        \node [] (n2) at (6,-1){$\begin{array}{c}\textcolor{blue}{\varphi^2 v_i(2)}\\+\\\textcolor{red}{- \varphi v_i(1)}\end{array}$}; 
+        \node [] (n3) at (9,-1){$\begin{array}{c}\textcolor{thupurple}{\varphi^3 v_i(3)}\\+\\\textcolor{blue}{ -\varphi^2 v_i(2)}\end{array}$}; 
+        \draw [->,thick] (n0)--(n1);
+        \draw [->,thick] (n1)--(n2);
+        \draw [->,thick] (n2)--(n3);
+      \end{tikzpicture}
+    \end{center}
+  \end{figure}
+\end{frame}
+\begin{frame}{状态轨迹}
+  \begin{figure}[ht]
+    \centering
+    \input{consensus4.tex}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{隐私保护}
+  \begin{figure}[ht]
+    \begin{center}
+      \setlength{\figureheight}{5cm}
+      \setlength{\figurewidth}{6cm}
+      \inputtikz{variance}
+    \end{center}
+    \label{fig:variance}
+  \end{figure}
+\end{frame}
+
+\section{控制系统中的信息安全问题}
+\begin{frame}{震网病毒}
   \begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{stuxnet.jpg}
   \end{figure}
-  Stuxnet is the first discovered malware that spies on and subverts industrial control systems. It was discovered in June 2010. 
+  震网病毒于2010年6月被发现，它是第一个可以对控制系统产生破坏的恶意软件。
 \end{frame}
 
-\begin{frame}{Industrial Control Systems}
+\begin{frame}{工业控制系统中的安全隐患}
   \begin{figure}[ht]
     \centering
     \includegraphics[width=0.6\textwidth]{cert.jpg}
   \end{figure}
-  In FY 2014, ICS-CERT (Industrial Control Systems Cyber Emergency Response Team) received and responded to 245 incidents as reported by asset owners and industry partners. This number increased to 290 in FY 2016.
+  2014年，美国工业控制系统应急小组收到245起针对工业控制系统的攻击报告。2016年，攻击数量增加至290起。
 \end{frame}
 
 \begin{frame}[standout]
   感谢各位老师同学聆听，请大家批评指正！
 \end{frame}
-
 \end{document}
 
 %%% Local Variables: 
