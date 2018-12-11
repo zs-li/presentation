@@ -127,7 +127,7 @@ legend style={legend cell align=left,align=left,draw=black}
 4.9	1.10157636246823e-08\\
 5	6.07588284982329e-09\\
 };
-\addlegendentry{$\theta=-1$};
+\addlegendentry{$\theta=0$};
 
 \addplot [color=red,solid]
   table[row sep=crcr]{%

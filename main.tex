@@ -30,6 +30,7 @@
 \newcommand{\J}{{\mathcal J}}
 \newcommand{\K}{{\mathcal K}}
 
+\DeclareMathOperator{\pr}{Pr}
 \DeclareMathOperator{\Smin}{Smin}
 \DeclareMathOperator{\Smid}{Smid}
 \DeclareMathOperator{\Smax}{Smax}
@@ -174,6 +175,688 @@
 %\end{block}
 
   
+%\end{frame}
+
+
+\begin{frame}{Hardening CPS Security using Control Theory}
+  \begin{itemize}
+  \item System Modelling
+  \item Attack Modelling
+  \item Intrusion Detection and Isolation
+  \item Resilient Algorithm Design
+  %\only<2>{{\color{red} Resilient Algorithm Design  }}
+  \item Fundamental Limitations
+  %\only <2>{{\color{red}Fundamental Limitations}}
+  \item Security Investment
+  %\only <2>{{\color{red}Security Investment}}
+  \item \dots
+  \end{itemize}
+\end{frame}
+
+
+
+
+%\begin{frame}{Cyber Attacks Classification}
+%\large Typical attacks: \\
+%  \begin{enumerate}
+%  \item \large Confidentiality attack
+%   \begin{itemize}
+%   \item Information is disclosed to unauthorized ones (passive).
+%   \end{itemize}
+%  \item{\large \textcolor{red}{Integrity attack}}
+%   \begin{itemize}
+%   \item Modifying the data packets to compromise the data integrity (active).
+%   \item Usually requiring comprehensive information about the system.
+%   \end{itemize}
+%  \item \large Availability attack
+%   \begin{itemize}
+%   \item Blocking the information change between parts of the CPS (active).
+%   \item No requirement for system knowledge.
+%   \end{itemize}
+%  \end{enumerate}
+%\end{frame}
+ \section{Hypothesis Testing}
+ 
+ \frame{\tableofcontents[currentsection]}
+ \begin{frame}{A Classical Hypothesis Testing Problem}
+   \begin{itemize}
+   \item We want to decide whether the state $\theta$ is $-1$ or $1$.
+     \begin{align*}
+       \theta=\begin{cases}
+         -1 &\text{w.p.~}0.5\\
+         +1 &\text{w.p.~}0.5\\
+       \end{cases}
+     \end{align*}
+   \item $m$ sensors are measuring the state: $z_i(k)\sim\mathcal N(\theta,1)$.
+   \item Let us define 
+     \begin{displaymath}
+       z(k) = \begin{bmatrix}z_1(k)&\dots&z_m(k)\end{bmatrix},\,Z(k) = \begin{bmatrix}z(1)&\dots&z(k)\end{bmatrix}.
+     \end{displaymath}
+   \item A detector at time $k$  is a function $f_k:\mathbb R^{mk}\rightarrow \{-1,1\}$.
+   \item A detection strategy is an infinite sequence of detectors $f = (f_1,\,f_2,\,\dots)$.
+   \end{itemize}
+ \end{frame}
+ 
+ \begin{frame}{A Classical Hypothesis Testing Problem}
+   \begin{center}
+     \setlength{\figureheight}{2cm}
+     \setlength{\figurewidth}{10cm}
+     \inputtikz{gaussian}
+   \end{center}
+   
+   Without the attacker, it is well-known that the optimal detector with minimum detection error is a Naive Bayes Detector:
+   \begin{align*}
+     \hat \theta(k)=f_k(Z(k))=\begin{cases}
+       -1 &\text{if }\sum_{i=1}^m\sum_{t=1}^k z_i(t)/mk < 0\\
+       +1 &\text{if }\sum_{i=1}^m\sum_{t=1}^k z_i(t)/mk \geq 0\\
+     \end{cases}.
+   \end{align*}
+   
+   However, the Naive Bayes Detector is not secure. Suppose the attacker compromise one sensor. Thus, it can manipulate the summation arbitrarily. Hence, it has full control over $\hat \theta$. 
+ \end{frame}
+ 
+ 
+ \begin{frame}{Attack Model}
+   The attacker compromised $p$ sensors, the set of which is denoted as $\mathcal I$. The detector knows $p$, but does not know $\mathcal I$.
+   \begin{displaymath}
+     y(k) = z(k) + a(k),  
+   \end{displaymath}
+   where $a_i(k) = 0$ if $i\notin \mathcal I$.
+   
+   We consider different information set $\mathcal G(k)$ of the attacker at time $k$:
+   \begin{itemize}
+   \item Weak Attack Model: The attacker knows only the measurements of the compromised sensors, i.e., $\mathcal G(k) = Z_{\mathcal I}(k)$.
+   \item Strong Attack Model: The attacker knows the measurements of all sensors, i.e., $\mathcal G(k) = Z(k)$. 
+   \end{itemize}
+   The disturbance $a(k)$ depends on the information set $\mathcal Z(k)$ and $\mathcal I$: 
+   \begin{displaymath}
+     a(k) = g_k(\mathcal G(k),\mathcal I). 
+   \end{displaymath}
+   The attack strategy $g = (g_1,\,g_2,\,\dots)$.
+ \end{frame}
+ 
+ \begin{frame}{Performance: Probability of Error}
+   \begin{itemize}
+   \item The probability of error at time $k$ is denoted as
+     \begin{displaymath}
+       P_e(k) = \max_{\mathcal I}\; P(f_k(Y(k)) \neq \theta). 
+     \end{displaymath}
+   \item Clearly, $P_e(k)$ is a function of the detection strategy $f$ and the attack strategy $g$.
+   \item  In general, for a fixed $k$, optimizing $P_e(k)$ directly (either from the system's perspective or the attacker's perspective) is difficult.
+   \item As a result, we will focus on the asymptotic performance when $k\rightarrow\infty$.
+   \end{itemize}
+ \end{frame}
+ 
+ \begin{frame}{Chernoff Information}
+   \begin{itemize}
+   \item Suppose $m = 1$ and $p = 0$, the Naive Bayes Detector takes the following form:
+     \begin{align*}
+       \hat \theta(k)=f_k(Z(k))=\begin{cases}
+         -1 &\text{if }\sum_{t=1}^k z_1(t)/k < 0\\
+         +1 &\text{if }\sum_{t=1}^k z_1(t)/k \geq 0\\
+       \end{cases}.
+     \end{align*}
+   \item By LLN, the probability of error goes to $0$.
+   \item Moreover, it goes to $0$ exponentially fast, i.e.,
+     \begin{displaymath}
+       \lim_{k\rightarrow\infty}-\frac{\log P_e(k)}{k} = \max_{0<\alpha<1} -\log \int_{-\infty}^\infty \left(\frac{p^-(x)}{p^+(x)}\right)^\alpha p^+(x) dx = \frac{1}{2}.
+     \end{displaymath}
+   \item For general $m$ with $p = 0$, the probability of error for the Naive Bayes Detector satisfies:
+     \begin{displaymath}
+       P_e(k)\sim e^{-\frac{1}{2}mk}.
+     \end{displaymath}
+   \end{itemize}
+ \end{frame}
+ 
+ \begin{frame}{Asymptotic Performance}
+   \begin{itemize}
+   \item In adversarial environment, let us define the rate function $I$ as
+     \begin{displaymath}
+       I = \liminf_{k\rightarrow\infty} -\frac{\log P_e(k)}{k}.
+     \end{displaymath}
+     Roughly speaking, 
+     \begin{displaymath}
+       P_e(k)\sim e^{-Ik}. 
+     \end{displaymath}
+     Larger rate implies better detection performance.
+   \item  $I$ is a function of both detection strategy $f$ and attack strategy $g$.
+   \item The detector wants to maximize $I$ while the attacker wants to minimize $I$.
+   \item Our goal is to find a Nash-equilibrium $(f^*,g^*)$, such that
+     \begin{displaymath}
+       I(f^*,g)\geq I(f^*,g^*) \geq I(f,g^*).	
+     \end{displaymath}
+   \end{itemize}
+ \end{frame}
+ 
+ \begin{frame}{Nash-equilibrium when $m \leq 2p$}
+   \it Theorem: For both weak and strong attack model, the following strategy pair $(f^*,g^*)$ is a Nash-equilibrium with $I(f^*,g^*) = 0$:
+   \begin{block}{Attack Strategy $g^*$}
+     \begin{enumerate}
+     \item Flip $m-p$ compromised sensors' measurements.
+     \item Set the rest $2p-m$ compromised sensors' measurements to $0$. 
+     \end{enumerate}
+     For example, if $m=3$ and $p=2$, then the adversary should flip $1$ sensor and set the other sensor's readings to $0$.
+   \end{block}
+   \begin{block}{Detection Strategy $f^*$}
+     $f_k = 1$ for all $k$.
+   \end{block}
+ \end{frame}
+ \begin{frame}{Nash-Equilibrium when $m \geq 2p+1$}
+   We need to define the following ``summation'' functions:
+   \begin{definition}
+     Define the symmetric functions $\Smin_{2p},\,\Smid_{2p},\,\Smax_{2p}:\mathbb R^{m}\rightarrow \mathbb R$ as  
+     \begin{align*}
+       \Smin_{2p}(x_1,\ldots,x_m) &\triangleq \sum_{i=1}^{m-2p}x_i,\\
+       \Smid_{2p}(x_1,\ldots,x_m) &\triangleq \sum_{i=p+1}^{m-p}x_i,\\
+       \Smax_{2p}(x_1,\ldots,x_m) &\triangleq \sum_{i=2p+1}^{m}x_i,
+     \end{align*}
+     when $x_1\leq \dots\leq x_m$.
+   \end{definition}
+ \end{frame}
+ 
+ \begin{frame}{Nash-Equilibrium when $m \geq 2p+1$}
+   \begin{itemize}
+   \item If $\|x' - x\|_0\leq p$, then
+     \begin{displaymath}
+       \Smin_{2p}(x) \leq \Smid_{2p}(x')\leq \Smax_{2p}(x).
+     \end{displaymath} 
+   \item Assuming $m=5$, $p = 1$:
+     \begin{center}
+       \begin{tikzpicture}[semithick,>=latex]
+         \draw [->] (0,0)--(10,0);
+         \draw plot[mark=x] coordinates{(1,0)} node [above] {$x_1$};
+         \draw plot[mark=x] coordinates{(2,0)} node [above] {$x_2$};
+         \draw plot[mark=x] coordinates{(4,0)} node [above] {$x_3$};
+         \draw plot[mark=x] coordinates{(5,0)} node [above] {$x_4$};
+         \draw plot[mark=x] coordinates{(7,0)} node [above] {$x_5$};
+         
+         \draw [->] (0,-2)--(10,-2);
+         \draw plot[mark=x] coordinates{(9,-2)} node [above] {$x_1'$};
+         \draw plot[mark=x] coordinates{(2,-2)} node [above] {$x_2'$};
+         \draw plot[mark=x] coordinates{(4,-2)} node [above] {$x_3'$};
+         \draw plot[mark=x] coordinates{(5,-2)} node [above] {$x_4'$};
+         \draw plot[mark=x] coordinates{(7,-2)} node [above] {$x_5'$};
+         
+         \draw [->,dashed] (1,0)--(1,-1)--(9,-1)--(9,-2);
+         \begin{pgfonlayer}{background}
+           \fill [fill=red!30] (3,-2.5) rectangle (8,-1.25);
+           \node at (5.5,-2.3) {$\Smid_2(x')$};
+           
+           \fill [fill=blue!30] (3,-0.5) rectangle (8,0.75);
+           \node at (5.5,-0.3) {$\Smax_2(x)$};
+         \end{pgfonlayer}
+       \end{tikzpicture}
+     \end{center}
+   \item $\Smid_{2p}$ is a more ``secure'' version of sum. 
+   \end{itemize}
+ \end{frame}
+ 
+ 
+ \begin{frame}{Nash-Equilibrium when $m \geq 2p+1$}
+   \it Theorem: For both weak and strong attack model, the following strategy pair $(f^*,g^*)$ is a Nash-equilibrium with $I(f^*,g^*) = (m-2p)/2$:
+   \begin{block}{Attack Strategy $g^*$}
+     Flip $p$ compromised sensors' measurements.
+   \end{block}
+   \begin{block}{Detection Strategy $f^*$}
+     \begin{enumerate}
+     \item For each sensor $i$, compute a local sum $ \Lambda_i(k) = \sum_{t=1}^k y_i(t)$.
+     \item The detector $f_k$ is given by
+       \begin{displaymath}
+         f_k(Y(k)) = \begin{cases}
+           -1 &\text{if }\Smid_{2p}(\Lambda(k))< 0\\
+           1 &\text{if }\Smid_{2p}(\Lambda(k))\geq 0\\
+         \end{cases}
+       \end{displaymath}
+     \item At each time step, the computation is $O(m)$.
+     \end{enumerate}
+   \end{block}
+ \end{frame}
+ 
+ \begin{frame}{Numerical Examples}
+   We assume $m = 9$ and plot the probability of error for the equilibrium strategy for different $p$
+   \begin{center}
+     \setlength{\figureheight}{7cm}
+     \setlength{\figurewidth}{12cm}
+     \inputtikz{Perror}
+   \end{center}
+ \end{frame}
+ 
+ \begin{frame}{What if the defender does not know $p$?}
+   \begin{enumerate}
+   \item Suppose the defender does not know $p$, and implement a detector assuming using $\Smid_{2p'}$.
+   \item If $p' \geq p$, then the detector is still resilient to the attack, with rate $(m-p-p')/2$ (comparing to the optimal rate $(m-2p)/2$)
+   \item If $p' < p$, then the detector is not resilient. The rate will be $0$.
+   \end{enumerate}
+   
+   \centering
+   \begin{tikzpicture}
+     \begin{axis}[%
+       width=6cm,
+       height=4cm,
+       scale only axis,
+       separate axis lines,
+       every outer x axis line/.append style={black},
+       every x tick label/.append style={font=\color{black}},
+       xmin=0,
+       xmax=5,
+       xlabel={Number of Compromised Sensors},
+       every outer y axis line/.append style={black},
+       every y tick label/.append style={font=\color{black}},
+       ymin=0,
+       ymax=5,
+       ylabel={Performance},
+       axis background/.style={fill=white},
+       legend style={at={(1.1,0.5)},anchor=west},
+       ]
+       \addplot [color=red,solid,mark=+]
+       table[row sep=crcr]{%
+       0	4.5\\
+     };
+       \addlegendentry{Naive Bayes};
+       
+       \addplot [color=blue,solid,mark=+]
+       table[row sep=crcr]{%
+       0	4\\
+       1	3.5\\
+     };
+       \addlegendentry{$p' = 1$};
+       
+       \addplot [color=black,solid,mark=+]
+       table[row sep=crcr]{%
+       0	3.5\\
+       1	3\\
+       2	2.5\\
+     };
+       \addlegendentry{$p' = 2$};
+       
+       \addplot [color=green,solid,mark=+]
+       table[row sep=crcr]{%
+       0	3\\
+       1	2.5\\
+       2	2\\
+       3	1.5\\
+     };
+       \addlegendentry{$p' = 3$};
+       
+       
+       \addplot [color=brown,solid,mark=+]
+       table[row sep=crcr]{%
+       0	2.5\\
+       1	2\\
+       2	1.5\\
+       3	1\\
+       4	0.5\\
+     };
+       \addlegendentry{$p' = 4$};
+       
+       \addplot [color=gray,solid]
+       table[row sep=crcr]{%
+       0	4.5\\
+       1	3.5\\
+       2	2.5\\
+       3	1.5\\
+       4	0.5\\
+     };
+       \addlegendentry{Fundamental Limit};
+     \end{axis}
+   \end{tikzpicture}
+   
+ \end{frame}
+
+
+\section{Trade-off Between Efficiency and Security}
+\begin{frame}{Outline}
+  \tableofcontents[currentsection]
+\end{frame}
+%\begin{frame}{Binary Hypothesis Testing}
+%   We want to detect certain event:
+%    \begin{align*}
+%      \theta=\begin{cases}
+%        0 &\text{w.p.~}0.5\\
+%        1 &\text{w.p.~}0.5\\
+%      \end{cases},
+%    \end{align*}
+%    with $m$ homogeneous  sensors measuring the system.
+%\end{frame}
+%
+%
+%
+%\begin{frame}{Attack Modelling}
+%\begin{itemize}
+%  \item The adversary can change up to $n$ sensors' measurements arbitrarily, which can be achieved by
+%  \begin{enumerate}
+%  \item Compromising the sensors' hardware/software
+%  \item Hijacking the communication from sensors
+%  \item Physical attacks
+%  \end{enumerate}
+%  \vspace{2mm}
+%  \item The system knows $n$, but does not know what sensors are compromised.
+%\end{itemize}
+%\end{frame}
+%
+%\begin{frame}{Motivating Example}
+%  \begin{center}
+%    \setlength{\figureheight}{2cm}
+%    \setlength{\figurewidth}{10cm}
+%    \inputtikz{gaussian}
+%  \end{center}
+%  \begin{block}{Naive Probability Ratio Test: Optimal Without Attacks}
+%  \begin{enumerate}
+%  \item  Compute the average of all measurements and compare it with 0.
+%  \item  Choose $\hat \theta = 0$ if the average is less than 0.
+%  Choose $\hat \theta = 1$ otherwise.
+%  \end{enumerate}
+%  \end{block}
+%%  \begin{itemize}
+%%  \item The optimal fusion algorithm is to
+%%  \item Choose $\hat \theta = 0$ if the average is less than 0.
+%%  \item Choose $\hat \theta = 1$ otherwise.
+%%  \item However, this is not secure.
+%%  \end{itemize}
+%\begin{center}
+% \only <2> {\large{ {\color{red}not secure at all}}}
+%\end{center}
+%\end{frame}
+%
+%
+%
+%\begin{frame}{Cost of Security}
+%  \begin{itemize}
+%  \item Security: The performance of the information fusion algorithm when under attack
+%        \begin{align*}
+%    \liminf_{k\rightarrow\infty} - \frac{\log \max_g\{\pr(f_k=1|0),\pr(f_k=0|1)\}}{k}
+%  \end{align*}
+% % \item However, there may be a cost associated with security, as we cannot use the optimal (but non-secure) fusion algorithm.
+%  \item Efficiency: The performance of the fusion algorithm when all sensors are benign.
+%          \begin{align*}
+%    \liminf_{k\rightarrow\infty} - \frac{\log \max\{\pr(f_k=1|0),\pr(f_k=0|1)\}}{k}
+%  \end{align*}
+%  \item What is best achievable trade-off between security and efficiency?
+%  \end{itemize}
+%\end{frame}
+%
+%
+%
+%
+%
+%
+%\begin{frame}{General Case}
+%      \begin{center}
+%        \inputtikz{fun_lim}
+%      \end{center}
+%\vspace{-5mm}
+%$C$: biggest contribution that one healthy sensor can provide
+%         \begin{align*}
+%    C\triangleq \liminf_{k\rightarrow\infty} - \frac{\log \max\{\pr(f^*_k=1|0),\pr(f^*_k=0|1)\}}{k}
+%  \end{align*}
+%  where $f^*$ is the classic probability ratio test.
+%\end{frame}
+
+\begin{frame}{Binary Hypothesis Testing Under Attack}
+  \begin{center}
+    \setlength{\figureheight}{2cm}
+    \setlength{\figurewidth}{10cm}
+    \inputtikz{blockdiagram}
+  \end{center}
+\begin{itemize}
+  \item Up to $n$ sensors' measurements arbitrarily manipulated
+  \begin{enumerate}
+  \item Compromising the sensors' hardware/software
+  \item Hijacking the communication from sensors
+  \item Physical attacks
+  \end{enumerate}
+  \vspace{2mm}
+  \item The system knows $n$, but does not know what sensors are compromised.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Motivating Example: Classic Probability Ratio Test}
+    \begin{center}
+    \setlength{\figureheight}{2cm}
+    \setlength{\figurewidth}{10cm}
+    \inputtikz{blockdiagram}
+  \end{center}
+\begin{itemize}
+  \item At each time $k$, classic probability ratio test runs as
+  \begin{align*}
+        \theta = \begin{cases}
+        0 & \text{if } \sum_{t=1}^{k}\sum_{i=1}^m L(\tilde y_i(t)) \leq 0\\
+        1 & \text{if } \sum_{t=1}^{k}\sum_{i=1}^m L(\tilde y_i(t)) > 0,
+        \end{cases}
+  \end{align*}
+  where $L(\tilde y_i(k))$ is the log-likelihood ratio.
+  \item Optimal without attacks
+\end{itemize}
+\begin{center}
+ \only <2> {\Large{ {\color{red}not secure at all}}}
+\end{center}
+\end{frame}
+
+\begin{frame}{Motivating Example: Trimmed Mean Algorithm}
+    \begin{center}
+    \setlength{\figureheight}{2cm}
+    \setlength{\figurewidth}{10cm}
+    \inputtikz{blockdiagram}
+  \end{center}
+\begin{itemize}
+  \item At each time $k$, trimmed mean algorithm runs as
+   \begin{enumerate}
+     \item Remove the measurements with the largest $n$ and smallest $n$ log-likelihood ratios;
+     \item Apply classic probability ratio test to the remaining $m-2n$ data
+   \end{enumerate}
+\end{itemize}
+\begin{center}
+ \only <2> {\Large{ {\color{red}too conservative?}}}
+\end{center}
+\end{frame}
+
+
+
+
+
+
+
+\begin{frame}{Tradeoff Between Security and Efficiency}
+  \begin{itemize}
+  \item Security: The performance of the information fusion algorithm when under attack
+        \begin{align*}
+    \liminf_{k\rightarrow\infty} - \frac{\log \max_{g,\theta} \pr(f_k\neq \theta|\theta)}{k}
+  \end{align*}
+ % \item However, there may be a cost associated with security, as we cannot use the optimal (but non-secure) fusion algorithm.
+  \item Efficiency: The performance of the fusion algorithm when all sensors are benign.
+          \begin{align*}
+    \liminf_{k\rightarrow\infty} - \frac{\log \max_{\theta} \pr(f_k\neq \theta|\theta)}{k}
+  \end{align*}
+  \item What is best achievable trade-off between security and efficiency?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Main Results}
+      \begin{center}
+        \inputtikz{fun_lim}
+      \end{center}
+\vspace{-5mm}
+$C$: biggest contribution that one healthy sensor can provide
+         \begin{align*}
+    C\triangleq    \liminf_{k\rightarrow\infty} - \frac{\log \max_{\theta} \pr(f_k^*\neq \theta|\theta)}{k}
+  \end{align*}
+  where $f^*$ is the classic probability ratio test.
+\end{frame}
+
+
+
+
+
+
+\begin{frame}{Proofs of Upper Bounds}
+\begin{itemize}
+\item The best achievable efficiency is $mC$.
+\begin{itemize}
+\item
+Classic probability ratio test
+\end{itemize}
+\visible<2->{\item  The best achievable security is $(m-2n)C$.
+\begin{itemize}
+\item
+The achievability is deferred
+\item The limit is shown by construct the following attack strategy.
+  \begin{center}
+    \setlength{\figureheight}{2cm}
+    \setlength{\figurewidth}{10cm}
+    \inputtikz{attack}
+  \end{center}
+green/red: healthy/compromised sensors\\
+circle/triangle: different distributions}
+\end{itemize}
+
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Fundamental Limits of Trade-off}
+\begin{itemize}
+\item Consider the following two hypotheses:
+  \begin{center}
+    \setlength{\figureheight}{2cm}
+    \setlength{\figurewidth}{10cm}
+    \inputtikz{lim1}
+  \end{center}
+Suppose that we aim to find a detector such that the following is minimized.
+\[\pr(f=1|0) + \phi\pr(f=0|1). \]
+
+\item Bayesian detection theory $\Longrightarrow$ fundamental relation between $\pr(f=1|0)$ and $\pr(f=0|1)$.
+
+\visible<2->{\item Efficiency $\leq \pr(f=1|0)$, Security $\leq \pr(f=0|1)$}
+\visible<3->{\item Vary $\phi$}
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Fundamental Limits of Trade-off: Cont'd}
+\begin{itemize}
+\item Consider the following two hypotheses:
+  \begin{center}
+    \setlength{\figureheight}{2cm}
+    \setlength{\figurewidth}{10cm}
+    \inputtikz{lim2}
+  \end{center}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Achievability}
+ There exists algorithms achieving the limits, i.e., the limit is tight.
+   \begin{enumerate}
+   \item Each of the $m$ measurements is mapped to \emph{nonnegative} numbers by two functions $I_0,I_1$.
+  \item If there are $m-n$ values of $I_0$ whose sum is ``small'' enough, then choose $\hat \theta = 0$.
+  \item If there are $m-n$ values of $I_1$ whose sum is ``small'' enough, then choose $\hat \theta = 1$.
+  \item Compare the average of log-likelihood ratios with 0 to decide if $\hat \theta = 0$ or $1$.
+  \end{enumerate}
+\end{frame}
+
+
+\begin{frame}{Intuitions of the Algorithm}
+ \begin{itemize}
+   \item  Nonnegative mapping.
+     \begin{center}
+    \setlength{\figureheight}{2cm}
+    \setlength{\figurewidth}{10cm}
+    \inputtikz{nonnegative}
+  \end{center}
+  \item Safe kernel
+       \begin{center}
+    \setlength{\figureheight}{2cm}
+    \setlength{\figurewidth}{10cm}
+    \inputtikz{safekernel}
+  \end{center}
+  \end{itemize}
+\end{frame}
+
+
+
+
+
+
+\begin{frame}{Gaussian Cases}
+\begin{itemize}
+\item The best security $(m-2n)C$ and the best efficiency $mC$ are achieved simultaneously
+\item Security is cost-free
+\begin{itemize}
+  \item Computational burden: $O(m)$ versus $O(m\log m)$
+\end{itemize}
+\item More than Gaussian: ``symmetric" distributions. There exists a constant $a$ such that for any Borel measurable set $\mathcal A$,
+\begin{align*}
+  \mu(a+\mathcal A) = \nu (a-\mathcal A).
+\end{align*}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Non-Asymptotic Performance}
+      \begin{center}
+        \inputtikz{finite_time}
+      \end{center}
+\end{frame}
+
+
+
+\begin{frame}{Secure Sensors}
+\begin{itemize}
+\item A subset of sensors are well protected and cannot be compromised.
+\item Trade-offs?
+\item Similar ideas to prove limits and design algorithm?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Fundamental Trade-off when There are Secure Sensors}
+$m_s$ normal sensors are replaced with secure ones.
+\begin{itemize}
+\item $2n \leq m-m_s$: nothing affected
+\begin{itemize}
+  \item The redundancy of the $m-m_s$ normal sensors is enough
+\end{itemize}
+\item $2n > m-m_s$: the trade-off limit remains, and the maximum security level is increased from $\max(0,(m-2n)C)$ to $m_sC$
+\item Do nothing or secure more than $m-2n$ sensors
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Detection Algorithm when There are Secure Sensors}
+   \begin{enumerate}
+   \item Mapping by nonnegative functions $I_0,I_1$.
+  \item Sum $I_0$ of the $m_s$ secure sensors and any $m-m_s-n$ of $I_0$ of the $m-m_s$ normal sensors, if there exist one ``small'' enough, then choose $\hat \theta = 0$.
+  \item Sum $I_1$ of the $m_s$ secure sensors and any $m-m_s-n$ of $I_1$ of the $m-m_s$ normal sensors, if there exist one ``small'' enough, then choose $\hat \theta = 1$.
+  \item Compare with $0$.
+  \end{enumerate}
+\end{frame}
+
+
+
+
+%\begin{frame}{Unknown Number of Compromised Sensors}
+%   \begin{itemize}
+%     \item The number of sensors being attacked, $n_a$,  is in a set, size of which is more than $2$
+%     \item $n_a\in\{0,n\}$ for security/efficiency case
+%     \item Trade-offs among these ``multi-level" detection performances?
+%   \end{itemize}
+%\end{frame}
+%
+%\begin{frame}{Fundamental Trade-off and Algorithm when the Number of Compromised Sensors is Unknown}
+%   \begin{itemize}
+%     \item Pairwise trade-off for any two $n_a$ $\Longrightarrow$  trade-off on the whole set
+%     \item Pairwise trade-off is obtained using the aforementioned idea
+%   \visible<2->{  \item The algorithm achieving the ``multi-level" limits is:
+%   \begin{enumerate}
+%   \item Mapping by two nonnegative functions $I_0,I_1$.
+%   \item For any sequence of $n_a\geq 1$ in the set,
+%   \begin{itemize}
+%  \item If there are $m-n_a$ values of $I_0$ whose sum is ``small'' enough, then choose $\hat \theta = 0$.
+%  \item If there are $m-n_a$ values of $I_1$ whose sum is ``small'' enough, then choose $\hat \theta = 1$.
+%  \end{itemize}
+%  \item Compare with $0$
+%  \end{enumerate}}
+%   \end{itemize}
 %\end{frame}
 
 
@@ -773,871 +1456,11 @@ One can prove the following:
 \item If there is an attack and less than one half of the sensors are malicious, then the estimator is still stable.
 \end{enumerate}
 \end{frame}
-% \section{Hypothesis Testing}
-% 
-% \frame{\tableofcontents[currentsection]}
-% \begin{frame}{A Classical Hypothesis Testing Problem}
-%   \begin{itemize}
-%   \item We want to decide whether the state $\theta$ is $-1$ or $1$.
-%     \begin{align*}
-%       \theta=\begin{cases}
-%         -1 &\text{w.p.~}0.5\\
-%         +1 &\text{w.p.~}0.5\\
-%       \end{cases}
-%     \end{align*}
-%   \item $m$ sensors are measuring the state: $z_i(k)\sim\mathcal N(\theta,1)$.
-%   \item Let us define 
-%     \begin{displaymath}
-%       z(k) = \begin{bmatrix}z_1(k)&\dots&z_m(k)\end{bmatrix},\,Z(k) = \begin{bmatrix}z(1)&\dots&z(k)\end{bmatrix}.
-%     \end{displaymath}
-%   \item A detector at time $k$  is a function $f_k:\mathbb R^{mk}\rightarrow \{-1,1\}$.
-%   \item A detection strategy is an infinite sequence of detectors $f = (f_1,\,f_2,\,\dots)$.
-%   \end{itemize}
-% \end{frame}
-% 
-% \begin{frame}{A Classical Hypothesis Testing Problem}
-%   \begin{center}
-%     \setlength{\figureheight}{2cm}
-%     \setlength{\figurewidth}{10cm}
-%     \inputtikz{gaussian}
-%   \end{center}
-%   
-%   Without the attacker, it is well-known that the optimal detector with minimum detection error is a Naive Bayes Detector:
-%   \begin{align*}
-%     \hat \theta(k)=f_k(Z(k))=\begin{cases}
-%       -1 &\text{if }\sum_{i=1}^m\sum_{t=1}^k z_i(t)/mk < 0\\
-%       +1 &\text{if }\sum_{i=1}^m\sum_{t=1}^k z_i(t)/mk \geq 0\\
-%     \end{cases}.
-%   \end{align*}
-%   
-%   However, the Naive Bayes Detector is not secure. Suppose the attacker compromise one sensor. Thus, it can manipulate the summation arbitrarily. Hence, it has full control over $\hat \theta$. 
-% \end{frame}
-% 
-% 
-% \begin{frame}{Attack Model}
-%   The attacker compromised $p$ sensors, the set of which is denoted as $\mathcal I$. The detector knows $p$, but does not know $\mathcal I$.
-%   \begin{displaymath}
-%     y(k) = z(k) + a(k),  
-%   \end{displaymath}
-%   where $a_i(k) = 0$ if $i\notin \mathcal I$.
-%   
-%   We consider different information set $\mathcal G(k)$ of the attacker at time $k$:
-%   \begin{itemize}
-%   \item Weak Attack Model: The attacker knows only the measurements of the compromised sensors, i.e., $\mathcal G(k) = Z_{\mathcal I}(k)$.
-%   \item Strong Attack Model: The attacker knows the measurements of all sensors, i.e., $\mathcal G(k) = Z(k)$. 
-%   \end{itemize}
-%   The disturbance $a(k)$ depends on the information set $\mathcal Z(k)$ and $\mathcal I$: 
-%   \begin{displaymath}
-%     a(k) = g_k(\mathcal G(k),\mathcal I). 
-%   \end{displaymath}
-%   The attack strategy $g = (g_1,\,g_2,\,\dots)$.
-% \end{frame}
-% 
-% \begin{frame}{Performance: Probability of Error}
-%   \begin{itemize}
-%   \item The probability of error at time $k$ is denoted as
-%     \begin{displaymath}
-%       P_e(k) = \max_{\mathcal I}\; P(f_k(Y(k)) \neq \theta). 
-%     \end{displaymath}
-%   \item Clearly, $P_e(k)$ is a function of the detection strategy $f$ and the attack strategy $g$.
-%   \item  In general, for a fixed $k$, optimizing $P_e(k)$ directly (either from the system's perspective or the attacker's perspective) is difficult.
-%   \item As a result, we will focus on the asymptotic performance when $k\rightarrow\infty$.
-%   \end{itemize}
-% \end{frame}
-% 
-% \begin{frame}{Chernoff Information}
-%   \begin{itemize}
-%   \item Suppose $m = 1$ and $p = 0$, the Naive Bayes Detector takes the following form:
-%     \begin{align*}
-%       \hat \theta(k)=f_k(Z(k))=\begin{cases}
-%         -1 &\text{if }\sum_{t=1}^k z_1(t)/k < 0\\
-%         +1 &\text{if }\sum_{t=1}^k z_1(t)/k \geq 0\\
-%       \end{cases}.
-%     \end{align*}
-%   \item By LLN, the probability of error goes to $0$.
-%   \item Moreover, it goes to $0$ exponentially fast, i.e.,
-%     \begin{displaymath}
-%       \lim_{k\rightarrow\infty}-\frac{\log P_e(k)}{k} = \max_{0<\alpha<1} -\log \int_{-\infty}^\infty \left(\frac{p^-(x)}{p^+(x)}\right)^\alpha p^+(x) dx = \frac{1}{2}.
-%     \end{displaymath}
-%   \item For general $m$ with $p = 0$, the probability of error for the Naive Bayes Detector satisfies:
-%     \begin{displaymath}
-%       P_e(k)\sim e^{-\frac{1}{2}mk}.
-%     \end{displaymath}
-%   \end{itemize}
-% \end{frame}
-% 
-% \begin{frame}{Asymptotic Performance}
-%   \begin{itemize}
-%   \item In adversarial environment, let us define the rate function $I$ as
-%     \begin{displaymath}
-%       I = \liminf_{k\rightarrow\infty} -\frac{\log P_e(k)}{k}.
-%     \end{displaymath}
-%     Roughly speaking, 
-%     \begin{displaymath}
-%       P_e(k)\sim e^{-Ik}. 
-%     \end{displaymath}
-%     Larger rate implies better detection performance.
-%   \item  $I$ is a function of both detection strategy $f$ and attack strategy $g$.
-%   \item The detector wants to maximize $I$ while the attacker wants to minimize $I$.
-%   \item Our goal is to find a Nash-equilibrium $(f^*,g^*)$, such that
-%     \begin{displaymath}
-%       I(f^*,g)\geq I(f^*,g^*) \geq I(f,g^*).	
-%     \end{displaymath}
-%   \end{itemize}
-% \end{frame}
-% 
-% \begin{frame}{Nash-equilibrium when $m \leq 2p$}
-%   \it Theorem: For both weak and strong attack model, the following strategy pair $(f^*,g^*)$ is a Nash-equilibrium with $I(f^*,g^*) = 0$:
-%   \begin{block}{Attack Strategy $g^*$}
-%     \begin{enumerate}
-%     \item Flip $m-p$ compromised sensors' measurements.
-%     \item Set the rest $2p-m$ compromised sensors' measurements to $0$. 
-%     \end{enumerate}
-%     For example, if $m=3$ and $p=2$, then the adversary should flip $1$ sensor and set the other sensor's readings to $0$.
-%   \end{block}
-%   \begin{block}{Detection Strategy $f^*$}
-%     $f_k = 1$ for all $k$.
-%   \end{block}
-% \end{frame}
-% \begin{frame}{Nash-Equilibrium when $m \geq 2p+1$}
-%   We need to define the following ``summation'' functions:
-%   \begin{definition}
-%     Define the symmetric functions $\Smin_{2p},\,\Smid_{2p},\,\Smax_{2p}:\mathbb R^{m}\rightarrow \mathbb R$ as  
-%     \begin{align*}
-%       \Smin_{2p}(x_1,\ldots,x_m) &\triangleq \sum_{i=1}^{m-2p}x_i,\\
-%       \Smid_{2p}(x_1,\ldots,x_m) &\triangleq \sum_{i=p+1}^{m-p}x_i,\\
-%       \Smax_{2p}(x_1,\ldots,x_m) &\triangleq \sum_{i=2p+1}^{m}x_i,
-%     \end{align*}
-%     when $x_1\leq \dots\leq x_m$.
-%   \end{definition}
-% \end{frame}
-% 
-% \begin{frame}{Nash-Equilibrium when $m \geq 2p+1$}
-%   \begin{itemize}
-%   \item If $\|x' - x\|_0\leq p$, then
-%     \begin{displaymath}
-%       \Smin_{2p}(x) \leq \Smid_{2p}(x')\leq \Smax_{2p}(x).
-%     \end{displaymath} 
-%   \item Assuming $m=5$, $p = 1$:
-%     \begin{center}
-%       \begin{tikzpicture}[semithick,>=latex]
-%         \draw [->] (0,0)--(10,0);
-%         \draw plot[mark=x] coordinates{(1,0)} node [above] {$x_1$};
-%         \draw plot[mark=x] coordinates{(2,0)} node [above] {$x_2$};
-%         \draw plot[mark=x] coordinates{(4,0)} node [above] {$x_3$};
-%         \draw plot[mark=x] coordinates{(5,0)} node [above] {$x_4$};
-%         \draw plot[mark=x] coordinates{(7,0)} node [above] {$x_5$};
-%         
-%         \draw [->] (0,-2)--(10,-2);
-%         \draw plot[mark=x] coordinates{(9,-2)} node [above] {$x_1'$};
-%         \draw plot[mark=x] coordinates{(2,-2)} node [above] {$x_2'$};
-%         \draw plot[mark=x] coordinates{(4,-2)} node [above] {$x_3'$};
-%         \draw plot[mark=x] coordinates{(5,-2)} node [above] {$x_4'$};
-%         \draw plot[mark=x] coordinates{(7,-2)} node [above] {$x_5'$};
-%         
-%         \draw [->,dashed] (1,0)--(1,-1)--(9,-1)--(9,-2);
-%         \begin{pgfonlayer}{background}
-%           \fill [fill=red!30] (3,-2.5) rectangle (8,-1.25);
-%           \node at (5.5,-2.3) {$\Smid_2(x')$};
-%           
-%           \fill [fill=blue!30] (3,-0.5) rectangle (8,0.75);
-%           \node at (5.5,-0.3) {$\Smax_2(x)$};
-%         \end{pgfonlayer}
-%       \end{tikzpicture}
-%     \end{center}
-%   \item $\Smid_{2p}$ is a more ``secure'' version of sum. 
-%   \end{itemize}
-% \end{frame}
-% 
-% 
-% \begin{frame}{Nash-Equilibrium when $m \geq 2p+1$}
-%   \it Theorem: For both weak and strong attack model, the following strategy pair $(f^*,g^*)$ is a Nash-equilibrium with $I(f^*,g^*) = (m-2p)/2$:
-%   \begin{block}{Attack Strategy $g^*$}
-%     Flip $p$ compromised sensors' measurements.
-%   \end{block}
-%   \begin{block}{Detection Strategy $f^*$}
-%     \begin{enumerate}
-%     \item For each sensor $i$, compute a local sum $ \Lambda_i(k) = \sum_{t=1}^k y_i(t)$.
-%     \item The detector $f_k$ is given by
-%       \begin{displaymath}
-%         f_k(Y(k)) = \begin{cases}
-%           -1 &\text{if }\Smid_{2p}(\Lambda(k))< 0\\
-%           1 &\text{if }\Smid_{2p}(\Lambda(k))\geq 0\\
-%         \end{cases}
-%       \end{displaymath}
-%     \item At each time step, the computation is $O(m)$.
-%     \end{enumerate}
-%   \end{block}
-% \end{frame}
-% 
-% \begin{frame}{Numerical Examples}
-%   We assume $m = 9$ and plot the probability of error for the equilibrium strategy for different $p$
-%   \begin{center}
-%     \setlength{\figureheight}{7cm}
-%     \setlength{\figurewidth}{12cm}
-%     \inputtikz{Perror}
-%   \end{center}
-% \end{frame}
-% 
-% \begin{frame}{What if the defender does not know $p$?}
-%   \begin{enumerate}
-%   \item Suppose the defender does not know $p$, and implement a detector assuming using $\Smid_{2p'}$.
-%   \item If $p' \geq p$, then the detector is still resilient to the attack, with rate $(m-p-p')/2$ (comparing to the optimal rate $(m-2p)/2$)
-%   \item If $p' < p$, then the detector is not resilient. The rate will be $0$.
-%   \end{enumerate}
-%   
-%   \centering
-%   \tikzsetnextfilename{unknownp}
-%   \begin{tikzpicture}
-%     \begin{axis}[%
-%       width=6cm,
-%       height=4cm,
-%       scale only axis,
-%       separate axis lines,
-%       every outer x axis line/.append style={black},
-%       every x tick label/.append style={font=\color{black}},
-%       xmin=0,
-%       xmax=5,
-%       xlabel={Number of Compromised Sensors},
-%       every outer y axis line/.append style={black},
-%       every y tick label/.append style={font=\color{black}},
-%       ymin=0,
-%       ymax=5,
-%       ylabel={Performance},
-%       axis background/.style={fill=white},
-%       legend style={at={(1.1,0.5)},anchor=west},
-%       ]
-%       \addplot [color=red,solid,mark=+]
-%       table[row sep=crcr]{%
-%       0	4.5\\
-%     };
-%       \addlegendentry{Naive Bayes};
-%       
-%       \addplot [color=blue,solid,mark=+]
-%       table[row sep=crcr]{%
-%       0	4\\
-%       1	3.5\\
-%     };
-%       \addlegendentry{$p' = 1$};
-%       
-%       \addplot [color=black,solid,mark=+]
-%       table[row sep=crcr]{%
-%       0	3.5\\
-%       1	3\\
-%       2	2.5\\
-%     };
-%       \addlegendentry{$p' = 2$};
-%       
-%       \addplot [color=green,solid,mark=+]
-%       table[row sep=crcr]{%
-%       0	3\\
-%       1	2.5\\
-%       2	2\\
-%       3	1.5\\
-%     };
-%       \addlegendentry{$p' = 3$};
-%       
-%       
-%       \addplot [color=brown,solid,mark=+]
-%       table[row sep=crcr]{%
-%       0	2.5\\
-%       1	2\\
-%       2	1.5\\
-%       3	1\\
-%       4	0.5\\
-%     };
-%       \addlegendentry{$p' = 4$};
-%       
-%       \addplot [color=gray,solid]
-%       table[row sep=crcr]{%
-%       0	4.5\\
-%       1	3.5\\
-%       2	2.5\\
-%       3	1.5\\
-%       4	0.5\\
-%     };
-%       \addlegendentry{Fundamental Limit};
-%     \end{axis}
-%   \end{tikzpicture}
-%   
-% \end{frame}
-
-%\section{Privacy Preserving Consensus}
-%\frame{\tableofcontents[currentsection]}
-%\begin{frame}{Centralized v.s. Distributed Algorithm}
-%  \begin{figure}[<+htpb+>]
-%    \begin{center}
-%      \includegraphics[width=0.50\textwidth]{centralized.jpg}
-%    \end{center}
-%  \end{figure}
-%  Benefit of distributed algorithm: Reliability, Scalability, Transparency, Incremental Growth, Privacy
-%\end{frame}
-%
-%\begin{frame}{Preliminary: Average Consensus}
-%  \begin{itemize}
-%  \item We model the network composed of $n$ agents as an \emph{undirected} and \emph{connected} graph $G = \{V,\,E\}$.
-%  \item Define the neighborhood of sensor $i$ as $\mathcal N(i)$.
-%  \item Each agent has an initial scalar state $x_{i}(0)$.
-%  \item Update equation:
-%    \begin{displaymath}
-%      x_i(k+1) = a_{ii} x_{i}(k) + \sum_{j\in \mathcal N(i)} a_{ij} x_{j}(k).  
-%    \end{displaymath}
-%  \item Update equation in matrix form:
-%    \begin{displaymath}
-%      x(k+1) = A x(k),
-%    \end{displaymath}
-%    where we assume that $A$ is \emph{symmetric}.
-%  \end{itemize}
-%\end{frame}
-%
-%\begin{frame}{Preliminary: Average Consensus}
-%  Define the average vector as
-%  \begin{displaymath}
-%    \bar x\triangleq \frac{\mathbf 1' x(0)}{n} \mathbf 1.
-%  \end{displaymath}
-%  The following conditions are necessary and sufficient for all the agents to reach average consensus:
-%  \begin{enumerate}
-%  \item[(A1)] $ \lambda_1 = 1$ and  $|\lambda_i| < 1$ for all $i = 2,\ldots, n$.
-%  \item[(A2)] $A\mathbf 1 = \mathbf 1$, i.e., $\mathbf 1$ is an eigenvector of $A$.
-%  \end{enumerate}
-%\end{frame}
-%
-%\begin{frame}{Applications of Consensus}
-%  \begin{itemize}
-%  \item Dynamic load balancing;
-%  \item Vehicle formation control;
-%  \item Rendezvous problem;
-%  \item Social network;
-%  \item Clock Synchronization;
-%  \item Localization;
-%  \item Distributed Estimation;
-%  \item Distributed Optimization;
-%  \item \dots
-%  \end{itemize}
-%\end{frame}
-%
-%\begin{frame}{Challenges}
-%  \begin{itemize}
-%  \item Malicious Attacker: What if some agent do not follow the update rule:
-%    \begin{displaymath}
-%      x_i(k+1) = a_{ii} x_{i}(k) + \sum_{j\in \mathcal N(i)} a_{ij} x_{j}(k).  
-%    \end{displaymath}
-%
-%    \emph{(Pasqualetti, Bicchi and Bullo, 2012)}: If there are $k$ malicious agents, then
-%    \begin{itemize}
-%    \item a benign node can detect the presence of malicious agents if the size of the minimum cut of the graph is at least $k + 1$.
-%    \item a benign node can identify the set of the malicious agents if the size of the minimum cut of the graph is at least $2k + 1$.
-%    \end{itemize} 
-%
-%  \item Curious Attacker: What if an agent wants to infer the initial state of other agents?
-%  \item Malicious \& Curious Attacker?: Separation principle.
-%  \end{itemize}
-%\end{frame}
-%
-%\begin{frame}{Privacy Concerns}
-%  \begin{itemize}
-%  \item Without loss of generality, we consider agent $n$ wants to estimate the initial states of other agents.
-%  \item Denote the neighborhood of agent $n$ as
-%    \begin{displaymath}
-%      \mathcal N(n) = \{j_1,\dots,j_m\}.
-%    \end{displaymath}
-%  \item Define
-%    \begin{displaymath}
-%      \begin{split}
-%        C &\triangleq \begin{bmatrix}
-%          e_{j_1}&\dots&e_{j_m}&e_n
-%        \end{bmatrix}' \in \mathbb R^{(m+1)\times n},\\
-%        y(k)&\triangleq \begin{bmatrix}x_{j_1}(k)&\dots&x_{j_m}(k)&x_n(k)
-%        \end{bmatrix}=Cx(k).
-%      \end{split}
-%    \end{displaymath}
-%  \item The information set for agent $n$ at time $k$ is 
-%    \begin{displaymath}
-%      \mathcal I(k) = \{y(0),\dots,y(k)\}. 
-%    \end{displaymath}
-%  \end{itemize}
-%\end{frame}
-%
-%\begin{frame}{Privacy Concerns}
-%  For agent $n$, the problem becomes a standard estimation problem of the following linear system: 
-%  \begin{displaymath}
-%    x(k+1) = A x(k),\,y(k) = C x(k). 
-%  \end{displaymath}
-%  Since the system is noiseless, if $x_i$ is in the observable space of $(A,C)$, then agent $n$ can perfectly recover the initial state $x_i(0)$ of agent $i$. 
-%
-%  \alert{The privacy of agent $i$ is breached.}
-%\end{frame}
-%
-%\begin{frame}{Example}
-%  \begin{center}
-%    \begin{tikzpicture}
-%      \node (n4) at (0,0) [circle,draw=caltechcolor!50,fill=caltechcolor!20,thick] {4};
-%      \node (n1) at (0,1.5cm) [circle,draw=caltechcolor!50,fill=caltechcolor!20,thick] {1};
-%      \node (n3) at (1.5cm,0) [circle,draw=caltechcolor!50,fill=caltechcolor!20,thick] {3};
-%      \node (n2) at (1.5cm,1.5cm) [circle,draw=caltechcolor!50,fill=caltechcolor!20,thick] {2};
-%      \draw [semithick] (n1)--(n2)--(n3)--(n4)--(n1);
-%    \end{tikzpicture}
-%  \end{center}
-%  \begin{enumerate}
-%  \item At time step $0$, agent $4$ knows $x_1(0)$ and $x_3(0)$.
-%  \item At time step $1$, agent $4$ knows $x_1(1)$, which is
-%    \begin{align*}
-%      x_1(1) = a_{11}x_1(0)+a_{14}x_4(0)+a_{12}x_2(0).    
-%    \end{align*}
-%  \end{enumerate}
-%
-%  For agent $4$, it can infer all the initial state $x(0)$ in two steps.
-%
-%\end{frame}
-%
-%
-%\begin{frame}{Privacy Preserving Average Consensus}
-%  \begin{enumerate}
-%  \item At time $k$, each agent generates a standard normal distributed random variable $v_i(k)$ with mean $0$ and variance 1. We assume that all the random variables $\{v_i(k)\}_{i=1,\dots,n,\,k=0,1,\dots}$ are jointly independent.
-%  \item Each agent then adds a random noise $w_i(k)$ to its state $x_i(k)$, where
-%    \begin{displaymath}
-%      w_i(k) = \begin{cases}
-%        v_i(0)&\text{, if }k = 0\\
-%        \varphi^kv_i(k)-\varphi^{k-1}v_i(k-1)&\text{, otherwise}
-%      \end{cases},
-%      \label{eq:addednoise}
-%    \end{displaymath}
-%    where $0<|\varphi|<1$ is a constant for all agents. Define the new state to be $x_{i}^+(k)$, i.e.,
-%    \begin{displaymath}
-%      x_{i}^+(k) = x_i(k) + w_i(k).  
-%      \label{eq:noisestep}
-%    \end{displaymath}
-%  \item Each agent then communicates with its neighbors and update its state to the average value, i.e.,
-%    \begin{displaymath}
-%      x_i(k+1) = a_{ii}x_i^+(k)+\sum_{j\in \mathcal N(i)}a_{ij}x_{j}^+(k).
-%      \label{eq:consensusstep}
-%    \end{displaymath}
-%  \item There is no requirement for additional communication.
-%  \end{enumerate}
-%\end{frame}
-%
-%\begin{frame}{Privacy Preserving Average Consensus}
-%  \begin{figure}[ht]
-%    \begin{center}
-%      \begin{tikzpicture}
-%        \node [label=above:$k:$] at (-1.5,0) {};
-%        \node [label=above:$0$] at (0,0) {};
-%        \node [label=above:$1$] at (3,0) {};
-%        \node [label=above:$2$] at (6,0) {};
-%        \node [label=above:$3$] at (9,0) {};
-%        \node [] at (-1.5,-2) {$w_i(k):$};
-%        \node [] (n0) at (0,-2){$v_i(0)$}; 
-%        \node [] (n1) at (3,-2){$\begin{array}{c}\textcolor{red}{\varphi v_i(1)}\\+\\- v_i(0)\end{array}$}; 
-%        \node [] (n2) at (6,-2){$\begin{array}{c}\textcolor{blue}{\varphi^2 v_i(2)}\\+\\\textcolor{red}{- \varphi v_i(1)}\end{array}$}; 
-%        \node [] (n3) at (9,-2){$\begin{array}{c}\textcolor{caltechcolor}{\varphi^3 v_i(3)}\\+\\\textcolor{blue}{ -\varphi^2 v_i(2)}\end{array}$}; 
-%        \draw [->,thick] (n0)--(n1);
-%        \draw [->,thick] (n1)--(n2);
-%        \draw [->,thick] (n2)--(n3);
-%      \end{tikzpicture}
-%    \end{center}
-%  \end{figure}
-%\end{frame}
-%
-%\begin{frame}{Privacy Preserving Average Consensus}
-%  \begin{itemize}
-%  \item Update equation in matrix form:
-%    \begin{displaymath}
-%      x(k+1) =Ax^+(k)= A(x(k) + w(k)).
-%    \end{displaymath}
-%  \item Agent $n$ only receives a noisy version of the state:
-%    \begin{displaymath}
-%      y(k) = C x^+(k) = C(x(k)+w(k)).	
-%    \end{displaymath}
-%  \end{itemize}
-%\end{frame}
-%
-%\begin{frame}{Performance Metric}
-%  Define the error vector as
-%  \begin{displaymath}
-%    e(k) \triangleq x(k) - \bar x.
-%  \end{displaymath}
-%  Define the mean square convergence rate as
-%  \begin{displaymath}
-%    \rho \triangleq \limsup_{k\rightarrow\infty} \left( \sup_{z(0)\neq 0}\frac{\mathbb E_v e(k)'e(k)}{e(0)'e(0)}\right)^{1/k},
-%  \end{displaymath}
-%\end{frame}
-%
-%\begin{frame}{Performance Metric}
-%  \begin{itemize}
-%  \item The new information set of agent $n$ at time $k$ is
-%    \begin{displaymath}
-%      \mathcal I(k) \triangleq \{x_n(0),y(0),\dots,y(k)\}.
-%    \end{displaymath}
-%  \item Denote the maximum likelihood estimate of $x(0)$ given $\mathcal I(k)$ as $\hat x(0|k)$, the covariance of which is defined as $P(k)$.
-%
-%  \item  Clearly, $\mathcal I(k)\subset \mathcal I(k+1)$, which implies $P(k)\geq P(k+1)$. Hence, we can define
-%
-%    \begin{displaymath}
-%      P = \lim_{k\rightarrow\infty} P(k). 
-%    \end{displaymath}
-%
-%    $P$ is best estimation performance that can be achieved by agent $n$ (with infinite observations).
-%
-%  \item If $P_{ii} = 0$, then agent $n$ can infer the initial state $x_i(0)$ of agent $i$ without any error (asymptotically).
-%
-%  \end{itemize}
-%  Our goal is to make $\rho$ \emph{small}, while making $P$ \emph{large}.
-%\end{frame}
-%
-%\begin{frame}{Convergence Result}
-%  \begin{theorem}
-%    For any initial condition $x(0)$, $x(k)$ converges to $\bar x$ in the mean square sense. Furthermore, the mean square convergence rate $\rho$ equals
-%    \begin{displaymath}
-%      \rho = \max(|\varphi|^2,|\lambda_2|^2,|\lambda_n|^2).
-%    \end{displaymath}
-%  \end{theorem}
-%  If we choose $\varphi$ to be small enough, then the added noise will not deteriorate the consensus speed.
-%\end{frame}
-%
-%% \begin{frame}{Reduced System}
-%%   \begin{itemize}
-%%   \item Define $\tilde x(k) = \begin{bmatrix} x_1(k)&\dots&x_{n-1}(k) 
-%%     \end{bmatrix}$. 
-%%   \item $\tx(k)$ follows:
-%%     \begin{displaymath}
-%%       \tx(k+1) = \tA \tx^+(k) + \zeta x_n^+(k),
-%%     \end{displaymath}
-%%     where $\tA\in \mathbb R^{(n-1)\times(n-1)}$ is the principal minor of $A$ by removing the last row and column
-%%   \item Similarly, we can define
-%%     \begin{displaymath}
-%%       \ty = \begin{bmatrix}\tx^+_{j_1}(k)&\dots&\tx^+_{j_m}(k)
-%%       \end{bmatrix} = \tC \tx^+(k) .
-%%     \end{displaymath}
-%%   \item We assume that $(\tA,\tC)$ is observable, otherwise we can do a Kalman decomposition and only consider the observable space.
-%%   \end{itemize}
-%% \end{frame}
-%% 
-%% \begin{frame}{Reduced System}
-%%   \begin{theorem}
-%%     $\tilde A$ is strictly stable, i.e., $\|\tA\|<1$. 
-%%   \end{theorem}
-%%   \begin{itemize}
-%%   \item Consider the following $n-1$ by $n-1$ symmetric matrix
-%%     \begin{displaymath}
-%%       \mathcal S = (I-\tA)^{-1}\tC'\tC(I-\tA)^{-1}
-%%     \end{displaymath}
-%%   \item $I-\tA$ is invertible, $\tC$ is of rank $m$. Hence $\rank(\mathcal S) = m$. 
-%%   \item Let $\psi_1,\dots,\psi_{n-1}\in \mathbb R^{n-1}$ be the eigenvectors of $\mathcal S$. 
-%%   \item Assume that the eigenvalues corresponding to $\{\psi_1,\dots,\psi_m\}$ are non-zero and the eigenvalues corresponding to $\{\psi_{m+1},\dots,\psi_{n-1}\}$ are zero. 
-%%   \item Define
-%%     \begin{align}
-%%       \mathcal Q_1&\triangleq \begin{bmatrix}
-%%         \psi_1&\dots&\psi_m
-%%       \end{bmatrix}\in \mathbb R^{(n-1)\times m},\\
-%%       \mathcal Q_2& \triangleq \begin{bmatrix}
-%%         \psi_{m+1}&\dots&\psi_{n-1}
-%%       \end{bmatrix}\in \mathbb R^{(n-1)\times (n-m-1)}.
-%%     \end{align}
-%%   \end{itemize}
-%% \end{frame}
-%
-%\begin{frame}{Estimation Performance}
-%  \begin{theorem}
-%    Suppose that $0<\varphi<1$. $P$ is given by the following equality:
-%    \begin{displaymath}
-%      P =\begin{bmatrix}
-%        \mathcal Q_2\left[\mathcal Q_2'(I-\tA)^{-1}Y(I-\tA)^{-1}\mathcal Q_2\right]^{-1} \mathcal Q_2'&\mathbf 0\\
-%        \mathbf 0'&0
-%      \end{bmatrix}
-%    \end{displaymath}
-%    where $ Y = \lim_{k\rightarrow\infty} Y(k)$ is the limit of the following recursive Riccati equations:
-%    \begin{align*}
-%      Y(0)& = \tA \mathcal U \tA,\\
-%      Y(k+1) &=\tA \mathcal U\tA  +\varphi^{-2}\tA&\left[ Y^+(k) -  Y^+(k)\left(\varphi^2 I+Y^+(k) \right)^{-1}Y^+(k)\right]\tA,
-%    \end{align*}
-%    where
-%    \begin{displaymath}
-%      Y^+(k) = \mathcal V Y(k) \mathcal V.
-%    \end{displaymath}
-%  \end{theorem}
-%\end{frame}
-%
-%% \begin{frame}{Estimation Performance}
-%%   \begin{theorem}[Cont.]
-%%     Furthermore, the following inequalities hold:
-%%     \begin{displaymath}
-%%       \left( 1+\frac{\|\tA\|}{\varphi}\right)^{-2} \begin{bmatrix}
-%%         \Delta &\mathbf 0\\
-%%         \mathbf 0'&0
-%%       \end{bmatrix}\leq P \leq \left( 1-\frac{\|\tA\|}{\varphi}\right)^{-2} \begin{bmatrix}
-%%         \Delta &\mathbf 0\\
-%%         \mathbf 0'&0
-%%       \end{bmatrix}
-%%     \end{displaymath}
-%%     where
-%%     \begin{displaymath}
-%%       \Delta \triangleq \mathcal Q_2\left[\mathcal Q_2'(I-\tA)^{-1}\mathcal X(I-\tA)^{-1}\mathcal Q_2\right]^{-1} \mathcal Q_2',
-%%     \end{displaymath}
-%%     and $\mathcal X$ is the unique solution of the following Lyapunov equation
-%%     \begin{displaymath}
-%%       \mathcal X = \tA \mathcal X\tA /\varphi^2+  \tA\tC'\tC\tA . 
-%%     \end{displaymath}
-%%   \end{theorem}
-%% \end{frame}
-%\begin{frame}{Estimation Performance}
-%  Define the essential neighborhood of sensor $i$ as 
-%  \begin{displaymath}
-%    \mathcal N_e(i) \triangleq \{j\in V:j\neq i,\,a_{ij}\neq 0\}.
-%  \end{displaymath}
-%  Node $j$ is called a super neighbor of $i$ if
-%  \begin{enumerate}
-%  \item $j$ is a neighbor of $i$.
-%  \item $j$ is also a neighbor of all $i$'s essential neighbors.
-%  \end{enumerate}
-%
-%  \begin{theorem}
-%    The $i$th node's privacy is breached to node $j$ if and only if $j$ is a super neighbor of $i$.
-%  \end{theorem}
-%  The condition is can be checked \alert{locally}. In other words, your initial state can only be leaked to your neighbors.
-%\end{frame}
-%\begin{frame}{Estimation Performance}
-%  \begin{center}
-%    \begin{tikzpicture}
-%      \node (n4) at (-1.5cm,0) [circle,draw=caltechcolor!50,fill=caltechcolor!20,thick] {4};
-%      \node (n5) at (0,0) [circle,draw=caltechcolor!50,fill=caltechcolor!20,thick] {5};
-%      \node (n1) at (0,1.5cm) [circle,draw=caltechcolor!50,fill=caltechcolor!20,thick] {1};
-%      \node (n3) at (1.5cm,0) [circle,draw=caltechcolor!50,fill=caltechcolor!20,thick] {3};
-%      \node (n2) at (1.5cm,1.5cm) [circle,draw=caltechcolor!50,fill=caltechcolor!20,thick] {2};
-%      \draw [semithick] (n5)--(n1)--(n2)--(n3)--(n5)--(n4);
-%    \end{tikzpicture}
-%  \end{center}
-%  \begin{displaymath}
-%    \mathcal N(5)\bigcup \{5\} = \{1,3,4,5\}. 
-%  \end{displaymath}
-%  \begin{displaymath}
-%    \mathcal N(4)\bigcup \{4\} = \{4,5\}. \text{ Agent 5 can perfectly infer }x_4(0).
-%  \end{displaymath}
-%  \begin{displaymath}
-%    \mathcal N(1)\bigcup \{1\} = \{1,2,5\}.\text{ Agent 5 cannot perfectly infer }x_1(0)\text{ if }a_{12}\neq 0. 
-%  \end{displaymath}
-%\end{frame}
-%
-%% \begin{frame}{Estimation Performance}
-%%   \begin{center}
-%%     \begin{tikzpicture}
-%%       \node (n4) at (0,0) [circle,draw=caltechcolor!50,fill=caltechcolor!20,thick] {4};
-%%       \node (n1) at (0,1.5cm) [circle,draw=caltechcolor!50,fill=caltechcolor!20,thick] {1};
-%%       \node (n3) at (1.5cm,0) [circle,draw=caltechcolor!50,fill=caltechcolor!20,thick] {3};
-%%       \node (n2) at (1.5cm,1.5cm) [circle,draw=caltechcolor!50,fill=caltechcolor!20,thick] {2};
-%%       \draw [semithick] (n1)--(n2)--(n3)--(n4)--(n1);
-%%     \end{tikzpicture}
-%%   \end{center}
-%%   Assume $a_{ii} = a_{ij} = 1/3$, then agent $4$ can perfectly recover
-%%   \begin{displaymath}
-%%     x_4(0),\,x_1(0) + x_2(0) + x_3(0),\,x_1(0) - x_3(0).
-%%   \end{displaymath}
-%%   However, agent $4$ cannot infer $x_1(0)$, $x_2(0)$, $x_3(0)$ perfectly.
-%% \end{frame}
-%
-%\begin{frame}{Fundamental Limitation}
-%  \begin{itemize}
-%  \item If $P_{ii}=0$ using our average consensus algorithm, it is possible to design another noise sequence $\{w_i(k)\}$ to make $P_{ii}\neq 0$?
-%
-%  \item Consider a more general noise model:
-%    \begin{enumerate}
-%    \item $\mathbb Ew_i(k) = 0$.
-%    \item $\mathbb Ew_i(k_1)w_j(k_2) = 0$, when $i\neq j$.
-%    \end{enumerate}
-%  \item The second condition implies that the sensors are not collaborating.
-%  \end{itemize}
-%\end{frame}
-%
-%\begin{frame}{Fundamental Limitation}
-%  \begin{theorem}
-%    $x(k)$ converges to $\bar x$ in the mean squared sense, i.e.,
-%    \begin{displaymath}
-%      \lim_{k\rightarrow\infty}\mathbb E  \,\|x(k)-\bar x\|^2 = 0,
-%    \end{displaymath}
-%    implies that for each agent $i$:
-%    \begin{displaymath}
-%      \lim_{k\rightarrow\infty}\mathbb E \,\left(\sum_{t=0}^k w_i(t)\right)^2  = 0, \,\forall i=1,\dots,n.
-%    \end{displaymath}
-%
-%  \end{theorem}
-%  Since the sensors are not collaborating, average consensus is achieved if and only if the noise from each sensor sums to 0 asymptotically (in the mean squared sense).
-%\end{frame}
-%
-%\begin{frame}{Fundamental Limitation}
-%  \begin{theorem}
-%    Suppose that
-%    \begin{align*}
-%      \lim_{k\rightarrow\infty}\mathbb E \,\left(\sum_{t=0}^k w_i(t)\right)^2  = 0, \,\forall i=1,\dots,n.
-%    \end{align*}
-%    Then $i$th node's privacy is breached to node $j$ \emph{if} $j$ is a super neighbor of $i$.
-%  \end{theorem}
-%
-%  Comparing it to the previous theorem, we know that our proposed strategy achieves ``minimum'' privacy breach.
-%\end{frame}
-%
-%%% \subsection{Differential Privacy}
-%%% \begin{frame}{Differential Privacy}
-%%%   \begin{itemize}
-%%%   \item Denote the probability space generated by $\{v_i(k)\}$ as $(\Omega,\mathcal F,\mathbb P)$.
-%%%   \item Define $D = \mathbb R^n$ as the set of all possible initial condition $x(0)$.
-%%%   \item  Define a binary ``adjacency'' relation $\text{Adj}$ on $D$:
-%%%     \begin{displaymath}
-%%%       \text{Adj}(x^a(0),x^b(0)) \triangleq \begin{cases}
-%%%         1& \text{, if }\|x^a(0)-x^b(0)\|\leq d\\
-%%%         0&\text{, otherwise}
-%%%       \end{cases}.
-%%%     \end{displaymath}
-%%%   \item Let $\hat x_i(0|k)$ be the maximum likelihood estimate of the initial condition $x_i(0)$ of agent $i$ by agent $n$, given the information set $\mathcal I(k)$.
-%%%     \begin{align*}
-%         %%          \hat x_i(0|k) = x_i(0) + \varsigma_i(k),	
-%         %%        \end{align*}
-%         %%          where $\varsigma_i(k)$ is a zero mean normal R.V. with variance $P_{ii}(k)\geq P_{ii}$.
-%         %%          \item Clearly $\hat x_i(0|k)$ is a mapping from $D\times \Omega$ to $\mathbb R$, which can be written as
-%         %%          \begin{displaymath}
-%         %%          \hat x_i(0|k) = M_{i,k}(x(0),\,\omega),\,\text{where }x(0)\in D,\,\omega\in \Omega.
-%         %%          \end{displaymath}
-%         %%          \end{itemize}
-%         %%          \end{frame}
-%         %%          
-%         %%          \begin{frame}{Differential Privacy}
-%         %%          \begin{definition}
-%         %%          The mapping $M_{i,k}$ is called $(\varepsilon,\delta)$-differentially private for $\text{Adj}$ if for all Borel-measureable $S\subseteq\mathbb R$ and adjacent initial conditions $x^a(0),x^b(0)$, the following inequality holds:
-%         %%          \begin{displaymath}
-%         %%          \mathbb P(M_{i,k}(x^a(0),\omega)\in S) \leq e^\varepsilon \mathbb P(M_{i,k}(x^b(0),\omega)\in S) +\delta.
-%         %%          \end{displaymath}
-%         %%          \end{definition}
-%         %%          \end{frame}
-%
-%         %%          \begin{frame}{Relation with Differential Privacy}
-%         %%          \begin{theorem}
-%         %%          If $\varepsilon>0,0.5>\delta>0$ and
-%         %%          \begin{displaymath}
-%         %%          \frac{d}{2\varepsilon}(K + \sqrt{K^2+2\varepsilon})\leq P_{ii}, 
-%         %%          \label{eq:epsilondelta}
-%         %        \end{displaymath}
-%         %        where $K =  Q^{-1}(\delta)$ and 
-%         %        \begin{displaymath}
-%         %          Q(x) \triangleq \frac{1}{\sqrt{2\pi}}\int_x^\infty \exp\left(-\frac{u^2}{2}\right)du,
-%         %        \end{displaymath}
-%         %        then for any $k\geq 0$, the mapping $M_{i,k}$ is $(\varepsilon,\delta)$-differentially private for $\text{Adj}$. 
-%         %        \label{theorem:diffprivate}
-%         %      \end{theorem}
-%         %    \end{frame}
-%
-%\begin{frame}{Numerical Example}
-%  \begin{center}
-%    \begin{tikzpicture}
-%      \node (n4) at (0,0) [circle,draw=caltechcolor!50,fill=caltechcolor!20,thick] {4};
-%      \node (n1) at (0,1.5cm) [circle,draw=caltechcolor!50,fill=caltechcolor!20,thick] {1};
-%      \node (n3) at (1.5cm,0) [circle,draw=caltechcolor!50,fill=caltechcolor!20,thick] {3};
-%      \node (n2) at (1.5cm,1.5cm) [circle,draw=caltechcolor!50,fill=caltechcolor!20,thick] {2};
-%      \draw [semithick] (n1)--(n2)--(n3)--(n4)--(n1);
-%    \end{tikzpicture}
-%  \end{center}
-%  \begin{itemize}
-%  \item $a_{ii} = a_{ij} = 1/3$, for $j \in \mathcal N(i)$.
-%  \item $\|\tA\| = 0.805$. 
-%  \item We choose $\varphi = 0.9$.
-%  \end{itemize}
-%\end{frame}
-%
-%\begin{frame}{Numerical Example: Convergence Result}
-%  \begin{figure}[ht]
-%    \begin{center}
-%      \setlength{\figureheight}{5cm}
-%      \setlength{\figurewidth}{6cm}
-%      \inputtikz{convergence}
-%    \end{center}
-%  \end{figure}
-%\end{frame}
-%
-%\begin{frame}{Numerical Example:Estimation Performance}
-%  \begin{figure}[ht]
-%    \begin{center}
-%      \setlength{\figureheight}{5cm}
-%      \setlength{\figurewidth}{6cm}
-%      \inputtikz{variance}
-%    \end{center}
-%    \label{fig:variance}
-%  \end{figure}
-%\end{frame}
-
-% \section{Conclusion}
-% \begin{frame}{Conclusion}
-%   \begin{itemize}
-%   \item We propose a privacy preserving average consensus algorithm.
-%   \item We compute the exact mean square convergence rate of the proposed algorithm.
-%   \item We derive the asymptotic estimation performance.
-%   \item We provide a topological necessary and sufficient condition, under which the privacy of an agent is breached. 
-%   \item We prove that our algorithm achieves minimum privacy breach, under the non-collaborating assumption.
-%   \item We prove that our consensus algorithm is differentially private given that $P_{ii}\neq 0$. 
-%   \end{itemize}
-
-% \end{frame}
-
 \section{Conclusion}
-
-% \begin{frame}{CPS Architecture}
-%   \begin{center}
-%     \begin{tikzpicture}[>=latex]
-%       \draw [draw=caltechcolor!50,fill=caltechcolor!20,thick] (-4,-0.5) rectangle (4,0.5);
-%       \node at (0,0) {Physical System};
-%       \draw [draw=blue!50,fill=blue!20,thick] (-4,1.5) rectangle (4,2.5);
-%       \node at (0,2) {Cyber Infrastructure};
-%       \draw [draw=red!50,fill=red!20,thick] (-4,3.5) rectangle (4,4.5);
-%       \node at (0,4) {Decision Making and Control};
-%       \node [anchor=west] at (2,3) {Raw Data};
-%       \node [anchor=east] at (-2,3) {Control};
-%       \draw [thick,->] (-2,3.5)--(-2,2.5);
-%       \draw [thick,->] (-2,1.5)--(-2,0.5);
-%       \draw [thick,<-] (2,3.5)--(2,2.5);
-%       \draw [thick,<-] (2,1.5)--(2,0.5);
-%     \end{tikzpicture}
-%   \end{center}
-% \end{frame}
-% 
-% \begin{frame}{A Secure CPS Architecture}
-%   \begin{center}
-%     \begin{tikzpicture}[>=latex]
-%       \draw [draw=caltechcolor!50,fill=caltechcolor!20,thick] (-4,-0.5) rectangle (4,0.5);
-%       \node at (0,0) {Physical System};
-%       \draw [draw=blue!50,fill=blue!20,thick] (-4,1.5) rectangle (4,2.5);
-%       \node at (0,2) {Cyber Infrastructure};
-%       \draw [draw=green!50,fill=green!20,thick] (-4,3.5) rectangle (4,4.5);
-%       \node at (0,4) {Security Layer};
-%       \draw [draw=red!50,fill=red!20,thick] (-4,5.5) rectangle (4,6.5);
-%       \node at (0,6) {Decision Making and Control};
-%       \node [anchor=west] at (2,3) {Raw Data};
-%       \node [anchor=west] at (2,5) {Secured Data};
-%       \node [anchor=east] at (-2,3) {Modified Control};
-%       \node [anchor=east] at (-2,5) {Control};
-%       \draw [thick,->] (-2,5.5)--(-2,4.5);
-%       \draw [thick,->] (-2,3.5)--(-2,2.5);
-%       \draw [thick,->] (-2,1.5)--(-2,0.5);
-%       \draw [thick,<-] (2,5.5)--(2,4.5);
-%       \draw [thick,<-] (2,3.5)--(2,2.5);
-%       \draw [thick,<-] (2,1.5)--(2,0.5);
-%     \end{tikzpicture}
-%   \end{center}
-% \end{frame}
-
 \begin{frame}{Conclusion}
 % We consider two different information fusion schemes: state estimation and average consensus and design low weight algorithms to address the security and privacy challenges in these settings.
   We consider the problem of state estimation in the presence of malicious sensors and design algorithms to detect and identify the set of compromised sensors and generate stable state estimate against all possible attacks.
 \end{frame}
-
-%\begin{frame}{Advertisement}
-%  \begin{itemize}
-%  \item If you want to learn more about my research, you can check my homepage:
-%    \url{https://yilinmo.github.io}
-%  \item I am currently looking for prospective Ph.D. student and Postdoc. If you are interested, please let me know. My email address is {ylmo@ntu.edu.sg}.
-%    \begin{enumerate}
-%    \item PhD: Tuition will be covered, Stipend is 2000/2500SGD (before/after Qual)
-%    \item PhD: NTU will organize its own English test if you do not have TOEFL or GRE.
-%    \item Postdoc: Salary $\sim$ 4500SGD
-%    \end{enumerate}
-%
-%  \end{itemize}
-%\end{frame}
 
 \begin{frame}[standout]
   Thank you!
