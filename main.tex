@@ -15,6 +15,7 @@
 \usepackage{tkz-euclide}
 \usetkzobj{all}
 \usepackage{pgfplots}
+\usepackage[xetex]{media9}
 \pgfplotsset{compat=1.12}
 \pgfdeclarelayer{background}
 \pgfsetlayers{background,main}
@@ -409,6 +410,14 @@
 
 \begin{frame}[standout]
   感谢各位老师同学聆听，请大家批评指正！
+\end{frame}
+\begin{frame}
+  \includemedia[width=0.6\linewidth,height=0.6\linewidth,activate=pageopen,
+  passcontext,
+  transparent,
+  addresource=penguinschasingbutterfly.mp4,
+  flashvars={source=penguinschasingbutterfly.mp4}
+  ]{\includegraphics[width=0.6\linewidth]{penguins}}{VPlayer.swf}
 \end{frame}
 \end{document}
 
