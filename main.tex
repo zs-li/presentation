@@ -2,7 +2,6 @@
 \usepackage{subfigure}
 \usepackage{amssymb, amsmath, amsfonts,verbatim}
 \usepackage{tikz, booktabs}
-\usepackage{media9}
 \graphicspath{ {./} }
 \usetikzlibrary{matrix,arrows,fit,backgrounds,mindmap,plotmarks,decorations.pathreplacing}
 
@@ -380,8 +379,6 @@
 \end{frame}
 
 \begin{frame}{Cost-Free Security}
-  For Gaussian case, there exists algorithm achieving perfect security and efficiency simultaneously.
-  \begin{enumerate}
   \item If there exists a set $J$ of $m-p$ sensors, such that
     \begin{align*}
       \sum_{i\in \mathcal J}\frac{1}{2}(\bar y_i+1)^2 < (m-2p)C,
@@ -1039,25 +1036,25 @@ I_0^{-1}\left(\frac{s}{m-n}\right)\leq I_1^{-1}\left(\frac{e}{m-n}\right),\, I_0
   Can be extend to the case where the system is not fully observable for each individual sensor.
 \end{frame}
 
-\begin{frame}{Autonomous Vehicle Simulation}
-  \centering
-  \includemedia[width=0.96\linewidth,height=0.54\linewidth,activate=pageopen,
-  passcontext,
-  transparent,
-  addresource=gps1.mp4,
-  flashvars={source=gps1.mp4}
-  ]{Autonomous Vehicle Under GPS Spoofing Attack}{VPlayer.swf} 
-\end{frame}
-
-\begin{frame}{Autonomous Vehicle Simulation}
-  \centering
-  \includemedia[width=0.96\linewidth,height=0.54\linewidth,activate=pageopen,
-  passcontext,
-  transparent,
-  addresource=gps2.mp4,
-  flashvars={source=gps2.mp4}
-  ]{Autonomous Vehicle Under GPS Spoofing Attack}{VPlayer.swf} 
-\end{frame}
+%\begin{frame}{Autonomous Vehicle Simulation}
+%  \centering
+%  \includemedia[width=0.96\linewidth,height=0.54\linewidth,activate=pageopen,
+%  passcontext,
+%  transparent,
+%  addresource=gps1.mp4,
+%  flashvars={source=gps1.mp4}
+%  ]{Autonomous Vehicle Under GPS Spoofing Attack}{VPlayer.swf} 
+%\end{frame}
+%
+%\begin{frame}{Autonomous Vehicle Simulation}
+%  \centering
+%  \includemedia[width=0.96\linewidth,height=0.54\linewidth,activate=pageopen,
+%  passcontext,
+%  transparent,
+%  addresource=gps2.mp4,
+%  flashvars={source=gps2.mp4}
+%  ]{Autonomous Vehicle Under GPS Spoofing Attack}{VPlayer.swf} 
+%\end{frame}
 
 \section{Conclusion and Future Works}
 
@@ -1065,8 +1062,8 @@ I_0^{-1}\left(\frac{s}{m-n}\right)\leq I_1^{-1}\left(\frac{e}{m-n}\right),\, I_0
   \begin{itemize}
   \item We consider both the hypothesis testing and the state estimation in adversarial environment and propose secure and efficient algorithm for both problems.
   \item System theory can help CPS to tolerate, detect and recover from malicious attacks.
-  \item How to combine information security with system theory to provide defense in depth.
   \item How to systematically design algorithms that are both secure and efficient?
+  \item How to combine information security with system theory to provide defense in depth?
   \end{itemize}
 \end{frame}
 
