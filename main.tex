@@ -56,7 +56,7 @@
 \institute[Tsinghua]{
   清华大学 自动化系
 }
-\date[Nov 25, 2018]{ 人工智能与群体智能研讨会\\ 
+\date[Jan 21st, 2019]{Jan 21st, 2019\\ 
   \small Joint Work with Hanxiao Liu, Jiaqi Yan and Karl H. Johansson}
 
 \usetheme[subsectionpage=none,block=fill]{metropolis}
@@ -147,19 +147,6 @@
       \caption{A successful attack on CPS can have devastating effects.}
     \end{center}
   \end{figure}
-\end{frame}
-
-\begin{frame}{How to deal with CPS security threats}
-  \begin{exampleblock}{}
-    {\it 知彼知己，百战不殆；不知彼而知己，一胜一负；不知彼不知己，每战必败}
-    \vskip5mm
-    \hspace*\fill{ \it\small--- 孙子兵法}
-  \end{exampleblock}
-
-  \begin{enumerate}
-  \item Intrusion detection and isolation
-  \item Resilient information fusion and control
-  \end{enumerate}
 \end{frame}
 
 \section{重放攻击与物理水印}
@@ -422,13 +409,13 @@
     \begin{align*}
       y^c(k) = y(k-\Delta k) = \textcolor{red}{\gamma(k-1-\Delta k)} + \textcolor{blue}{\vartheta(k-1-\Delta k)}.
     \end{align*}
-  \item The KL divergence between ``compromised'' measurement $y^c(k)$ and ``normal'' measurement $y(k)$ is a convex function $U$, which satisfies
+  \item The KL divergence between ``compromised'' measurement $y^c(k)$ and ``normal'' measurement $y(k)$ is a convex function $U$:
     \begin{displaymath}
-      \frac{1}{2}\tr(U\mathcal P) \leq D_{KL}(y^c(k)||y(k))\leq \tr(U\mathcal P)-\frac{1}{2}\log(1+\tr(U\mathcal P)).
+      \tr\left( U \mathcal P  \right) - \frac{1}{2}\logdet\left( I+ U \mathcal P \right),
     \end{displaymath}
-    Both the upper and lower bounds are increasing functions of $\tr(U\mathcal P)$, where
+    where
     \begin{align*}
-    \mathcal P \triangleq\sum_{k=0}^\infty \textcolor{thupurple}{H_k^T\mathcal W^{-1}H_k},\\
+      \mathcal P \triangleq\sum_{k=0}^\infty \textcolor{thupurple}{H_k^T\mathcal W^{-1}H_k},\\
     \end{align*}
     where $\mathcal W$ is the covariance of $\vartheta_{k-1}$.
   \end{itemize}
@@ -438,33 +425,30 @@
   \begin{block}{Problem 1}
     \begin{align*}
       &\mathop{\textrm{maximize}}\limits_{U}&
-      & \tr (U\textcolor{thupurple}{\mathcal P})\\
+      & \tr\left( U \mathcal P  \right) - \frac{1}{2}\logdet\left( I+ U \mathcal P \right), \\
       &\textrm{subject to}&
       & \tr (U\textcolor{thupurple}{\mathcal X}) \leq \delta \\
       &&& U \text{ is positive semidefinite.}
     \end{align*}
   \end{block}
   \centering
-  \begin{tikzpicture}
-    \tkzDefPoint[label=-135:\scriptsize$O$](0,0){O}
-    \tkzDefPoint(15:3){A}
-    \tkzDefPoint(60:3){B}
-    \tkzDefShiftPoint[B](10:1){B1}
-    \tkzDefShiftPoint[B](190:1){B2}
-    \tkzDefPoint[label=\scriptsize PSD-cone](37.5:3.5){C}
-    \tkzFillPolygon[color=thupurple!20](A,B,O)
-    \tkzDrawPoints[color=thupurple!50](B)
-    \tkzDrawLines[color=thupurple!50,add=0 and 0.2](O,A O,B)
-    \tkzDrawLines[color=thupurple!50](A,B)
-    \tkzLabelSegments[pos=1.2,below](B,A){\scriptsize$\tr(U\mathcal X)=\delta$}
-    \foreach \i in {-0.5,0,...,1.5}{
-      \tkzDefShiftPoint[B1](-80:\i){b1}
-      \tkzDefShiftPoint[B2](-80:\i){b2}
-      \tkzDrawLines[color=black!50,dashed,add 0.5 and 0.5](b1,b2)
-    }
+  \begin{tikzpicture}[domain=-2:2.5]
+\draw[semithick] plot (\x,{\x*\x/4});
+\draw[semithick,->] (-2.5,-0.5)--(3,-0.5);
+\draw[dashed] (-2,-0.5)--(-2,1);
+\draw[dashed] (2.5,-0.5)--(2.5,1.5625);
   \end{tikzpicture}
 
-  The optimal $U = \alpha vv^T$ is a rank-$1$ matrix. 
+  The solution lies on the boundary of the feasible set!
+\end{frame}
+
+\begin{frame}{Optimal Watermark}
+  \begin{enumerate}
+  \item The boundary of the set of positive semi-definite matrices are rank $1$ matrix:
+    \[U = \alpha vv^T.\] 
+  \item $v$ is the generalized eigenvector s.t. $\mathcal Pv = \lambda\mathcal Xv$, where $\lambda$ is the largest generalized eigenvalue.
+  \item $\alpha$ is chosen such that $\tr(U\mathcal X)=\delta$.
+  \end{enumerate}
 \end{frame}
 
 \begin{frame}{Online-Watermark Design: Watermark Generation}
@@ -535,52 +519,38 @@
       p(A) = A^n + \alpha_{n-1}A^{n-1}+\ldots+\alpha_1 A + \alpha_0 I = 0     
     \end{align*}
     where $p(x)$ is the characteristic polynomial of $A$. 
-  \item We can compute $A^n$ as
+  \item As a result, we know that
     \begin{align*}
-      A^n =- \alpha_{n-1}A^{n-1}-\ldots-\alpha_1 A - \alpha_0 I.
+      H_{n+i} &+ \alpha_{n-1}H_{n-1+i}+\ldots+\alpha_0 H_i\\
+              &= CA^{i}A^nB + \alpha_{n-1}CA^{i}A^{n-1}B+\ldots+\alpha_0 CA^iB\\
+      &=CA^i p(A)B = 0.
     \end{align*}
-  \item Similarly, we have
-    \begin{align*}
-      CA^nB =- \alpha_{n-1}CA^{n-1}B-\ldots-\alpha_1 CAB - \alpha_0 CB.
-    \end{align*}
-  \item As long as we know the characteristic polynomial of $A$, we can infer all $H_t$ from $H_0,\ldots, H_{n-1}$.
+    \item All $H_\tau$ can be deduced from $H_0,\ldots, H_{n-1}$, if we know $p(A)$.
+    \item Actually as long as we know some non-trivial polynomial $\tilde p(x)$, such that $\tilde p(A) = 0$, we can deduce all $H_\tau$ from finitely many $H_\tau$s.
   \end{itemize} 
 \end{frame}
 
-\begin{frame}{Infer the Characteristic Polynomial}
+\begin{frame}{Infer the Characteristic Polynomial $p(A)$}
   \begin{itemize}
-  \item Since the system is controllable and observable, $p(A) = 0$ is equivalent to:
+  \item Suppose that we find some coefficients $\tilde \alpha_i$, such that
+    \begin{align*}
+      H_{n+i} &+ \tilde \alpha_{n-1}H_{n-1+i}+\ldots+\tilde \alpha_0 H_i = 0.
+    \end{align*}
+  \item Let $\tilde p(x) = x^n + \alpha_{n-1}x^{n-1}+\ldots+\alpha_1 x + \alpha_0 $.
+  \item Question: Under what condition, will $\tilde p(x) = 0$?
+  \item $CA^i\tilde p(A)B = 0$ for $i=0$ to $2n-2$, then
     \begin{align*}
       \begin{bmatrix}
         C\\
         CA\\
         \cdots\\
         CA^{n-1}
-      \end{bmatrix}p(A)\begin{bmatrix}
+      \end{bmatrix}\tilde p(A)\begin{bmatrix}
         B&AB&\cdots&A^{n-1}B
       \end{bmatrix}=0.
     \end{align*}
-  \item The above equation is equivalent to
-    \begin{align*}
-      \mathcal H   \begin{bmatrix}
-        \alpha_0I\\
-        \cdots\\
-        \alpha_{n-1}I
-      \end{bmatrix} + \begin{bmatrix}
-        H_n\\
-        \cdots\\
-        H_{3n-2} 
-      \end{bmatrix} = 0    ,
-    \end{align*}
-    where $\mathcal H$ is the Hankel matrix
-    \begin{align*}
-      \mathcal H \triangleq \begin{bmatrix}
-        H_{0} & H_{1} &\cdots & H_{n-1}\\
-        H_{1} & H_{2} &\cdots & H_{n}\\
-        \vdots & \vdots &\ddots & \vdots \\
-        H_{2n-2} & H_{2n-1} &\cdots & H_{3n-3}\\
-      \end{bmatrix}. 
-    \end{align*}
+  \item If the system is controllable and observable, then $\tilde p(A)=0$. 
+    
   \end{itemize} 
 \end{frame}
 
@@ -595,12 +565,24 @@
     \end{align*}
   \item More \textcolor{blue}{exploration} at the beginning and more \textcolor{red}{exploitation} towards the end.
   \end{itemize}
-  \begin{theorem}
-    Assume that $0 < \beta <1$, then we have $\hat U_k$ converges to the optimal $U$ a.s.
-    
-  \end{theorem}
 \end{frame}
 
+\begin{frame}{Convergence of the Watermarking Signal}
+  \begin{theorem}
+    Assume that $0 < \beta <1$, then we have $\hat U_k$ converges to the optimal $U$ a.s. Furthermore, for any $\epsilon > 0$, we have
+    \begin{align*}
+      \hat U_k - U \sim O(k^{-\gamma+\epsilon}),a.s.
+    \end{align*}
+where $\gamma = \max((1-\beta)/2,\beta)$.
+  \end{theorem}
+  \begin{enumerate}
+  \item To achieve faster convergence, we need to maximize $\gamma$.
+  \item The $(1-\beta)/2$ term is due to the estimation error. 
+  \item If we choose $\beta \rightarrow 0^+$ (non-decaying explortation), then $(1-\beta)/2\approx 0.5$ (central limiting theorem, law of iterated logarithm).
+  \item The $\beta$ term is due to the exploration term $k^{-\beta}I$.
+  \item $\gamma$ is maximized when $\beta = 1/3$.
+  \end{enumerate}
+\end{frame}
 
 
 \begin{frame}{Tennessee Eastman Process}
@@ -683,7 +665,7 @@
   \begin{columns}
     \begin{column}{0.6\textwidth}
       \begin{figure}[h!]
-         \inputtikz{errU1_te}
+        \inputtikz{errU1_te}
       \end{figure}
     \end{column}
     \begin{column}{0.4\textwidth}
@@ -705,7 +687,7 @@
   \end{itemize}
   \begin{figure}[h!]
     \centering
-     \inputtikz{gng_te}
+    \inputtikz{gng_te}
   \end{figure}
 \end{frame}
 
