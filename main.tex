@@ -51,13 +51,13 @@
 \DeclareMathOperator{\argmax}{arg\;max}
 \let\Tiny\tiny
 
-\title[Secure CPS]{基于数据驱动的主动入侵检测}
+\title[Secure CPS]{Replay Attack Detection in Cyber Physical Systems}
 \author[Yilin Mo]{莫一林}
 \institute[Tsinghua]{
-  清华大学 自动化系
+  Department of Automation, Tsinghua University
 }
-\date[Jan 21st, 2019]{Jan 21st, 2019\\ 
-  \small Joint Work with Hanxiao Liu, Jiaqi Yan and Karl H. Johansson}
+\date[Feb 19th, 2019]{Feb 19th, 2019\\ 
+  \small Joint Work with Hanxiao Liu, Jiaqi Yan, Lihua Xie and Karl H. Johansson}
 
 \usetheme[subsectionpage=none,block=fill]{metropolis}
 \definecolor{thupurple}{RGB}{102,8,116}
@@ -70,7 +70,7 @@
 
 \maketitle 
 
-\section{信息物理系统安全研究简介}
+\section{Introduction}
 
 \begin{frame}{Cyber-Physical System}
   \begin{itemize}
@@ -80,13 +80,13 @@
         level 1 concept/.append style={sibling angle=120,minimum size = 3cm},
         ]
         \path [draw=thupurple!50,fill=thupurple!20,thick,rounded corners] (-10,-4.5) rectangle (10,7);
-        \node at (-9,6) [anchor=north west] {\Huge 物理空间};
+        \node at (-9,6) [anchor=north west] {\Huge Physical Space};
         \path[mindmap,concept color=black,text=white]
         node[concept] {\Huge CPS}
         [clockwise from=330]
-        child[concept color=green!50!black] { node[concept](communication) {\huge 通讯} }
-        child[concept color=red] { node[concept](control) {\huge 控制} }
-        child[concept color=blue] { node[concept](computation) {\huge 计算} };
+        child[concept color=green!50!black] { node[concept](communication) {\huge Comm.} }
+        child[concept color=red] { node[concept](control) {\huge Ctrl.} }
+        child[concept color=blue] { node[concept](computation) {\huge Comp.} };
       \end{tikzpicture}
     \end{center}
   \item Applications: aerospace, chemical processes, civil infrastructure, energy, manufacturing and transportation. 
@@ -149,7 +149,7 @@
   \end{figure}
 \end{frame}
 
-\section{重放攻击与物理水印}
+\section{Replay Attack and Physical Watermarking}
 
 \begin{frame}{Stuxnet}
   \begin{itemize}
@@ -337,7 +337,7 @@
   \end{itemize}
 \end{frame}
 
-\section{主动检测机制的在线学习}
+\section{An Online Approach to Replay Attack Detection}
 
 \begin{frame}{System Diagram}
   \begin{figure}[htpb]
@@ -691,14 +691,14 @@ where $\gamma = \max((1-\beta)/2,\beta)$.
   \end{figure}
 \end{frame}
 
-\section{结论}
+\section{Conclusion}
 
 \begin{frame}{Conclusion}
   We consider the impact of replay attacks on a steady state control system and propose watermarking scheme to actively detect the presence of replay attack. For systems whose parameters are unknown, we design learning based mechanism to identify the parameters and design the watermarking signals simultaneously.
 \end{frame}
 
 \begin{frame}[standout]
-  感谢各位老师同学聆听，请大家批评指正！
+  Thank you for your time.
 \end{frame}
 
 \end{document}
