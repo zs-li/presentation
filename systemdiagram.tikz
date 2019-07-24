@@ -22,7 +22,8 @@ every node/.append style={font=\small}
 \node (estimator) [box] {Estimator};&
 \node (p8) [point] {};\\
 %fourth row
-&&&& \node (detector) [box] {Failure Detector}; \\
+&& \node (detector) [box] {Failure Detector};&
+\node (p9) [point] {};&\\
 };
 \draw [semithick] (plant) -- (sensor);
 \draw [semithick](sensor) -- (p3) -- node[midway,right]{$y(k)$} (p8) -- (estimator);
@@ -30,6 +31,6 @@ every node/.append style={font=\small}
 \draw [semithick](controller)-- node[midway,above]{$u(k)$} (p7)--(p1)--(plant);
 
 \draw [semithick](p5)--(delay)-- node[midway,above]{$u(k-1)$}(p6)--(estimator);
-\draw [semithick](p8)--(detector);
+\draw [semithick](estimator)--(p9) --node[midway,below]{$z(k)$}(detector);
 
 \end{tikzpicture}
