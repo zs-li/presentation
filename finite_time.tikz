@@ -7,8 +7,8 @@
 \begin{tikzpicture}
 
 \begin{axis}[%
-width=2.56in,
-height=1.78in,
+width=3in,
+height=1.6in,
 at={(0.758in,0.481in)},
 scale only axis,
 separate axis lines,

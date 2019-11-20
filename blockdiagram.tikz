@@ -42,10 +42,10 @@
 \draw [->,thick, blue] (4,1.2) -- node [above] {$\hat \theta$?} (5,1.2);
 
 {\footnotesize
-\node [above right] at (0.54,0.3) {$z_m(k)$};
-\node [above right] at (0.54,2.16) {$z_1(k)$};
-\node [above right] at (1.95,0.3) {$ y_m(k)$};
-\node [above right] at (1.95,2.16) {$ y_1(k)$};
+\node [above right] at (0.54,0.3) {$z_m$};
+\node [above right] at (0.54,2.16) {$z_1$};
+\node [above right] at (1.95,0.3) {$ y_m$};
+\node [above right] at (1.95,2.16) {$ y_1$};
 }
 
 \end{tikzpicture}
