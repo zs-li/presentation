@@ -1,3 +1,6 @@
+% !TEX program = xelatex
+% !TEX encoding = UTF-8 Unicode
+
 \documentclass[10pt]{beamer}
 \usepackage{subfigure}
 \usepackage{amssymb, amsmath, amsfonts,verbatim}
@@ -51,9 +54,9 @@
 \institute[Tsinghua]{
   Department of Automation\\ Tsinghua University\\
 }
-\date[Jan 25, 2019]{Jan 25th, 2019 \\ 
-  \small Joint Work with Xiaoqiang Ren, Duo Han, Xinghua Liu, Jiaqi Yan,\\
-  Prof. Lihua Xie and Prof. Emanuele Garone}
+\date[Nov 21, 2019]{Nov 21st, 2019 \\ 
+  \small Joint Work with Jiaqi Yan, Zishuo Li,\\
+  Prof. Xiaoqiang Ren, Prof. Bruno Sinopoli, Prof. Joao Hespanha}
 
 \usetheme[subsectionpage=none,block=fill]{metropolis}
 \definecolor{thupurple}{RGB}{102,8,116}
@@ -114,17 +117,16 @@
   In FY 2016, ICS-CERT (Industrial Control Systems Cyber Emergency Response Team) received and responded to 290 incidents as reported by asset owners and industry partners.
 \end{frame}
 
-
-\begin{frame}{Industrial Control Systems}
-  The scope of incidents encompassed a vast range of threats and observed methods for attempting to gain access to both business and control systems infrastructure, including but not limited to the following:
-  \begin{enumerate}
-  \item  Unauthorized access and exploitation of Internet facing ICS/Supervisory Control and Data Acquisition (SCADA) devices,
-  \item  Exploitation of zero-day vulnerabilities in control system devices and software, 
-  \item  Malware infections within air-gapped control system networks,
-  \item \dots
-  \end{enumerate}
-
-\end{frame}
+%\begin{frame}{Industrial Control Systems}
+%  The scope of incidents encompassed a vast range of threats and observed methods for attempting to gain access to both business and control systems infrastructure, including but not limited to the following:
+%  \begin{enumerate}
+%  \item  Unauthorized access and exploitation of Internet facing ICS/Supervisory Control and Data Acquisition (SCADA) devices,
+%  \item  Exploitation of zero-day vulnerabilities in control system devices and software, 
+%  \item  Malware infections within air-gapped control system networks,
+%  \item \dots
+%  \end{enumerate}
+%
+%\end{frame}
 
 \begin{frame}{Attack Through Compromised Supply Chain}
   \begin{figure}[ht]
@@ -143,25 +145,25 @@
   \end{figure}
 \end{frame}
 
-\begin{frame}{What is New in CPS Security?}
-  Why not just use information security?
-  \begin{enumerate}
-  \item Physics
-  \item Physical Attacks: GPS Spoofing, etc.
-  \item Zero-day Attacks: Attack that exploits undiscovered vulnerabilities.
-  \item Cost: Securing every single device is difficult and costly
-  \item High reliability requirement
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}{Defense in Depth}
-  \begin{figure}[<+htpb+>]
-    \begin{center}
-      \includegraphics[width=0.8\textwidth]{defense_in_depth.jpg}
-      \caption{Combining System Theory and Information Security to create better Protection for CPS}
-    \end{center}
-  \end{figure}
-\end{frame}
+%\begin{frame}{What is New in CPS Security?}
+%  Why not just use information security?
+%  \begin{enumerate}
+%  \item Physics
+%  \item Physical Attacks: GPS Spoofing, etc.
+%  \item Zero-day Attacks: Attack that exploits undiscovered vulnerabilities.
+%  \item Cost: Securing every single device is difficult and costly
+%  \item High reliability requirement
+%  \end{enumerate}
+%\end{frame}
+%
+%\begin{frame}{Defense in Depth}
+%  \begin{figure}[<+htpb+>]
+%    \begin{center}
+%      \includegraphics[width=0.8\textwidth]{defense_in_depth.jpg}
+%      \caption{Combining System Theory and Information Security to create better Protection for CPS}
+%    \end{center}
+%  \end{figure}
+%\end{frame}
 
 \begin{frame}{Hardening CPS Security using System Theory}
   \begin{itemize}
@@ -174,41 +176,36 @@
   \end{itemize}
 \end{frame}
 
-\frame{\tableofcontents}
-
 \section{Hypothesis Testing}
 
-\begin{frame}{A Classical Hypothesis Testing Problem}
+\begin{frame}{Static Detection Problem}
   \begin{itemize}
-  \item We want to decide whether a binary state $\theta$ is $0$ or $1$.
-  \item $m$ identical sensors are measuring the state: 
-  \begin{center}
-    \setlength{\figureheight}{3cm}
-    \setlength{\figurewidth}{10cm}
-    \inputtikz{gaussian}
-  \end{center}
-  \item Let us define 
-    \begin{displaymath}
-      z(k) = \begin{bmatrix}z_1(k)&\dots&z_m(k)\end{bmatrix},\,Z(k) = \begin{bmatrix}z(1)&\dots&z(k)\end{bmatrix}.
-    \end{displaymath}
-  \item A detection strategy is an infinite sequence of detectors $f = (f_1,\,f_2,\,\dots)$, where each $f_k$ maps $Z(k)$ into a decison $\hat \theta(k)$.
+    \item We want to decide whether a binary state $\theta$ is $0$ or $1$.
+    \item $m$ identical sensors are measuring the state: 
+      \begin{center}
+	\setlength{\figureheight}{3cm}
+	\setlength{\figurewidth}{10cm}
+	\inputtikz{gaussian}
+      \end{center}
+    \item The ``true'' measurements $z_i$ are independent and identically distributed.
   \end{itemize}
 \end{frame}
 
-\begin{frame}{A Classical Hypothesis Testing Problem}
- \begin{itemize}
-  \item Without the attacker, the optimal detector is a Naive Bayes Detector:
-    \begin{align*}
-      \hat \theta(k)=f_k(Z(k))=\begin{cases}
-        -1 &\text{if }\sum_{i=1}^m\sum_{t=1}^k z_i(t)/mk < 0\\
-        +1 &\text{if }\sum_{i=1}^m\sum_{t=1}^k z_i(t)/mk \geq 0\\
-      \end{cases}.
-    \end{align*}
-  \item However, it is not secure. 
-  \end{itemize}   
+\begin{frame}{Naive Bayes Detector}
+  \begin{itemize}
+    \item A detector is a function $f:\mathbb R^m\rightarrow \{-1,1\}$.
+    \item The optimal detector (without attacks) with minimum detection error is a Naive Bayesian Detector:
+      \begin{align*}
+	\hat x=f(y)=\begin{cases}
+	  -1 &\text{if }\sum_{i}z_i < 0\\
+	  +1 &\text{if }\sum_{i}z_i \geq 0\\
+	\end{cases}
+      \end{align*}
+    \item One corrupted measurement will possibly change the detection result. 
+  \end{itemize}
 \end{frame}
 
-\begin{frame}{Byzantine Attack}
+\begin{frame}{Byzantine Attack Model}
   \begin{itemize}
   \item The attacker can compromised $p$ sensors, the set of which is denoted as $\mathcal I$. 
     \begin{displaymath}
@@ -229,6 +226,260 @@
   \item The detector knows $p$, but does not know $\mathcal I$.
   \end{itemize}
 \end{frame}
+
+%
+%\begin{frame}{Attack Model}
+%  We assume the attacker knows the following:
+%  \begin{itemize}
+%    \item the detection algorithm $f$ (Kerckhoffs' Principle);
+%    \item the true state $\theta$;
+%    \item all measurements $z$.
+%  \end{itemize}
+%  The attacker can manipulate up to $p$ measurements arbitrarily.
+%  \begin{displaymath}
+%    z = y +  a, 
+%  \end{displaymath}
+%  where $a$ is $p$-sparse.
+%
+%  The attacker wants to maximize the probability of error:
+%  \begin{displaymath}
+%    P_e =\max_{\gamma\in S_\gamma,y^a} P(f(y^c)\neq x).
+%  \end{displaymath}
+%\end{frame}
+
+%\begin{frame}{Attacker's Strategy}
+%  The optimal strategy for the attacker:
+%  \begin{align*}
+%    (\gamma,y^a)= \begin{cases}
+%      \displaystyle argmin_{\gamma\in S_\gamma, y^a} f(y+\gamma\circ y^a ) & (x =1)\\
+%      \displaystyle argmax_{\gamma\in S_\gamma,y^a} f(y+ \gamma\circ y^a) & (x =-1)
+%    \end{cases}
+%  \end{align*}
+%  \begin{figure}[<+htpb+>]
+%    \centering
+%    \subfigure[$x = -1$]{
+%    \begin{tikzpicture}
+%      \fill[red!20] (1.9,1.9)--(1.9,-1.9)--(-1.9,1.9);
+%      \fill[green!20] (-1.9,-1.9)--(1.9,-1.9)--(-1.9,1.9);
+%      \node at (1.9,1.9) [anchor = north east] {$\hat x = 1$};
+%      \node at (-1.9,-1.9)[anchor = south west] {$\hat x = -1$};
+%      \draw[->,thick] (-2,0)--(2,0) node [anchor = north]{$y_1$};
+%      \draw[->,thick] (0,-2)--(0,2) node [anchor = west]{$y_2$};
+%      \draw[thick,dashed] (-1,-1)--(-1,1.5);
+%      \filldraw  (-1,-1) circle (2pt) node [anchor=east]{$y$};
+%      \filldraw  (-1,1.5) circle (2pt) node [anchor=west]{$y^c$};
+%    \end{tikzpicture}
+%    }
+%    \subfigure[$x = 1$]{
+%    \begin{tikzpicture}
+%      \fill[red!20] (1.9,1.9)--(1.9,-1.9)--(-1.9,1.9);
+%      \fill[green!20] (-1.9,-1.9)--(1.9,-1.9)--(-1.9,1.9);
+%      \node at (1.9,1.9) [anchor = north east] {$\hat x = 1$};
+%      \node at (-1.9,-1.9)[anchor = south west] {$\hat x = -1$};
+%      \draw[->,thick] (-2,0)--(2,0) node [anchor = north]{$y_1$};
+%      \draw[->,thick] (0,-2)--(0,2) node [anchor = west]{$y_2$};
+%      \filldraw  (-1,-1) circle (2pt) node [anchor=south]{$y=y^c$};
+%    \end{tikzpicture}
+%    }
+%  \end{figure}
+%\end{frame}
+%
+%\begin{frame}{Partitioning the Space of Measurements}
+%  \begin{figure}[<+htpb+>]
+%    \centering
+%    \subfigure[First Detector $f_1$]{
+%    \begin{tikzpicture}
+%      \fill[red!20] (1.9,1.9)--(1.9,-1.9)--(-1.9,1.9);
+%      \fill[green!20] (-1.9,-1.9)--(1.9,-1.9)--(-1.9,1.9);
+%      \node at (1.9,1.9) [anchor = north east] {$\hat x = 1$};
+%      \node at (-1.9,-1.9)[anchor = south west] {$\hat x = -1$};
+%      \draw[->,thick] (-2,0)--(2,0) node [anchor = north]{$y_1$};
+%      \draw[->,thick] (0,-2)--(0,2) node [anchor =north west]{$y_2$};
+%      \filldraw  (-0.3,-0.3) circle (2pt) node [anchor=east]{};
+%      \draw[dashed,thick] (-2,-0.3)--(2,-0.3);
+%      \draw[dashed,thick] (-0.3,-2)--(-0.3,2);
+%    \end{tikzpicture}
+%    }
+%    \subfigure[Second Detector $f_2$]{
+%    \begin{tikzpicture}
+%      \fill[green!20] (-1.9,-1.9)--(1.9,-1.9)--(1.9,1.9)--(-1.9,1.9);
+%      \fill[red!20] (1.9,1.9)--(1.9,0)--(0,0)--(0,1.9);
+%      \node at (1.9,1.9) [anchor = north east] {$\hat x = 1$};
+%      \node at (-1.9,-1.9)[anchor = south west] {$\hat x = -1$};
+%      \draw[->,thick] (-2,0)--(2,0) node [anchor = north]{$y_1$};
+%      \draw[->,thick] (0,-2)--(0,2) node [anchor =north west]{$y_2$};
+%      \filldraw  (-0.3,-0.3) circle (2pt) node [anchor=east]{};
+%      \draw[dashed,thick] (-2,-0.3)--(2,-0.3);
+%      \draw[dashed,thick] (-0.3,-2)--(-0.3,2);
+%    \end{tikzpicture}
+%    }
+%  \end{figure}
+%  There are three categories of point in $R^m$:
+%  \begin{enumerate}
+%    \item for some $\gamma\in S_\gamma,y^a$, $f(y+\gamma\circ y^a)=1$ and for some $\gamma\in S_\gamma,y^a$, $f(y+\gamma\circ y^a)=-1$. (Bad)
+%    \item for all $\gamma\in S_\gamma,y^a$, $f(y+\gamma\circ y^a)=-1$. (\alert{Good})
+%    \item for all $\gamma\in S_\gamma,y^a$, $f(y+\gamma\circ y^a)=1$. (\alert{Good})
+%  \end{enumerate}
+%\end{frame}
+%
+%\begin{frame}{Worst-Case Probability of Error}
+%  Define
+%  \begin{align*}
+%    Y^-(f) &\triangleq \big\{y\in \mathbb R^m:f(y+\gamma\circ y^a)=-1, \; \forall y^a\in\mathbb R^m,\gamma\in S_\gamma\big\},\\
+%    Y^+(f) &\triangleq \big\{y\in \mathbb R^m: f(y+\gamma\circ y^a)=1,\; \forall y^a\in\mathbb R^m,\gamma\in S_\gamma\big\}.
+%  \end{align*}
+%  The detector can correctly detect $x$ if and only if 
+%  \begin{displaymath}
+%    (x,y)\in\Big\{ (-1,y): y\in Y^-(f) \Big\} \cup \Big\{ (+1,y): y\in Y^+(f) \Big\}
+%  \end{displaymath}
+%  As a result, the worst-case probability of error is
+%  \begin{displaymath}
+%    P_e(f) = (1-\mu(Y^+(f)))p^+ +(1-\nu(Y^-(f)) p^-.
+%  \end{displaymath}
+%  If $Y^-(f)\subseteq Y^-(g)$ and $Y^+(f)\subseteq Y^+(g)$, then $P_e(f)\geq P_e(g)$.
+%\end{frame}
+%
+%\begin{frame}{$Y^-$ and $Y^+$ for different detectors}
+%  \begin{figure}[<+htpb+>]
+%    \centering
+%    \subfigure[First Detector]{
+%    \begin{tikzpicture}
+%      \fill[red!20] (1.9,1.2)--(1.9,-1.2)--(-1.9,1.2);
+%      \fill[green!20] (-1.9,-1.2)--(1.9,-1.2)--(-1.9,1.2);
+%      \node at (1.9,1.3) [anchor = north east] {$\hat x = 1$};
+%      \node at (-1.9,-1.3)[anchor = south west] {$\hat x = -1$};
+%      \draw[->,thick] (-2,0)--(2,0) node [anchor = north]{$y_1$};
+%      \draw[->,thick] (0,-1.3)--(0,1.3) node [anchor =north west]{$y_2$};
+%    \end{tikzpicture}
+%    }
+%    \subfigure[$Y^+$ and $Y^-$]{
+%    \begin{tikzpicture}
+%      \node at (1.9,1.3) [anchor = north east] {$Y^+ = \emptyset$};
+%      \node at (-1.9,-1.3)[anchor = south west] {$Y^- = \emptyset$};
+%      \draw[->,thick] (-2,0)--(2,0) node [anchor = north]{$y_1$};
+%      \draw[->,thick] (0,-1.3)--(0,1.3) node [anchor =north east]{$y_2$};
+%    \end{tikzpicture}
+%    }\\
+%    \subfigure[Second Detector]{
+%    \begin{tikzpicture}
+%      \fill[green!20] (-1.9,-1.2)--(1.9,-1.2)--(1.9,1.2)--(-1.9,1.2);
+%      \fill[red!20] (1.9,1.2)--(1.9,0)--(0,0)--(0,1.2);
+%      \node at (1.9,1.2) [anchor = north east] {$\hat x = 1$};
+%      \node at (-1.9,-1.2)[anchor = south west] {$\hat x = -1$};
+%      \draw[->,thick] (-2,0)--(2,0) node [anchor = north]{$y_1$};
+%      \draw[->,thick] (0,-1.3)--(0,1.3) node [anchor =north west]{$y_2$};
+%    \end{tikzpicture}
+%    }
+%    \subfigure[$Y^+$ and $Y^-$]{
+%    \begin{tikzpicture}
+%      \fill[green!80] (-1.9,-1.2)--(0,-1.2)--(0,0)--(-1.9,0);
+%      \node at (1.9,1.2) [anchor = north east] {$Y^+ = \emptyset$};
+%      \node at (-1.9,-1.2)[anchor = south west] {$Y^-$};
+%      \draw[->,thick] (-2,0)--(2,0) node [anchor = north]{$y_1$};
+%      \draw[->,thick] (0,-1.3)--(0,1.3) node [anchor =north east]{$y_2$};
+%    \end{tikzpicture}
+%    }
+%  \end{figure}
+%\end{frame}
+
+\begin{frame}{A Hamming-like distance}
+  Define metric $d:\mathbb R^m\times \mathbb R^m\rightarrow \mathbb N_0$ as
+  \begin{displaymath}
+    d(y_1,y_2)=\|y_1-y_2\|_0. 
+  \end{displaymath}
+  Let $Y_1,Y_2$ be two subsets of $\mathbb R^m$, define
+  \begin{displaymath}
+    d(Y_1,Y_2) = \min_{y_1\in Y_1,y_2\in Y_2}d(y_1,y_2),\,d(y,Y) =  \min_{y'\in Y}d(y,y').
+  \end{displaymath}
+
+%  \begin{lemma}
+%    For any detector $f$, $d(Y^-(f),Y^+(f))\geq 2l+1$.
+%  \end{lemma}
+%  \begin{lemma}
+%    Given $X^-,\,X^+$ two subsets of $\mathbb R^m$, and $d(X^-,X^+)\geq 2l+1$, there exists a detector $f$, such that $X^-\subseteq Y^-(f)$ and $X^+\subseteq Y^+(f)$.
+%  \end{lemma}
+\end{frame}
+
+\begin{frame}{The structure of the optimal detector}
+  \begin{theorem}
+    The optimal $f^*$ is of the following form
+    \begin{align*}
+      f^*(y) = \begin{cases}
+	1 & d(y,X^-)\ge d(y,X^+)\\
+	-1 & d(y,X^-)< d(y,X^+),
+      \end{cases}
+    \end{align*}
+    where $X^{+}$ and $X^{-}$ satisfies $d(X^+,X^-)\geq 2l+1$.
+%    where $X^{+}$ and $X^{-}$  are the solutions of the following optimization problem:
+%    \begin{align*}
+%      &\mathop{\textrm{minimize}}\limits_{X^+,X^-}&
+%      & (1-\nu(X^-))p^-+(1-\mu(X^+))p^+\\
+%      &\textrm{subject to}&
+%      & d(X^-,\,X^+)\geq 2l+1
+%    \end{align*}
+  \end{theorem}
+\end{frame}
+
+\begin{frame}{The structure of the optimal detector}
+  \begin{figure}[<+htpb+>]
+    \begin{center}
+      \begin{tikzpicture}
+	\draw (0,0) ellipse (3 and 2);
+	\node at (0,-2) [anchor = south] {$\mathbb R^m$};
+	\node (xplus) at (-2,0) [circle,fill = green!90,draw] {$X^-$};
+	\node (xminus) at (2,0) [circle,fill = red!90,draw] {$X^+$}
+	edge [stealth-stealth,thick] node[auto] {$\geq 2l+1$} (xplus);
+	\filldraw  (-1,1) circle (2pt) node [anchor=south]{$y$};
+	\draw [-stealth,thick] (-1,1)--(xplus);
+	\draw [-stealth,thick] (-1,1)--(xminus);
+      \end{tikzpicture}
+    \end{center}
+  \end{figure}
+  \begin{itemize}
+    \item Directly working on the probability of error is hard.
+    \item The exact optimal detection is very hard to compute in general.
+  \end{itemize}
+\end{frame}
+%
+%\begin{frame}{Optimal Detector for $m \leq 2l$ and $m = 2l+1$}
+%  \begin{itemize}
+%    \item If $m \leq 2l$, then the optimal detector is $f=1$ oare the solutions of the following optimization problem:r $f = -1$.
+%    \item If $ m = 2l+1$, the optimal detector is based on voting:
+%      \begin{enumerate}
+%	\item The detector computes $m$ individual estimates $\hat x_i$ by a N-P detector based on individual measurements $y_i^c$:
+%	  \begin{align*}
+%	    \hat x_i \triangleq \begin{cases}
+%	      -1 & \Lambda_{i}(y_i^c) <\eta_i\\
+%	      1 & \Lambda_{i}(y_i^c) \geq\eta_i\\
+%	    \end{cases}.
+%	  \end{align*}
+%	\item The detector decides $\hat x = 1$ if there are more than half of the $\hat x_i = 1$. Otherwise it decides $\hat x = -1$.
+%      \end{enumerate}
+%  \end{itemize}
+%\end{frame}
+
+\begin{frame}{Sequential Hypothesis Testing Problem}
+  \begin{itemize}
+    \item Let us define 
+      \begin{displaymath}
+	z(k) = \begin{bmatrix}z_1(k)&\dots&z_m(k)\end{bmatrix},\,Z(k) = \begin{bmatrix}z(1)&\dots&z(k)\end{bmatrix}.
+      \end{displaymath}
+    \item A detection strategy is an infinite sequence of detectors $f = (f_1,\,f_2,\,\dots)$, where each $f_k$ maps $Z(k)$ into a decison $\hat \theta(k)$.
+    \end{itemize}
+  \end{frame}
+
+%\begin{frame}{A Classical Hypothesis Testing Problem}
+% \begin{itemize}
+%  \item Without the attacker, the optimal detector is a Naive Bayes Detector:
+%    \begin{align*}
+%      \hat \theta(k)=f_k(Z(k))=\begin{cases}
+%        -1 &\text{if }\sum_{i=1}^m\sum_{t=1}^k z_i(t)/mk < 0\\
+%        +1 &\text{if }\sum_{i=1}^m\sum_{t=1}^k z_i(t)/mk \geq 0\\
+%      \end{cases}.
+%    \end{align*}
+%  \item However, it is not secure. 
+%  \end{itemize}   
+%\end{frame}
 
 \begin{frame}{Performance: Probability of Error}
   \begin{itemize}
@@ -277,10 +528,6 @@
     Larger rate implies better detection performance.
   \item  $I$ is a function of both detection strategy $f$ and attack strategy $g$.
   \item The detector wants to maximize $I$ while the attacker wants to minimize $I$.
-  \item Question: Does there exist a pair of equilibrium strategy $(f^*,g^*)$, such that
-    \begin{displaymath}
-      I(f^*,g)\geq I(f^*,g^*) \geq I(f,g^*).	
-    \end{displaymath}
   \end{itemize}
 \end{frame}
 
@@ -429,15 +676,15 @@
   The above algorithm is optimal for any number of compromised sensors.
 \end{frame}
 
-\begin{frame}{General Case: Some Definitions from Large Deviation Theory}
-  \begin{center}
-    \inputtikz{rate_function}
-  \end{center}
-  \begin{itemize}
-  \item $I_\theta(y) \triangleq \sup_{w} yw - \log \mathbb E_\theta exp(\lambda w).$
-  \item $I_\theta(y)$ measures how typical a measurement $y$ is under each hypothesis.
-  \end{itemize}
-\end{frame}
+%\begin{frame}{General Case: Some Definitions from Large Deviation Theory}
+%  \begin{center}
+%    \inputtikz{rate_function}
+%  \end{center}
+%  \begin{itemize}
+%  \item $I_\theta(y) \triangleq \sup_{w} yw - \log \mathbb E_\theta exp(\lambda w).$
+%  \item $I_\theta(y)$ measures how typical a measurement $y$ is under each hypothesis.
+%  \end{itemize}
+%\end{frame}
 
 \begin{frame}{General Cases}
   \begin{center}
@@ -485,586 +732,61 @@ I_0^{-1}\left(\frac{s}{m-n}\right)\leq I_1^{-1}\left(\frac{e}{m-n}\right),\, I_0
   \end{center}
 \end{frame}
 
-\section{State Estimation}
+\begin{frame}{Sequential Hypothesis Testing}
+  Instead of deciding $\theta$ at a fixed time $t$, at every time, we can make 3 decisions:
+  \begin{itemize}
+    \item Decide $\theta = 0$;
+    \item Decide $\theta = 1$; 
+    \item Take another measurement.
+  \end{itemize}
 
-\begin{frame}{Static State Estimation}
-  \begin{enumerate}
-  \item We assume that $x \in \mathbb R^n$ is the state that we want to estimate.
-  \item $m$ sensors are deployed to monitor the system. Denote $z_i \in \mathbb R$ as the measurement generated by sensor $i$.
-  \item Denote $z = \begin{bmatrix}z_1&\dots&z_m\end{bmatrix}^T$ as the collection of all sensory data.
-  \item We assume the following sensor model:
-    \begin{align*}
-      z = Hx + w,
-    \end{align*}
-    where $H$ is a matrix of proper dimension and $w$ represent random noise.
-  \item The optimal state estimator is of the form
-    \begin{align*}
-      \hat x = Kz, \text{ where }K = (H^TH)^{-1}H^T.
-    \end{align*}
-  \end{enumerate}
 \end{frame}
 
-\begin{frame}{Least Square Estimator}
-  Suppose the following sensory model:
-  \begin{align*}
-    y = \begin{bmatrix}
-      1\\
-      1\\
-      1
-    \end{bmatrix}x + w.
-  \end{align*}
-  The optimal estimator is given by
-  \begin{align*}
-    \hat x = \frac{1}{3}\left(y_1+y_2+y_3\right).
-  \end{align*}
-  
-  This estimator is not resilient to a single malicious sensor.
+\begin{frame}{Performance Metric}
+  \begin{itemize}
+    \item Similar to the previous case, we could define the rate function to be
+    \begin{displaymath}
+      I = \liminf_{P_e\rightarrow 0} -\frac{\log P_e}{\mathbb E T},
+    \end{displaymath}
+    where $P_e$ is a pre-specified probability of error and $T$ is the time to achieve such error.
+  \item  $I$ is a function of both detection strategy $f$ and attack strategy $g$.
+  \item The detector wants to maximize $I$ while the attacker wants to minimize $I$.
+  \item Question: Does there exist a pair of equilibrium strategy $(f^*,g^*)$, such that
+    \begin{displaymath}
+      I(f^*,g)\geq I(f^*,g^*) \geq I(f,g^*).	
+    \end{displaymath}
+  \end{itemize}  
 \end{frame}
 
-\begin{frame}{Problem Formulation}
-  \begin{enumerate}
-  \item Assume that at most $p$ sensors are compromised.
-  \item The sensory model is given by
-    \begin{align*}
-      y = z + a = Hx + w +a,
-    \end{align*}
-    where $a$ is a $p$-sparse vector indicating the attacker's action.
-  \item We will call an estimator $\hat x = g(y)$ to be resilient if
-    \begin{align*}
-      \|g(y) - g(z)\|\text{ is bounded for all $p$-sparse $a$}.
-    \end{align*}
-  \item The total state estimation error can be written as
-    \begin{align*}
-      x-g(y) = x-g(z) + g(z)-g(y).
-    \end{align*}
-
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}{Why not use bad data detection?}
-  \begin{center}
-
-    \begin{tikzpicture}[scale=0.9]
-      \draw[thick,rounded corners,fill=red!30,draw=red!60] (0,1) rectangle (3,2);
-      \node at (1.5,1.5) {Estimation};
-
-      \draw[thick,rounded corners,fill=blue!30,draw=blue!60] (5,1) rectangle (8,2);
-      \node at (6.5,1.5) {\begin{tabular}{c} Bad Data\\ Detection \end{tabular}};
-
-      \draw[thick,->] (-1.5,1.5)--(0,1.5);
-      \node [anchor=east] at (-1.5,1.5) {Data};
-
-      % \draw[thick,->] (3,1.5) to (5,1.5);
-
-      \draw[thick,->] (1.5,2) to [bend left] (6.5,2);
-      \draw[thick,->] (6.5,1) to [bend left] (1.5,1);
-
-      \draw[thick,->] (8,1.5) to (9,1.5);
-
-      \node [anchor=west] at (9,1.5) {$\hat x$};
-    \end{tikzpicture}
-  \end{center}
-  \begin{enumerate}
-  \item A typical bad data detector will first compute $\hat x = Ky$ and then the residue $r = y - H\hat x$.
-  \item The bad data detector will then remove the sensors with large residue.
-  \item Drawbacks: It is designed for \emph{random failures}, not necessarily attacks; Difficult to analyze the estimation performance.
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}{Some Related Research}
-  \begin{enumerate}
-  \item The following estimator is resilient under $2p$ observable condition:
-    \begin{align*}
-      & \mathop{\textit{minimize}}\limits_{\hat x,a,w}&
-      & \|w\|^2 \\
-      &\text{subject to}&
-      &y = H \hat x + w + a,\,\|a\|_0\leq p.
-    \end{align*}
-    The drawback: The optimization problem is not convex and solving it is computationally difficult.
-  \item We can use convex optimization based estimator, e.g., 
-    \begin{align*}
-      & \mathop{\textit{minimize}}\limits_{\hat x,a,w}&
-      & \|w\|^2 + \|a\|_1 \\
-      &\text{subject to}&
-      &y = H \hat x + w + a.
-    \end{align*}
-    However, there is no direct proof on its resiliency.
-  \item What about other type of estimators?
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}{A General Convex Optimization Based Estimator}
-  We consider the following estimator
-  \begin{align*}
-    \hat x = g(y) \triangleq \argmin_{\hat x} \sum_{i=1}^m f_i(y_i-H_i \hat x),
-  \end{align*}
-  where the following properties of function $f_i:\mathbb R\mapsto \mathbb R$ are assumed:
-  \begin{enumerate}
-  \item $f_i$ is convex.
-  \item $f_i$ is symmetric, i.e., $f_i(u) = f_i(-u)$.
-  \item $f_i$ is non-negative and $f_i(0) = 0$.
-  \end{enumerate} 
-
-  If we define the residue $r_i\triangleq y_i - H_i\hat x$, then we are trying to minimize the sum of some cost function related to the residue.
-
-  The estimator can be computed efficiently via convex optimization. 
-\end{frame}
-
-
-\begin{frame}{A General Convex Optimization Based Estimator}
-  Our proposed estimator is very general since we can choose the right $f_i$ to get the following estimator:
-  \begin{enumerate}
-  \item Linear Estimator:
-    \begin{align*}
-      g(y) = \argmin_{\hat x} \|y-H\hat x\|_2^2= \argmin_{\hat x}  \sum_{i=1}^m (y_i-H_i\hat x)^2.
-    \end{align*}
-  \item $L_1$ Estimator:
-    \begin{align*}
-      g(y) = \argmin_{\hat x} \|y-H\hat x\|_1=\argmin_{\hat x} \sum_{i=1}^m |y_i-H_i\hat x|.
-    \end{align*}
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}{A General Convex Optimization Based Estimator}
-  \begin{enumerate}  \setcounter{enumi}{2}
-  \item LASSO:
-    \begin{align*}
-      g(y) = \argmin_{\hat x} \|w\|^2+\lambda \|a\|_1, \text{ s.t. }y=H\hat x+w+a.
-    \end{align*}
-    After some manipulations, we can rewrite the optimization problem as
-    \begin{align*}
-      g(y) = \argmin_{\hat x} \sum_{i=1}^m f(y_i-H_i\hat x)
-    \end{align*}
-    where
-    \begin{align*}
-      f(r) = \min_{w} w^2 + \lambda |r-w| = \begin{cases}
-        r^2 & \text{if } r \leq \lambda/2\\
-        \lambda |r|-\lambda^2/4 & \text{if } r\geq \lambda/2\\
-      \end{cases}.
-    \end{align*}
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}{Example}
-  Suppose the following sensory model:
-  \begin{align*}
-    y = \begin{bmatrix}
-      1\\
-      1\\
-      1
-    \end{bmatrix}x + w+a,\,\|a\|_0\leq 1.
-  \end{align*}
-  Then the following estimator is resilient (in fact, it is the median of $y_i$):
-  \begin{align*}
-    g(y) = \argmin_{\hat x}  |y_1-\hat x|+|y_2-\hat x|+|y_3-\hat x|.
-  \end{align*}
-\end{frame}
-
-\begin{frame}{Example}
-  \begin{figure}[ht]
-    \centering
-    \begin{tikzpicture}[yscale=0.4]
-      \draw[thick,->] (0,0)--(9,0);
-      \node [anchor=west] at (9,0) {$\hat x$};
-      \draw[thin,gray] (2,0)--(2,0.1);
-      \draw[thin,gray] (5,0)--(5,0.1);
-      \draw[thin,gray] (7,0)--(7,0.1);
-      \draw[thick](1,11)--(2,8)--(5,5)--(7,7)--(8,10);
-      \node [anchor=north] at (2,0) {\color{red}{$y_1$}};
-      \node [anchor=north] at (5,0) {\color{blue}{$y_2$}};
-      \node [anchor=north] at (7,0) {\color{brown}{$y_3$}};
-    \end{tikzpicture}
-  \end{figure}
-  \color{white}{If we interpret the function $|y_i-\hat x|$ as a potential function generate by sensor $i$, then we can see that sensor $i$ is dragging $\hat x$ towards $y_i$ with $1$ unit of force. The equilibrium point will be at the middle $y_i$.}
-\end{frame}
-
-\begin{frame}{Interpretation}
-  \begin{figure}[ht]
-    \centering
-    \begin{tikzpicture}[yscale=0.4]
-      \draw[thick,->] (0,0)--(9,0);
-      \node [anchor=west] at (9,0) {$\hat x$};
-      \draw[thin,gray] (2,0)--(2,0.1);
-      \draw[thin,gray] (5,0)--(5,0.1);
-      \draw[thin,gray] (7,0)--(7,0.1);
-      \draw[thick,white](1,11)--(2,8)--(5,5)--(7,7)--(8,10);
-      \node [anchor=north] at (2,0) {\color{red}{$y_1$}};
-      \draw[semithick,red](1,1)--(2,0)--(8,6);
-      \node [anchor=north] at (5,0) {\color{blue}{$y_2$}};
-      \draw[semithick,blue](1,4)--(5,0)--(8,3);
-      \node [anchor=north] at (7,0) {\color{brown}{$y_3$}};
-      \draw[semithick,brown](1,6)--(7,0)--(8,1);
-    \end{tikzpicture}
-  \end{figure}
-  If we interpret the function $|y_i-\hat x|$ as a potential function generate by sensor $i$, then we can see that sensor $i$ is dragging $\hat x$ towards $y_i$ with $1$ unit of force. The equilibrium point will be at the middle $y_i$.
-\end{frame}
-
-\begin{frame}{Another Example}
-  Suppose the following sensory model:
-  \begin{align*}
-    y = \begin{bmatrix}
-      1\\
-      1\\
-      3
-    \end{bmatrix}x + w+a ,\,\|a\|_0\leq 1.
-  \end{align*}
-  Then the following estimator is not resilient:
-  \begin{align*}
-    g(y) = \argmin_{\hat x}  |y_1-\hat x|+|y_2-\hat x|+|y_3-3\hat x|.
-  \end{align*}
-  In fact, we can rewrite it as
-  \begin{align*}
-    g(y) = \argmin_{\hat x}  |y_1-\hat x|+|y_2-\hat x|+3\left|\frac{y_3}{3}-\hat x\right| = \frac{y_3}{3}
-  \end{align*}
-  Sensor $3$ generates $3$ unit of force comparing to $1$ unit of force from sensor $1$ and $2$.
-\end{frame}
-
-\begin{frame}{Sufficient Condition For Resiliency}
-  \begin{theorem}
-    If the following conditions hold, then the estimation is resilient:
+\begin{frame}{Equilibrium Strategies}
+  \begin{block}{Attack Strategy $g^*$}
+    Flip $p$ compromised sensors' measurements.
+  \end{block}
+  \begin{block}{Detection Strategy $f^*$ (Vote Counting)}
     \begin{enumerate}
-    \item For all $i$, the following limit is well-defined:
-      \begin{align*}
-        \lim_{t\rightarrow\infty}\frac{f_i(t)}{t} = \alpha_i < \infty.
-      \end{align*}
-    \item For any $u\neq 0$ and any index set $\mathcal I$ of cardinality $p$, the following inequality hold:
-      \begin{align*}
-        \sum_{i\in \mathcal I} |\alpha_i H_i u| < \sum_{i\in \mathcal I^c} |\alpha_i H_i u|.
-      \end{align*}
+      \item Each sensor has two triggers $t_{i,0}=0$ and $t_{i,1}=1$.
+      \item If $\sum_{t=1}^k y_i(t) < -threshold$ at certain time $k$, set $t_{i,0} = 1$
+      \item If $\sum_{t=1}^k y_i(t) > threshold$ at certain time $k$, set $t_{i,1} = 1$
+      \item Make a decision $\hat \theta = 0$ if $\sum_i t_{i,0} \geq m-p$, or $\hat \theta = 1$ if $\sum_i t_{i,1} \geq m-p$.
     \end{enumerate}
-  \end{theorem}
-  Roughly speaking $|\alpha_i H_i u|$ is the maximum force from sensor $i$. The condition can be interpreted as the combined force from any $p$ sensors should be smaller than that of the remaining $m-p$ sensors.
+  \end{block}
+
+  \begin{itemize}
+      \item Only need to exchange at most $2m$ messages (regardless of $P_e$)
+      \item Can be implemented as an event-based strategy.
+      \item Potentially can be made into a distributed algorithm?
+      \item Efficiency vs Security trade-off?
+  \end{itemize}
 \end{frame}
-
-\begin{frame}{Necessary Condition For Resiliency}
-  \begin{theorem}
-    If the one of the following conditions is violated, then the estimation is not resilient:
-    \begin{enumerate}
-    \item There exists an $i$, such that
-      \begin{align*}
-        \lim_{t\rightarrow\infty}\frac{f_i(t)}{t} = \infty.
-      \end{align*}
-    \item There exists a $u\neq 0$ and an index set $\mathcal I$ of cardinality $p$, such that
-      \begin{align*}
-        \sum_{i\in \mathcal I} |\alpha_i H_i u| > \sum_{i=\mathcal I^c} |\alpha_i H_i u|.
-      \end{align*}
-    \end{enumerate}
-  \end{theorem}
-  Notice that we only have a trivial gap for the case:
-  \[ \sum_{i\in \mathcal I} |\alpha_i H_i u| = \sum_{i=\mathcal I^c} |\alpha_i H_i u|.\]
-\end{frame}
-
-\begin{frame}{How to Handle Correlated Noise}
-  Instead of the problem where the residues are decoupled:
-  \begin{align*}
-    g(y) = \argmin_{\hat x} \sum_{i=1}^m f_i(r_i),\text{s.t.}y_i = H_i\hat x+r_i,
-  \end{align*}
-  we could also consider the estimator where part of the residue are coupled via a quadratic term:
-  \begin{align*}
-    g(y) = \argmin_{\hat x}  w^TQw+\sum_{i=1}^m f_i(a_i),\text{s.t.}y_i = H_i\hat x+w_i+a_i.
-  \end{align*}
-  The sufficient condition for resiliency remains the same.
-\end{frame}
-
-\begin{frame}{Simulation IEEE 14-bus System}
-  \begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.60\textwidth]{ieee14.jpg}
-  \end{figure}
-  We assume $p=1$ and the flow sensor on the red line is being attacked.
-\end{frame}
-
-\begin{frame}{Simulation IEEE 14-bus System}
-  \begin{figure}[ht]
-    \begin{center}
-      
-      \setlength{\figureheight}{6cm}
-      \setlength{\figurewidth}{10cm}
-      \definecolor{mycolor1}{rgb}{1.00000,0.00000,1.00000}%
-      % 
-      \begin{tikzpicture}
-
-        \begin{axis}[%
-          width=\figurewidth,
-          height=\figureheight,
-          at={(1.527in,1.083in)},
-          scale only axis,
-          xmin=0.95,
-          xmax=2.4,
-          xlabel={Normalized MSE of the estimators without attack},
-          xmajorgrids,
-          ymin=0.95,
-          ymax=2.5,
-          ylabel={Normalized MSE when under attack},
-          ymajorgrids,
-          axis background/.style={fill=white},
-          legend style={at={(0.597,0.528)},anchor=south west,legend cell align=left,align=left,draw=white!15!black}
-          ]
-          \addplot [color=blue,dashed,line width=1.5pt,mark=triangle,mark options={solid},forget plot]
-          table[row sep=crcr]{%
-            2.16434829886514	2.41673714136766\\
-            1.49824142620916	1.6273922047888\\
-            1.46836558726546	1.61304395019434\\
-            1.42878218405531	1.58080265845186\\
-            1.33509034059386	1.48317348510781\\
-            1.24979953097586	1.4011442907391\\
-            1.20190884155895	1.36475282176979\\
-            1.14816845697376	1.32743887772808\\
-            1.104692902235	1.30458587111275\\
-            1.0727554366346	1.2930587844785\\
-            1.04837293442887	1.29286647088633\\
-            1.03276380632143	1.30464750437787\\
-            1.02491383863213	1.32636243694814\\
-            1.0209295289153	1.35606289076979\\
-            1.01470702949196	1.40680155569416\\
-            1.00686189169388	1.48274325705327\\
-            1.00166658882151	1.69020329692052\\
-            1.00012894457222	2.29806950301701\\
-          };
-
-          \addplot [color=mycolor1,dashed,forget plot]
-          table[row sep=crcr]{%
-            1	1\\
-            2.2	1\\
-          };
-          \addplot [color=mycolor1,dashed,forget plot]
-          table[row sep=crcr]{%
-            1	1\\
-            1	2.5\\
-          };
-          \node[right, align=left, text=blue]
-          at (axis cs:2.164,2.417) {$\text{   }\leftarrow\text{ }\lambda\rightarrow 0$};
-          \node[right, align=left, text=blue]
-          at (axis cs:1.335,1.483) {$\text{   }\leftarrow\text{ }\lambda\text{=0.5}$};
-          \node[right, align=left, text=blue]
-          at (axis cs:1.202,1.365) {$\text{   }\leftarrow\text{ }\lambda\text{=1}$};
-          \node[right, align=left, text=blue]
-          at (axis cs:1.073,1.293) {$\text{   }\leftarrow\text{ }\lambda\text{=1.9}$};
-          \node[right, align=left, text=blue]
-          at (axis cs:1.02,1.356) {$\leftarrow\lambda\text{=3}$};
-          \node[right, align=left, text=blue]
-          at (axis cs:1,2.298) {$\text{   }\leftarrow\text{ }\lambda\text{=7}$};
-          \node[right, align=left, text=mycolor1]
-          at (axis cs:1,2.4) {$\text{   }\leftarrow\text{ LSE}$};
-          \node[right, align=left, text=mycolor1]
-          at (axis cs:1.9,1.14) {Oracle LSE};
-          \node[right, align=left, text=mycolor1]
-          at (axis cs:1.9,1.07) {$\text{     ~~~~~}\downarrow$};
-        \end{axis}
-      \end{tikzpicture}%
-    \end{center}
-  \end{figure}
-\end{frame}
-
-\begin{frame}{Dynamic State Estimation}
-  \begin{enumerate}
-  \item Consider the following dynamic system
-    \begin{align}
-      x(k+1) = A x(k) + w(k),\, y(k) = C x(k) + v(k) + a(k).
-    \end{align}
-  \item A linear fixed-gain estimator:
-    \begin{align}
-      \hat x(k+1) = A \hat x(k) + K(y(k+1)-CA\hat x(k)),
-    \end{align}
-    where $K$ is the estimation gain, and $A-KCA$ is stable.
-    \begin{center}
-      \begin{tikzpicture}[x=2cm, y=0.75cm]
-        \node at (-0.7,0) {State Est:};
-        \node [blue!70] at (-0.7,1) {Sensor 2:};
-        \node [red!70] at (-0.7,-1) {Sensor 1:};
-
-        \node            (x0)  at (0,0) {$\hat x(0)$};
-        \node [blue!70] (y20)  at (0,1)    {$y_2(0)$};
-        \node [red!70]  (y10)  at (0,-1)   {$y_1(0)$};
-        \draw [->,semithick,blue!70] (y20) to (x0);
-        \draw [->,semithick,red!70]  (y10) to (x0);
-
-        \node            (x1)  at (1,0) {$\hat x(1)$};
-        \node [blue!70] (y21)  at (1,1)    {$y_2(1)$};
-        \node [red!70]  (y11)  at (1,-1)   {$y_1(1)$};
-        \draw [->,semithick,blue!70] (y21) to (x1);
-        \draw [->,semithick,red!70]  (y11) to (x1);
-
-        \node            (x2)  at (2,0) {$\hat x(2)$};
-        \node [blue!70] (y22)  at (2,1)    {$y_2(2)$};
-        \node [red!70]  (y12)  at (2,-1)   {$y_1(2)$};
-        \draw [->,semithick,blue!70] (y22) to (x2);
-        \draw [->,semithick,red!70]  (y12) to (x2);
-
-        \draw [->,semithick] (x0) to (x1);
-        \draw [->,semithick] (x1) to (x2);
-      \end{tikzpicture}
-    \end{center}
-  \item The error introduced by the attack may accumulate over time.
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}{Dynamic State Estimate: A Moving Horizon Approach}
-  In order to convert the dynamic estimation problem into a static one, we can use a moving horizon approach:
-  \begin{center}
-    \begin{tikzpicture}[x=2cm, y=0.75cm]
-      \node at (-0.7,0) {State Est:};
-      \node [blue!70] at (-0.7,1) {Sensor 2:};
-      \node [red!70] at (-0.7,-1) {Sensor 1:};
-
-      \node            (x0)  at (0,0) {$\hat x(0)$};
-      \node [blue!70] (y20)  at (0,1)    {$y_2(0)$};
-      \node [red!70]  (y10)  at (0,-1)   {$y_1(0)$};
-      \draw [->,semithick,blue!70] (y20) to (x0);
-      \draw [->,semithick,red!70]  (y10) to (x0);
-
-      \node            (x1)  at (1,0) {$\hat x(1)$};
-      \node [blue!70] (y21)  at (1,1)    {$y_2(1)$};
-      \node [red!70]  (y11)  at (1,-1)   {$y_1(1)$};
-      \draw [->,semithick,blue!70] (y21) to (x1);
-      \draw [->,semithick,red!70]  (y11) to (x1);
-      \draw [->,semithick,blue!70] (y20) to (x1);
-      \draw [->,semithick,red!70]  (y10) to (x1);
-
-      \node            (x2)  at (2,0) {$\hat x(2)$};
-      \node [blue!70] (y22)  at (2,1)    {$y_2(2)$};
-      \node [red!70]  (y12)  at (2,-1)   {$y_1(2)$};
-      \draw [->,semithick,blue!70] (y22) to (x2);
-      \draw [->,semithick,red!70]  (y12) to (x2);
-      \draw [->,semithick,blue!70] (y21) to (x2);
-      \draw [->,semithick,red!70]  (y11) to (x2);
-    \end{tikzpicture}
-  \end{center}
-
-  However, the historical data are discarded and the estimation performance may be poor when the system is operating normally.
-\end{frame}
-
-\begin{frame}{Dynamic State Estimate: A Local Estimator Approach}
-  We propose to store historical data in the local estimations:
-  \begin{center}
-    \begin{tikzpicture}[x=2cm, y=0.75cm]
-      \node at (-0.7,0) {State Est:};
-      \node [blue!70] at (-0.7,2) {Sensor 2:};
-      \node [blue!70] at (-0.7,1) {Local Est 2:};
-      \node [red!70] at (-0.7,-2) {Sensor 1:};
-      \node [red!70] at (-0.7,-1) {Local Est 1:};
-
-      \node            (x0)  at (0,0)    {$\hat x(0)$};
-      \node [blue!70] (y20)  at (0,2)       {$y_2(0)$};
-      \node [blue!70] (x20)  at (0,1)  {$\hat x_2(0)$};
-      \node [red!70]  (y10)  at (0,-2)      {$y_1(0)$};
-      \node [red!70]  (x10)  at (0,-1) {$\hat x_1(0)$};
-      \draw [->,semithick,blue!70] (y20) to (x20);
-      \draw [->,semithick,red!70]  (y10) to (x10);
-      \draw [->,semithick,blue!70] (x20) to  (x0);
-      \draw [->,semithick,red!70]  (x10) to  (x0);
-
-      \node            (x1)  at (1,0)    {$\hat x(1)$};
-      \node [blue!70] (y21)  at (1,2)       {$y_2(1)$};
-      \node [blue!70] (x21)  at (1,1)  {$\hat x_2(1)$};
-      \node [red!70]  (y11)  at (1,-2)      {$y_1(1)$};
-      \node [red!70]  (x11)  at (1,-1) {$\hat x_1(1)$};
-      \draw [->,semithick,blue!70] (y21) to (x21);
-      \draw [->,semithick,red!70]  (y11) to (x11);
-      \draw [->,semithick,blue!70] (x21) to  (x1);
-      \draw [->,semithick,red!70]  (x11) to  (x1);
-
-      \node            (x2)  at (2,0)    {$\hat x(2)$};
-      \node [blue!70] (y22)  at (2,2)       {$y_2(2)$};
-      \node [blue!70] (x22)  at (2,1)  {$\hat x_2(2)$};
-      \node [red!70]  (y12)  at (2,-2)      {$y_1(2)$};
-      \node [red!70]  (x12)  at (2,-1) {$\hat x_1(2)$};
-      \draw [->,semithick,blue!70] (y22) to (x22);
-      \draw [->,semithick,red!70]  (y12) to (x12);
-      \draw [->,semithick,blue!70] (x22) to  (x2);
-      \draw [->,semithick,red!70]  (x12) to  (x2);
-
-      \draw [->,semithick,blue!70] (x20) to (x21);
-      \draw [->,semithick,blue!70] (x21) to (x22);
-      \draw [->,semithick,red!70] (x10) to (x11);
-      \draw [->,semithick,red!70] (x11) to (x12);
-    \end{tikzpicture}
-  \end{center}
-  \begin{enumerate}
-  \item Construct local estimators (which uses only the local measurements):
-    \begin{align*}
-      \hat x_i(k) = A \hat x_i(k) + L_i (y_i(k)-CA\hat x_i(k)).
-    \end{align*}  
-  \item Reconstruct the global estimator as
-    \begin{align*}
-      \hat x(k) = g(\hat x_1(k),\ldots,\hat x_m(k)).
-    \end{align*}  
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}{Local Estimator Design}
-  \begin{enumerate}
-  \item  Choose $L_i$ such that $A-L_iCA$ shares the same eigenvalues as $A-KCA$ (requires observability)
-    \begin{align*}
-      \hat x_i(k) = A \hat x_i(k) + L_i (y_i(k)-CA\hat x_i(k)).
-    \end{align*}  
-  \item The global estimate can be recovered as
-    \begin{align*}
-      \hat x(k) = F_1\hat x_1(k)+\dots+F_m\hat x_m(k).
-    \end{align*}
-  \item More importantly, it can be written as the solution of a quadratic programming problem:
-    \begin{align*}
-      &\mathop{\textrm{minimize}}\limits_{\hat x(k),\hat e(k)}&
-      & \frac{1}{2}\hat e(k)^T \tilde W^{-1} \hat e(k)\\
-      &\textrm{subject to} &
-      &\hat x_i(k)  =  \hat x(k) + \hat e_i(k),&
-    \end{align*}
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}{Securing the Global Estimate}
-  We can secure the global estimator using LASSO:
-  \begin{align*}
-    &\mathop{\textrm{minimize}}\limits_{\hat x(k),\hat e(k)}&
-    & \frac{1}{2}\hat e(k)^T \tilde W^{-1} \hat e(k) + \gamma \sum_{i=1}^m \|\hat \nu_i(k)\|_1\\
-    &\textrm{subject to} &
-    &\hat x_i(k)  =  \hat x(k) + \hat e_i(k)+\hat \nu_i(k),&
-  \end{align*}
-\end{frame}
-
-\begin{frame}{Efficiency and Security}
-  \begin{theorem}
-    Assuming all sensors are benign, then the secure estimator recovers the Kalman estimation if the following holds:
-    \begin{align*}
-      \left\|\tilde W^{-1} - H \begin{bmatrix}
-          F_1&\dots&F_m
-        \end{bmatrix}\tilde e(k) \right\|_\infty\leq \gamma.  
-    \end{align*}
-  \end{theorem}
-  \begin{theorem}
-    Assuming that less than half of the sensors are compromised, then the secure estimator is stable.
-  \end{theorem}
-  Can be extend to the case where the system is not fully observable for each individual sensor.
-\end{frame}
-
-%\begin{frame}{Autonomous Vehicle Simulation}
-%  \centering
-%  \includemedia[width=0.96\linewidth,height=0.54\linewidth,activate=pageopen,
-%  passcontext,
-%  transparent,
-%  addresource=gps1.mp4,
-%  flashvars={source=gps1.mp4}
-%  ]{Autonomous Vehicle Under GPS Spoofing Attack}{VPlayer.swf} 
-%\end{frame}
-%
-%\begin{frame}{Autonomous Vehicle Simulation}
-%  \centering
-%  \includemedia[width=0.96\linewidth,height=0.54\linewidth,activate=pageopen,
-%  passcontext,
-%  transparent,
-%  addresource=gps2.mp4,
-%  flashvars={source=gps2.mp4}
-%  ]{Autonomous Vehicle Under GPS Spoofing Attack}{VPlayer.swf} 
-%\end{frame}
 
 \section{Conclusion and Future Works}
 
 \begin{frame}{Towards a Science of CPS Security}
   \begin{itemize}
-  \item We consider both the hypothesis testing and the state estimation in adversarial environment and propose secure and efficient algorithm for both problems.
-  \item System theory can help CPS to tolerate, detect and recover from malicious attacks.
-  \item How to systematically design algorithms that are both secure and efficient?
-  \item How to combine information security with system theory to provide defense in depth?
+    \item We consider both the hypothesis testing and the state estimation in adversarial environment and propose secure and efficient algorithm for both problems.
+    \item System theory can help CPS to tolerate, detect and recover from malicious attacks.
+    \item How to systematically design algorithms that are both secure and efficient?
+    \item How to combine information security with system theory to provide defense in depth?
   \end{itemize}
 \end{frame}
 
