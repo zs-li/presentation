@@ -56,7 +56,7 @@
 }
 \date[Nov 21, 2019]{Nov 21st, 2019 \\ 
   \small Joint Work with Jiaqi Yan, Zishuo Li,\\
-  Prof. Xiaoqiang Ren, Prof. Bruno Sinopoli, Prof. Joao Hespanha}
+  Prof. Fei Hao, Xiaoqiang Ren, Bruno Sinopoli, Joao Hespanha}
 
 \usetheme[subsectionpage=none,block=fill]{metropolis}
 \definecolor{thupurple}{RGB}{102,8,116}
@@ -396,7 +396,7 @@
 
 \begin{frame}{The structure of the optimal detector}
   \begin{theorem}
-    The optimal $f^*$ is of the following form
+    The optimal $f^*$ is of the following form\footnote{Yilin Mo, Joao Hespanha and Bruno Sinopoli, Resilient Detection in the Presence of Integrity Attacks, IEEE Transactions on Signal Processing, Jan 2014, Volume 62, Issue 1, Pages 31-43 }:
     \begin{align*}
       f^*(y) = \begin{cases}
 	1 & d(y,X^-)\ge d(y,X^+)\\
@@ -605,7 +605,9 @@
       \end{displaymath}
     \end{enumerate}
   \end{block}
-  The corresponding $X_- = \left\{y:\Smax_{2p}(y) < 0\right\}$ and $X_+ = \left\{y:\Smin_{2p}(y) > 0\right\}$.
+  $X_- = \left\{y:\Smax_{2p}(y) < 0\right\}$ and $X_+ = \left\{y:\Smin_{2p}(y) > 0\right\}$.
+
+
 \end{frame}
 
 \begin{frame}{What is the Cost of Security?}
@@ -693,7 +695,7 @@ I_0^{-1}\left(\frac{s}{m-n}\right)\leq I_1^{-1}\left(\frac{e}{m-n}\right),\, I_0
 \end{frame}
 
 \begin{frame}{General Case}
-  The following detection strategy achieves the fundamental limit:
+  The following detection strategy achieves the fundamental limit\footnote{Xiaoqiang Ren, Jiaqi Yan and Yilin Mo, Binary Hypothesis Testing with Byzantine Sensors: Fundamental Trade-off Between Security and Efficiency, IEEE Transactions on Signal Processing, Mar 2018, Volume 66, Issue 6, Pages 1454-1468 }:
   \begin{enumerate}
   \item If there exists a set $J$ of $m-p$ sensors, such that
     \begin{align*}
@@ -1780,7 +1782,7 @@ I_0^{-1}\left(\frac{s}{m-n}\right)\leq I_1^{-1}\left(\frac{e}{m-n}\right),\, I_0
   \end{frame}
 
   \begin{frame}{Equilibrium Strategies}
-    \emph{Theorem: The following strategy pair $(f^*,g^*)$ forms a Nash-equilibrium with $I(f^*,g^*) = (m-2p)\tilde C$:}
+    \emph{Theorem\footnote{Zishuo Li, Yilin Mo and Fei Hao, Game Theoretical Approach to Sequential Hypothesis Test with Byzantine Sensors, IEEE CDC 2019.}: The following strategy pair $(f^*,g^*)$ forms a Nash-equilibrium with $I(f^*,g^*) = (m-2p)\tilde C$:}
     \begin{block}{Attack Strategy $g^*$}
       Flip $p$ compromised sensors' measurements.
     \end{block}
@@ -1793,13 +1795,16 @@ I_0^{-1}\left(\frac{s}{m-n}\right)\leq I_1^{-1}\left(\frac{e}{m-n}\right),\, I_0
       \end{enumerate}
     \end{block}
 
+  \end{frame}
+
+  \begin{frame}{Remarks}
     \begin{itemize}
       \item Only need to exchange at most $2m$ messages (regardless of $P_e$)
       \item Can be implemented as an event-based strategy.
       \item Potentially can be made into a distributed algorithm?
       \item Efficiency vs Security trade-off?
     \end{itemize}
-  \end{frame}
+\end{frame}
 
   \section{Conclusion and Future Works}
 
