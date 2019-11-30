@@ -1,3 +1,6 @@
+% !TEX TS-program = xelatex
+% !TEX ecoding = UTF-8
+
 \documentclass[10pt]{beamer}
 
 \usepackage{xeCJK}
@@ -51,10 +54,10 @@
 \DeclareMathOperator{\argmax}{arg\;max}
 \let\Tiny\tiny
 
-\title[Secure CPS]{信息物理系统中的安全控制算法设计}
+\title[Secure CPS]{信息物理系统中主动入侵控制}
 \author[Yilin Mo]{莫一林}
 \institute[Tsinghua]{清华大学    自动化系}
-\date[Oct 11th, 2019]{2019年11月2日于上海大学}
+\date[Dec 16th, 2019]{2019年12月16日}
 
 \usetheme[subsectionpage=none,block=fill]{metropolis}
 \definecolor{thupurple}{RGB}{102,8,116}
@@ -89,17 +92,17 @@
   \item Applications: aerospace, chemical processes, civil infrastructure, energy, manufacturing and transportation. 
   \end{itemize}
 \end{frame}
-%
-%\begin{frame}{Security Threats for the CPS}
-%  \begin{itemize}
-%  \item The next generation CPS: Smart Grids, Smart Buildings, Smart Home, Internet of Things, will make extensive use of widespread sensing and networking.
-%  \item As the CPSs become ``smarter'', they are also more vulnerable to malicious attacks.
-%  \end{itemize}
-%  \begin{figure}[ht]
-%    \centering
-%    \includegraphics[width=0.6\textwidth]{SmartHome.jpg}
-%  \end{figure}
-%\end{frame}
+
+\begin{frame}{Security Threats for the CPS}
+  \begin{itemize}
+  \item The next generation CPS: Smart Grids, Smart Buildings, Smart Home, Internet of Things, will make extensive use of widespread sensing and networking.
+  \item As the CPSs become ``smarter'', they are also more vulnerable to malicious attacks.
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\textwidth]{SmartHome.jpg}
+  \end{figure}
+\end{frame}
 
 \begin{frame}{Stuxnet}
   \begin{figure}[ht]
@@ -174,6 +177,7 @@
   \caption{Protecting CPS with Multi-layer Defense}
   \end{figure}
 \end{frame}
+
 \section{Active Intrusion Detection}
 
 \begin{frame}{Stuxnet}
@@ -345,7 +349,7 @@
     \end{figure}
 \end{frame}
 
-\begin{frame}{Some Known Results}
+\begin{frame}{Detection Performance v.s. Control Performance}
   \begin{itemize}
   \item Assuming the watermarking signal is i.i.d. zero mean Gaussian with covariance $U$.
   \item The optimal watermarking signal design problem can be written as
@@ -356,12 +360,32 @@
       & Additional\;LQG\;Cost \leq \delta.
     \end{align*}
   \item The above problem can be relaxed into an Semi-Definite Programming problem. The optimal solution can be derived analytically using generalized eigenvectors.
-  \item What if the system is \textbf{unknown}?
   \end{itemize}
 \end{frame}
-%
-%\section{An Online Approach to Replay Attack Detection}
-%
+
+\begin{frame}{Stationary Watermarking}
+  \begin{itemize}
+    \item We can consider a zero mean stationary Gaussian signal, with autocovariance function:
+      \begin{align*}
+	\Gamma(d) = \mathbb E \zeta(k)\zeta(k+d)^T.
+      \end{align*}
+    \item All autocovariance functions form a convex cone.
+    \item The optimal trade-off is attained at the boundary of the cone, consisting of signals of the following form: 
+      \begin{align*}
+        \zeta(k) = H \xi(k),
+      \end{align*}
+      where $\xi(k)\in \mathbb R^2$ is a hidden state satisfies:
+      \begin{align*}
+      \xi(k+1) = \begin{bmatrix}
+	  \cos 2\pi\omega & -\sin 2\pi\omega \\
+	  \sin 2\pi\omega & \cos 2\pi\omega \\
+	\end{bmatrix} \xi(k).
+      \end{align*}
+  \end{itemize} 
+\end{frame}
+
+\section{An Online Approach to Replay Attack Detection}
+
 \begin{frame}{Data-Driven Approach}
   \begin{figure}[htpb]
     \inputtikz{systemdiagram2}
@@ -496,7 +520,7 @@
     \end{align*}
   \item Generate the watermark signal:
     \begin{align*}
-      \zeta(k) = \left(\hat U_k^{1/2}+k^{-1/3}I\right) \phi(k),\,where\; \phi(k)\sim\mathcal N(0,I).
+      \zeta(k) = \left(\hat U_k+k^{-\beta}I\right)^{1/2}\phi(k),\,where\; \phi(k)\sim\mathcal N(0,I).
     \end{align*}
   \item Update the estimated system parameters using the cross correlation between $y$ and $u$.
   \end{itemize}
@@ -591,7 +615,7 @@
   \item We could also consider classical system identification techniques, which use $\hat U_k=I$: Pure \textcolor{blue}{Exploration}.
   \item To achieve a balance, choose
     \begin{align*}
-      \hat U_k = \text{``optimal'' } U + k^{-1/3} I.
+      \hat U_k = \text{``optimal'' } U + k^{-\beta} I.
     \end{align*}
   \item More \textcolor{blue}{exploration} at the beginning and more \textcolor{red}{exploitation} towards the end.
   \end{itemize}
@@ -599,9 +623,9 @@
 
 \begin{frame}{Convergence of the Watermarking Signal}
   \begin{theorem}
-    $\hat U_k$ converges to the optimal $U$ a.s. Furthermore, for any $\epsilon > 0$, we have
+    If $0 \leq \beta < 1$, then $\hat U_k$ converges to the optimal $U$ a.s. Furthermore, for any $\epsilon > 0$, we have
     \begin{align*}
-      \frac{\hat U_k - U}{k^{-1/3+\epsilon}} \rightarrow 0,\,a.s.
+      \frac{\hat U_k - U}{k^{-1/2+\beta/2+\epsilon}} \rightarrow 0,\,a.s.
     \end{align*}
   \end{theorem}
 \end{frame}
@@ -645,15 +669,14 @@ The TEP is created to provide a realistic industrial process for developing stud
       \end{itemize}
     \end{column}
   \end{columns}
-  ~\\
+ ~\\
   As time $k$ goes to infinity, $U_k$ converges to the optimal covariance of the watermark signal, $U$.
 \end{frame}
 
-\begin{frame}
-  \frametitle{The detection performance}
+\begin{frame}{The detection performance}
   \begin{itemize}
-  \item $g_n$: the output of the failure detector designed with know parameters
-  \item $g$: the output of the failure detector when the parameters of the system are inferred through the learning technique. 
+  \item $g$: the output of the failure detector designed with know parameters
+  \item $\hat g$: the output of the failure detector when the parameters of the system are inferred through the learning technique. 
   \end{itemize}
   \begin{figure}[h!]
     \centering
@@ -661,435 +684,451 @@ The TEP is created to provide a realistic industrial process for developing stud
   \end{figure}
 \end{frame}
 
-\section{Resilient Algorithm Design}
-
-\begin{frame}{Static State Estimation}
-  \begin{enumerate}
-  \item We assume the following sensor model:
-    \begin{align*}
-  \begin{bmatrix}z_1\\\vdots\\z_m\end{bmatrix} =  z = Hx + w.
-    \end{align*}
-  \item The optimal state estimator is of the form
-    \begin{align*}
-      \hat x = Kz, \text{ where }K = (H^TH)^{-1}H^T.
-    \end{align*}
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}{Least Square Estimator}
-  Suppose the following sensory model:
-  \begin{align*}
-    z = \begin{bmatrix}
-      1\\
-      1\\
-      1
-    \end{bmatrix}x + w.
-  \end{align*}
-  The optimal estimator is given by
-  \begin{align*}
-    \hat x = \frac{1}{3}\left(z_1+z_2+z_3\right).
-  \end{align*}
-  This estimator is not resilient to a single malicious sensor.
-\end{frame}
-
-\begin{frame}{Problem Formulation}
-  \begin{enumerate}
-  \item Assume that at most $p$ sensors are compromised.
-  \item The sensory model is given by
-    \begin{align*}
-      y = z + a = Hx + w +a,
-    \end{align*}
-    where $a$ is a $p$-sparse vector indicating the attacker's action.
-  \item We will call an estimator $\hat x = g(y)$ to be resilient if
-    \begin{align*}
-      \|g(y) - g(z)\|\text{ is bounded for all $p$-sparse $a$}.
-    \end{align*}
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}{Some Related Research}
-  \begin{enumerate}
-  \item The following estimator is resilient under $2p$ observable condition:
-    \begin{align*}
-      & \mathop{\textit{minimize}}\limits_{\hat x,a,w}&
-      & \|w\|^2 \\
-      &\text{subject to}&
-      &y = H \hat x + w + a,\,\|a\|_0\leq p.
-    \end{align*}
-    The drawback: The optimization problem is not convex and solving it is computationally difficult.
-  \item Can we design a secure and computationally efficient estimators?
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}{A General Convex Optimization Based Estimator}
-  Least Square Estimator:
- \begin{align*}
-      g(y) = \argmin_{\hat x} \|y-H\hat x\|_2^2= \argmin_{\hat x}  \sum_{i=1}^m (y_i-H_i\hat x)^2.
- \end{align*}
- 
-  We consider the following estimator
-  \begin{align*}
-    \hat x = g(y) \triangleq \argmin_{\hat x} \sum_{i=1}^m f_i(y_i-H_i \hat x),
-  \end{align*}
-  where the following properties of function $f_i:\mathbb R\mapsto \mathbb R$ are assumed:
-  \begin{enumerate}
-  \item $f_i$ is convex.
-  \item $f_i$ is symmetric, i.e., $f_i(u) = f_i(-u)$.
-  \item $f_i$ is non-negative and $f_i(0) = 0$.
-  \end{enumerate} 
-
-  Many estimators, such as least square estimator, L1 estimator and LASSO estimation can be included in this framework, by choosing a suitable $f_i$.
-
-  The estimator can be computed efficiently via convex optimization. 
-\end{frame}
-
-\begin{frame}{Sufficient Condition For Resiliency}
-  \begin{theorem}
-    If the following conditions hold, then the estimation is resilient:
-    \begin{enumerate}
-    \item For all $i$, the following limit is well-defined:
-      \begin{align*}
-        \lim_{t\rightarrow\infty}\frac{f_i(t)}{t} = \alpha_i < \infty.
-      \end{align*}
-    \item For any $u\neq 0$ and any index set $\mathcal I$ of cardinality $p$, the following inequality hold:
-      \begin{align*}
-        \sum_{i\in \mathcal I} |\alpha_i H_i u| < \sum_{i\in \mathcal I^c} |\alpha_i H_i u|.
-      \end{align*}
-    \end{enumerate}
-  \end{theorem}
-  Roughly speaking $|\alpha_i H_i u|$ characterize how powerful a single sensor $i$ is. The condition can be interpreted as the no $p$ sensors combined can be more powerful than the remaining $m-p$ sensors.
-\end{frame}
-
-\begin{frame}{Necessary Condition For Resiliency}
-  \begin{theorem}
-    If the one of the following conditions is violated, then the estimation is not resilient:
-    \begin{enumerate}
-    \item There exists an $i$, such that
-      \begin{align*}
-        \lim_{t\rightarrow\infty}\frac{f_i(t)}{t} = \infty.
-      \end{align*}
-    \item There exists a $u\neq 0$ and an index set $\mathcal I$ of cardinality $p$, such that
-      \begin{align*}
-        \sum_{i\in \mathcal I} |\alpha_i H_i u| > \sum_{i=\mathcal I^c} |\alpha_i H_i u|.
-      \end{align*}
-    \end{enumerate}
-  \end{theorem}
-  Notice that we only have a trivial gap for the case:
-  \[ \sum_{i\in \mathcal I} |\alpha_i H_i u| = \sum_{i=\mathcal I^c} |\alpha_i H_i u|.\]
-\end{frame}
-
-\begin{frame}{Simulation IEEE 14-bus System}
-  \begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.60\textwidth]{ieee14.jpg}
-  \end{figure}
-  We assume $p=1$ and the flow sensor on the red line is being attacked.
-\end{frame}
-
-\begin{frame}{Simulation IEEE 14-bus System}
-  \begin{figure}[ht]
-    \begin{center}
-      
-      \setlength{\figureheight}{6cm}
-      \setlength{\figurewidth}{10cm}
-      \definecolor{mycolor1}{rgb}{1.00000,0.00000,1.00000}%
-      % 
-      \begin{tikzpicture}
-
-        \begin{axis}[%
-          width=\figurewidth,
-          height=\figureheight,
-          at={(1.527in,1.083in)},
-          scale only axis,
-          xmin=0.95,
-          xmax=2.4,
-          xlabel={Normalized MSE of the estimators without attack},
-          xmajorgrids,
-          ymin=0.95,
-          ymax=2.5,
-          ylabel={Normalized MSE when under attack},
-          ymajorgrids,
-          axis background/.style={fill=white},
-          legend style={at={(0.597,0.528)},anchor=south west,legend cell align=left,align=left,draw=white!15!black}
-          ]
-          \addplot [color=blue,dashed,line width=1.5pt,mark=triangle,mark options={solid},forget plot]
-          table[row sep=crcr]{%
-            2.16434829886514	2.41673714136766\\
-            1.49824142620916	1.6273922047888\\
-            1.46836558726546	1.61304395019434\\
-            1.42878218405531	1.58080265845186\\
-            1.33509034059386	1.48317348510781\\
-            1.24979953097586	1.4011442907391\\
-            1.20190884155895	1.36475282176979\\
-            1.14816845697376	1.32743887772808\\
-            1.104692902235	1.30458587111275\\
-            1.0727554366346	1.2930587844785\\
-            1.04837293442887	1.29286647088633\\
-            1.03276380632143	1.30464750437787\\
-            1.02491383863213	1.32636243694814\\
-            1.0209295289153	1.35606289076979\\
-            1.01470702949196	1.40680155569416\\
-            1.00686189169388	1.48274325705327\\
-            1.00166658882151	1.69020329692052\\
-            1.00012894457222	2.29806950301701\\
-          };
-
-          \addplot [color=mycolor1,dashed,forget plot]
-          table[row sep=crcr]{%
-            1	1\\
-            2.2	1\\
-          };
-          \addplot [color=mycolor1,dashed,forget plot]
-          table[row sep=crcr]{%
-            1	1\\
-            1	2.5\\
-          };
-          \node[right, align=left, text=blue]
-          at (axis cs:2.164,2.417) {$\text{   }\leftarrow\text{ }\lambda\rightarrow 0$};
-          \node[right, align=left, text=blue]
-          at (axis cs:1.335,1.483) {$\text{   }\leftarrow\text{ }\lambda\text{=0.5}$};
-          \node[right, align=left, text=blue]
-          at (axis cs:1.202,1.365) {$\text{   }\leftarrow\text{ }\lambda\text{=1}$};
-          \node[right, align=left, text=blue]
-          at (axis cs:1.073,1.293) {$\text{   }\leftarrow\text{ }\lambda\text{=1.9}$};
-          \node[right, align=left, text=blue]
-          at (axis cs:1.02,1.356) {$\leftarrow\lambda\text{=3}$};
-          \node[right, align=left, text=blue]
-          at (axis cs:1,2.298) {$\text{   }\leftarrow\text{ }\lambda\text{=7}$};
-          \node[right, align=left, text=mycolor1]
-          at (axis cs:1,2.4) {$\text{   }\leftarrow\text{ LSE}$};
-          \node[right, align=left, text=mycolor1]
-          at (axis cs:1.9,1.14) {Oracle LSE};
-          \node[right, align=left, text=mycolor1]
-          at (axis cs:1.9,1.07) {$\text{     ~~~~~}\downarrow$};
-        \end{axis}
-      \end{tikzpicture}%
-    \end{center}
-  \end{figure}
-\end{frame}
-
-\begin{frame}{Dynamic State Estimation}
-  \begin{enumerate}
-  \item Consider the following dynamic system
-    \begin{align}
-      x(k+1) = A x(k) + w(k),\, y(k) = C x(k) + v(k) + a(k).
-    \end{align}
-  \item A linear fixed-gain estimator:
-    \begin{align}
-      \hat x(k+1) = A \hat x(k) + K(y(k+1)-CA\hat x(k)),
-    \end{align}
-    where $K$ is the estimation gain, and $A-KCA$ is stable.
-    \begin{center}
-      \begin{tikzpicture}[x=2cm, y=0.75cm]
-        \node at (-0.7,0) {State Est:};
-        \node [blue!70] at (-0.7,1) {Sensor 2:};
-        \node [red!70] at (-0.7,-1) {Sensor 1:};
-
-        \node            (x0)  at (0,0) {$\hat x(0)$};
-        \node [blue!70] (y20)  at (0,1)    {$y_2(0)$};
-        \node [red!70]  (y10)  at (0,-1)   {$y_1(0)$};
-        \draw [->,semithick,blue!70] (y20) to (x0);
-        \draw [->,semithick,red!70]  (y10) to (x0);
-
-        \node            (x1)  at (1,0) {$\hat x(1)$};
-        \node [blue!70] (y21)  at (1,1)    {$y_2(1)$};
-        \node [red!70]  (y11)  at (1,-1)   {$y_1(1)$};
-        \draw [->,semithick,blue!70] (y21) to (x1);
-        \draw [->,semithick,red!70]  (y11) to (x1);
-
-        \node            (x2)  at (2,0) {$\hat x(2)$};
-        \node [blue!70] (y22)  at (2,1)    {$y_2(2)$};
-        \node [red!70]  (y12)  at (2,-1)   {$y_1(2)$};
-        \draw [->,semithick,blue!70] (y22) to (x2);
-        \draw [->,semithick,red!70]  (y12) to (x2);
-
-        \draw [->,semithick] (x0) to (x1);
-        \draw [->,semithick] (x1) to (x2);
-      \end{tikzpicture}
-    \end{center}
-  \item The error introduced by the attack may accumulate over time.
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}{Dynamic State Estimate: A Moving Horizon Approach}
-  In order to convert the dynamic estimation problem into a static one, we can use a moving horizon approach:
-  \begin{center}
-    \begin{tikzpicture}[x=2cm, y=0.75cm]
-      \node at (-0.7,0) {State Est:};
-      \node [blue!70] at (-0.7,1) {Sensor 2:};
-      \node [red!70] at (-0.7,-1) {Sensor 1:};
-
-      \node            (x0)  at (0,0) {$\hat x(0)$};
-      \node [blue!70] (y20)  at (0,1)    {$y_2(0)$};
-      \node [red!70]  (y10)  at (0,-1)   {$y_1(0)$};
-      \draw [->,semithick,blue!70] (y20) to (x0);
-      \draw [->,semithick,red!70]  (y10) to (x0);
-
-      \node            (x1)  at (1,0) {$\hat x(1)$};
-      \node [blue!70] (y21)  at (1,1)    {$y_2(1)$};
-      \node [red!70]  (y11)  at (1,-1)   {$y_1(1)$};
-      \draw [->,semithick,blue!70] (y21) to (x1);
-      \draw [->,semithick,red!70]  (y11) to (x1);
-      \draw [->,semithick,blue!70] (y20) to (x1);
-      \draw [->,semithick,red!70]  (y10) to (x1);
-
-      \node            (x2)  at (2,0) {$\hat x(2)$};
-      \node [blue!70] (y22)  at (2,1)    {$y_2(2)$};
-      \node [red!70]  (y12)  at (2,-1)   {$y_1(2)$};
-      \draw [->,semithick,blue!70] (y22) to (x2);
-      \draw [->,semithick,red!70]  (y12) to (x2);
-      \draw [->,semithick,blue!70] (y21) to (x2);
-      \draw [->,semithick,red!70]  (y11) to (x2);
-    \end{tikzpicture}
-  \end{center}
-
-  However, the historical data are discarded and the estimation performance may be poor when the system is operating normally.
-\end{frame}
-
-\begin{frame}{Dynamic State Estimate: A Local Estimator Approach}
-  We propose to store historical data in the local estimations:
-  \begin{center}
-    \begin{tikzpicture}[x=2cm, y=0.75cm]
-      \node at (-0.7,0) {State Est:};
-      \node [blue!70] at (-0.7,2) {Sensor 2:};
-      \node [blue!70] at (-0.7,1) {Local Est 2:};
-      \node [red!70] at (-0.7,-2) {Sensor 1:};
-      \node [red!70] at (-0.7,-1) {Local Est 1:};
-
-      \node            (x0)  at (0,0)    {$\hat x(0)$};
-      \node [blue!70] (y20)  at (0,2)       {$y_2(0)$};
-      \node [blue!70] (x20)  at (0,1)  {$\hat x_2(0)$};
-      \node [red!70]  (y10)  at (0,-2)      {$y_1(0)$};
-      \node [red!70]  (x10)  at (0,-1) {$\hat x_1(0)$};
-      \draw [->,semithick,blue!70] (y20) to (x20);
-      \draw [->,semithick,red!70]  (y10) to (x10);
-      \draw [->,semithick,blue!70] (x20) to  (x0);
-      \draw [->,semithick,red!70]  (x10) to  (x0);
-
-      \node            (x1)  at (1,0)    {$\hat x(1)$};
-      \node [blue!70] (y21)  at (1,2)       {$y_2(1)$};
-      \node [blue!70] (x21)  at (1,1)  {$\hat x_2(1)$};
-      \node [red!70]  (y11)  at (1,-2)      {$y_1(1)$};
-      \node [red!70]  (x11)  at (1,-1) {$\hat x_1(1)$};
-      \draw [->,semithick,blue!70] (y21) to (x21);
-      \draw [->,semithick,red!70]  (y11) to (x11);
-      \draw [->,semithick,blue!70] (x21) to  (x1);
-      \draw [->,semithick,red!70]  (x11) to  (x1);
-
-      \node            (x2)  at (2,0)    {$\hat x(2)$};
-      \node [blue!70] (y22)  at (2,2)       {$y_2(2)$};
-      \node [blue!70] (x22)  at (2,1)  {$\hat x_2(2)$};
-      \node [red!70]  (y12)  at (2,-2)      {$y_1(2)$};
-      \node [red!70]  (x12)  at (2,-1) {$\hat x_1(2)$};
-      \draw [->,semithick,blue!70] (y22) to (x22);
-      \draw [->,semithick,red!70]  (y12) to (x12);
-      \draw [->,semithick,blue!70] (x22) to  (x2);
-      \draw [->,semithick,red!70]  (x12) to  (x2);
-
-      \draw [->,semithick,blue!70] (x20) to (x21);
-      \draw [->,semithick,blue!70] (x21) to (x22);
-      \draw [->,semithick,red!70] (x10) to (x11);
-      \draw [->,semithick,red!70] (x11) to (x12);
-    \end{tikzpicture}
-  \end{center}
-  \begin{enumerate}
-  \item Construct local estimators (which uses only the local measurements):
-    \begin{align*}
-      \hat x_i(k) = A \hat x_i(k) + L_i (y_i(k)-CA\hat x_i(k)).
-    \end{align*}  
-  \item Reconstruct the global estimator as
-    \begin{align*}
-      \hat x(k) = g(\hat x_1(k),\ldots,\hat x_m(k)).
-    \end{align*}  
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}{Local Estimator Design}
-  \begin{enumerate}
-  \item  Choose $L_i$ such that $A-L_iCA$ shares the same eigenvalues as $A-KCA$ (requires observability)
-    \begin{align*}
-      \hat x_i(k) = A \hat x_i(k) + L_i (y_i(k)-CA\hat x_i(k)).
-    \end{align*}  
-  \item The global estimate can be recovered as
-    \begin{align*}
-      \hat x(k) = F_1\hat x_1(k)+\dots+F_m\hat x_m(k).
-    \end{align*}
-  \item More importantly, it can be written as the solution of a quadratic programming problem:
-    \begin{align*}
-      &\mathop{\textrm{minimize}}\limits_{\hat x(k),\hat e(k)}&
-      & \frac{1}{2}\hat e(k)^T \tilde W^{-1} \hat e(k)\\
-      &\textrm{subject to} &
-      &\hat x_i(k)  =  \hat x(k) + \hat e_i(k),&
-    \end{align*}
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}{Securing the Global Estimate}
-  We can secure the global estimator using LASSO:
-  \begin{align*}
-    &\mathop{\textrm{minimize}}\limits_{\hat x(k),\hat e(k)}&
-    & \frac{1}{2}\hat e(k)^T \tilde W^{-1} \hat e(k) + \gamma \sum_{i=1}^m \|\hat \nu_i(k)\|_1\\
-    &\textrm{subject to} &
-    &\hat x_i(k)  =  \hat x(k) + \hat e_i(k)+\hat \nu_i(k),&
-  \end{align*}
-\end{frame}
-
-\begin{frame}{Efficiency and Security}
-  \begin{theorem}
-    Assuming all sensors are benign, then the secure estimator recovers the Kalman estimation if the noise term $\tilde e(k)$ is ``small'', i.e.:
-    \begin{align*}
-      \left\|\tilde W^{-1} - H \begin{bmatrix}
-          F_1&\dots&F_m
-        \end{bmatrix}\tilde e(k) \right\|_\infty\leq \gamma.  
-    \end{align*}
-  \end{theorem}
-  \begin{theorem}
-    Assuming that less than half of the sensors are compromised, then the secure estimator is stable.
-  \end{theorem}
-\end{frame}
-
-\begin{frame}{Secure Control of Autonomous Vehicle}
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.8\textwidth]{singpilot.jpg}
-\end{figure}
-
-\end{frame}
-
-\begin{frame}{Localization of Autonomous Vehicles via Secure Sensor Fusion}
-  \begin{columns}
-    \begin{column}{0.48\textwidth}
-      \begin{figure}
-        \includegraphics[width=\textwidth]{gnssdrift.jpg}
-        \caption{EKF}
-      \end{figure}
-    \end{column}
-    \begin{column}{0.48\textwidth} 		
-      \begin{figure}
-        \includegraphics[width=\textwidth]{gnssdriftsafe.jpg}
-        \caption{Secure EKF}
-      \end{figure}
-    \end{column}
-  \end{columns}
-\end{frame}
+%\section{Resilient Algorithm Design}
+%
+%\begin{frame}{Static State Estimation}
+%  \begin{enumerate}
+%  \item We assume the following sensor model:
+%    \begin{align*}
+%  \begin{bmatrix}z_1\\\vdots\\z_m\end{bmatrix} =  z = Hx + w.
+%    \end{align*}
+%  \item The optimal state estimator is of the form
+%    \begin{align*}
+%      \hat x = Kz, \text{ where }K = (H^TH)^{-1}H^T.
+%    \end{align*}
+%  \end{enumerate}
+%\end{frame}
+%
+%\begin{frame}{Least Square Estimator}
+%  Suppose the following sensory model:
+%  \begin{align*}
+%    z = \begin{bmatrix}
+%      1\\
+%      1\\
+%      1
+%    \end{bmatrix}x + w.
+%  \end{align*}
+%  The optimal estimator is given by
+%  \begin{align*}
+%    \hat x = \frac{1}{3}\left(z_1+z_2+z_3\right).
+%  \end{align*}
+%  This estimator is not resilient to a single malicious sensor.
+%\end{frame}
+%
+%\begin{frame}{Problem Formulation}
+%  \begin{enumerate}
+%  \item Assume that at most $p$ sensors are compromised.
+%  \item The sensory model is given by
+%    \begin{align*}
+%      y = z + a = Hx + w +a,
+%    \end{align*}
+%    where $a$ is a $p$-sparse vector indicating the attacker's action.
+%  \item We will call an estimator $\hat x = g(y)$ to be resilient if
+%    \begin{align*}
+%      \|g(y) - g(z)\|\text{ is bounded for all $p$-sparse $a$}.
+%    \end{align*}
+%  \end{enumerate}
+%\end{frame}
+%
+%\begin{frame}{Some Related Research}
+%  \begin{enumerate}
+%  \item The following estimator is resilient under $2p$ observable condition:
+%    \begin{align*}
+%      & \mathop{\textit{minimize}}\limits_{\hat x,a,w}&
+%      & \|w\|^2 \\
+%      &\text{subject to}&
+%      &y = H \hat x + w + a,\,\|a\|_0\leq p.
+%    \end{align*}
+%    The drawback: The optimization problem is not convex and solving it is computationally difficult.
+%  \item Can we design a secure and computationally efficient estimators?
+%  \end{enumerate}
+%\end{frame}
+%
+%\begin{frame}{A General Convex Optimization Based Estimator}
+%  Least Square Estimator:
+% \begin{align*}
+%      g(y) = \argmin_{\hat x} \|y-H\hat x\|_2^2= \argmin_{\hat x}  \sum_{i=1}^m (y_i-H_i\hat x)^2.
+% \end{align*}
+% 
+%  We consider the following estimator
+%  \begin{align*}
+%    \hat x = g(y) \triangleq \argmin_{\hat x} \sum_{i=1}^m f_i(y_i-H_i \hat x),
+%  \end{align*}
+%  where the following properties of function $f_i:\mathbb R\mapsto \mathbb R$ are assumed:
+%  \begin{enumerate}
+%  \item $f_i$ is convex.
+%  \item $f_i$ is symmetric, i.e., $f_i(u) = f_i(-u)$.
+%  \item $f_i$ is non-negative and $f_i(0) = 0$.
+%  \end{enumerate} 
+%
+%  Many estimators, such as least square estimator, L1 estimator and LASSO estimation can be included in this framework, by choosing a suitable $f_i$.
+%
+%  The estimator can be computed efficiently via convex optimization. 
+%\end{frame}
+%
+%\begin{frame}{Sufficient Condition For Resiliency}
+%  \begin{theorem}
+%    If the following conditions hold, then the estimation is resilient:
+%    \begin{enumerate}
+%    \item For all $i$, the following limit is well-defined:
+%      \begin{align*}
+%        \lim_{t\rightarrow\infty}\frac{f_i(t)}{t} = \alpha_i < \infty.
+%      \end{align*}
+%    \item For any $u\neq 0$ and any index set $\mathcal I$ of cardinality $p$, the following inequality hold:
+%      \begin{align*}
+%        \sum_{i\in \mathcal I} |\alpha_i H_i u| < \sum_{i\in \mathcal I^c} |\alpha_i H_i u|.
+%      \end{align*}
+%    \end{enumerate}
+%  \end{theorem}
+%  Roughly speaking $|\alpha_i H_i u|$ characterize how powerful a single sensor $i$ is. The condition can be interpreted as the no $p$ sensors combined can be more powerful than the remaining $m-p$ sensors.
+%\end{frame}
+%
+%\begin{frame}{Necessary Condition For Resiliency}
+%  \begin{theorem}
+%    If the one of the following conditions is violated, then the estimation is not resilient:
+%    \begin{enumerate}
+%    \item There exists an $i$, such that
+%      \begin{align*}
+%        \lim_{t\rightarrow\infty}\frac{f_i(t)}{t} = \infty.
+%      \end{align*}
+%    \item There exists a $u\neq 0$ and an index set $\mathcal I$ of cardinality $p$, such that
+%      \begin{align*}
+%        \sum_{i\in \mathcal I} |\alpha_i H_i u| > \sum_{i=\mathcal I^c} |\alpha_i H_i u|.
+%      \end{align*}
+%    \end{enumerate}
+%  \end{theorem}
+%  Notice that we only have a trivial gap for the case:
+%  \[ \sum_{i\in \mathcal I} |\alpha_i H_i u| = \sum_{i=\mathcal I^c} |\alpha_i H_i u|.\]
+%\end{frame}
+%
+%\begin{frame}{Simulation IEEE 14-bus System}
+%  \begin{figure}[ht]
+%    \centering
+%    \includegraphics[width=0.60\textwidth]{ieee14.jpg}
+%  \end{figure}
+%  We assume $p=1$ and the flow sensor on the red line is being attacked.
+%\end{frame}
+%
+%\begin{frame}{Simulation IEEE 14-bus System}
+%  \begin{figure}[ht]
+%    \begin{center}
+%      
+%      \setlength{\figureheight}{6cm}
+%      \setlength{\figurewidth}{10cm}
+%      \definecolor{mycolor1}{rgb}{1.00000,0.00000,1.00000}%
+%      % 
+%      \begin{tikzpicture}
+%
+%        \begin{axis}[%
+%          width=\figurewidth,
+%          height=\figureheight,
+%          at={(1.527in,1.083in)},
+%          scale only axis,
+%          xmin=0.95,
+%          xmax=2.4,
+%          xlabel={Normalized MSE of the estimators without attack},
+%          xmajorgrids,
+%          ymin=0.95,
+%          ymax=2.5,
+%          ylabel={Normalized MSE when under attack},
+%          ymajorgrids,
+%          axis background/.style={fill=white},
+%          legend style={at={(0.597,0.528)},anchor=south west,legend cell align=left,align=left,draw=white!15!black}
+%          ]
+%          \addplot [color=blue,dashed,line width=1.5pt,mark=triangle,mark options={solid},forget plot]
+%          table[row sep=crcr]{%
+%            2.16434829886514	2.41673714136766\\
+%            1.49824142620916	1.6273922047888\\
+%            1.46836558726546	1.61304395019434\\
+%            1.42878218405531	1.58080265845186\\
+%            1.33509034059386	1.48317348510781\\
+%            1.24979953097586	1.4011442907391\\
+%            1.20190884155895	1.36475282176979\\
+%            1.14816845697376	1.32743887772808\\
+%            1.104692902235	1.30458587111275\\
+%            1.0727554366346	1.2930587844785\\
+%            1.04837293442887	1.29286647088633\\
+%            1.03276380632143	1.30464750437787\\
+%            1.02491383863213	1.32636243694814\\
+%            1.0209295289153	1.35606289076979\\
+%            1.01470702949196	1.40680155569416\\
+%            1.00686189169388	1.48274325705327\\
+%            1.00166658882151	1.69020329692052\\
+%            1.00012894457222	2.29806950301701\\
+%          };
+%
+%          \addplot [color=mycolor1,dashed,forget plot]
+%          table[row sep=crcr]{%
+%            1	1\\
+%            2.2	1\\
+%          };
+%          \addplot [color=mycolor1,dashed,forget plot]
+%          table[row sep=crcr]{%
+%            1	1\\
+%            1	2.5\\
+%          };
+%          \node[right, align=left, text=blue]
+%          at (axis cs:2.164,2.417) {$\text{   }\leftarrow\text{ }\lambda\rightarrow 0$};
+%          \node[right, align=left, text=blue]
+%          at (axis cs:1.335,1.483) {$\text{   }\leftarrow\text{ }\lambda\text{=0.5}$};
+%          \node[right, align=left, text=blue]
+%          at (axis cs:1.202,1.365) {$\text{   }\leftarrow\text{ }\lambda\text{=1}$};
+%          \node[right, align=left, text=blue]
+%          at (axis cs:1.073,1.293) {$\text{   }\leftarrow\text{ }\lambda\text{=1.9}$};
+%          \node[right, align=left, text=blue]
+%          at (axis cs:1.02,1.356) {$\leftarrow\lambda\text{=3}$};
+%          \node[right, align=left, text=blue]
+%          at (axis cs:1,2.298) {$\text{   }\leftarrow\text{ }\lambda\text{=7}$};
+%          \node[right, align=left, text=mycolor1]
+%          at (axis cs:1,2.4) {$\text{   }\leftarrow\text{ LSE}$};
+%          \node[right, align=left, text=mycolor1]
+%          at (axis cs:1.9,1.14) {Oracle LSE};
+%          \node[right, align=left, text=mycolor1]
+%          at (axis cs:1.9,1.07) {$\text{     ~~~~~}\downarrow$};
+%        \end{axis}
+%      \end{tikzpicture}%
+%    \end{center}
+%  \end{figure}
+%\end{frame}
+%
+%\begin{frame}{Dynamic State Estimation}
+%  \begin{enumerate}
+%  \item Consider the following dynamic system
+%    \begin{align}
+%      x(k+1) = A x(k) + w(k),\, y(k) = C x(k) + v(k) + a(k).
+%    \end{align}
+%  \item A linear fixed-gain estimator:
+%    \begin{align}
+%      \hat x(k+1) = A \hat x(k) + K(y(k+1)-CA\hat x(k)),
+%    \end{align}
+%    where $K$ is the estimation gain, and $A-KCA$ is stable.
+%    \begin{center}
+%      \begin{tikzpicture}[x=2cm, y=0.75cm]
+%        \node at (-0.7,0) {State Est:};
+%        \node [blue!70] at (-0.7,1) {Sensor 2:};
+%        \node [red!70] at (-0.7,-1) {Sensor 1:};
+%
+%        \node            (x0)  at (0,0) {$\hat x(0)$};
+%        \node [blue!70] (y20)  at (0,1)    {$y_2(0)$};
+%        \node [red!70]  (y10)  at (0,-1)   {$y_1(0)$};
+%        \draw [->,semithick,blue!70] (y20) to (x0);
+%        \draw [->,semithick,red!70]  (y10) to (x0);
+%
+%        \node            (x1)  at (1,0) {$\hat x(1)$};
+%        \node [blue!70] (y21)  at (1,1)    {$y_2(1)$};
+%        \node [red!70]  (y11)  at (1,-1)   {$y_1(1)$};
+%        \draw [->,semithick,blue!70] (y21) to (x1);
+%        \draw [->,semithick,red!70]  (y11) to (x1);
+%
+%        \node            (x2)  at (2,0) {$\hat x(2)$};
+%        \node [blue!70] (y22)  at (2,1)    {$y_2(2)$};
+%        \node [red!70]  (y12)  at (2,-1)   {$y_1(2)$};
+%        \draw [->,semithick,blue!70] (y22) to (x2);
+%        \draw [->,semithick,red!70]  (y12) to (x2);
+%
+%        \draw [->,semithick] (x0) to (x1);
+%        \draw [->,semithick] (x1) to (x2);
+%      \end{tikzpicture}
+%    \end{center}
+%  \item The error introduced by the attack may accumulate over time.
+%  \end{enumerate}
+%\end{frame}
+%
+%\begin{frame}{Dynamic State Estimate: A Moving Horizon Approach}
+%  In order to convert the dynamic estimation problem into a static one, we can use a moving horizon approach:
+%  \begin{center}
+%    \begin{tikzpicture}[x=2cm, y=0.75cm]
+%      \node at (-0.7,0) {State Est:};
+%      \node [blue!70] at (-0.7,1) {Sensor 2:};
+%      \node [red!70] at (-0.7,-1) {Sensor 1:};
+%
+%      \node            (x0)  at (0,0) {$\hat x(0)$};
+%      \node [blue!70] (y20)  at (0,1)    {$y_2(0)$};
+%      \node [red!70]  (y10)  at (0,-1)   {$y_1(0)$};
+%      \draw [->,semithick,blue!70] (y20) to (x0);
+%      \draw [->,semithick,red!70]  (y10) to (x0);
+%
+%      \node            (x1)  at (1,0) {$\hat x(1)$};
+%      \node [blue!70] (y21)  at (1,1)    {$y_2(1)$};
+%      \node [red!70]  (y11)  at (1,-1)   {$y_1(1)$};
+%      \draw [->,semithick,blue!70] (y21) to (x1);
+%      \draw [->,semithick,red!70]  (y11) to (x1);
+%      \draw [->,semithick,blue!70] (y20) to (x1);
+%      \draw [->,semithick,red!70]  (y10) to (x1);
+%
+%      \node            (x2)  at (2,0) {$\hat x(2)$};
+%      \node [blue!70] (y22)  at (2,1)    {$y_2(2)$};
+%      \node [red!70]  (y12)  at (2,-1)   {$y_1(2)$};
+%      \draw [->,semithick,blue!70] (y22) to (x2);
+%      \draw [->,semithick,red!70]  (y12) to (x2);
+%      \draw [->,semithick,blue!70] (y21) to (x2);
+%      \draw [->,semithick,red!70]  (y11) to (x2);
+%    \end{tikzpicture}
+%  \end{center}
+%
+%  However, the historical data are discarded and the estimation performance may be poor when the system is operating normally.
+%\end{frame}
+%
+%\begin{frame}{Dynamic State Estimate: A Local Estimator Approach}
+%  We propose to store historical data in the local estimations:
+%  \begin{center}
+%    \begin{tikzpicture}[x=2cm, y=0.75cm]
+%      \node at (-0.7,0) {State Est:};
+%      \node [blue!70] at (-0.7,2) {Sensor 2:};
+%      \node [blue!70] at (-0.7,1) {Local Est 2:};
+%      \node [red!70] at (-0.7,-2) {Sensor 1:};
+%      \node [red!70] at (-0.7,-1) {Local Est 1:};
+%
+%      \node            (x0)  at (0,0)    {$\hat x(0)$};
+%      \node [blue!70] (y20)  at (0,2)       {$y_2(0)$};
+%      \node [blue!70] (x20)  at (0,1)  {$\hat x_2(0)$};
+%      \node [red!70]  (y10)  at (0,-2)      {$y_1(0)$};
+%      \node [red!70]  (x10)  at (0,-1) {$\hat x_1(0)$};
+%      \draw [->,semithick,blue!70] (y20) to (x20);
+%      \draw [->,semithick,red!70]  (y10) to (x10);
+%      \draw [->,semithick,blue!70] (x20) to  (x0);
+%      \draw [->,semithick,red!70]  (x10) to  (x0);
+%
+%      \node            (x1)  at (1,0)    {$\hat x(1)$};
+%      \node [blue!70] (y21)  at (1,2)       {$y_2(1)$};
+%      \node [blue!70] (x21)  at (1,1)  {$\hat x_2(1)$};
+%      \node [red!70]  (y11)  at (1,-2)      {$y_1(1)$};
+%      \node [red!70]  (x11)  at (1,-1) {$\hat x_1(1)$};
+%      \draw [->,semithick,blue!70] (y21) to (x21);
+%      \draw [->,semithick,red!70]  (y11) to (x11);
+%      \draw [->,semithick,blue!70] (x21) to  (x1);
+%      \draw [->,semithick,red!70]  (x11) to  (x1);
+%
+%      \node            (x2)  at (2,0)    {$\hat x(2)$};
+%      \node [blue!70] (y22)  at (2,2)       {$y_2(2)$};
+%      \node [blue!70] (x22)  at (2,1)  {$\hat x_2(2)$};
+%      \node [red!70]  (y12)  at (2,-2)      {$y_1(2)$};
+%      \node [red!70]  (x12)  at (2,-1) {$\hat x_1(2)$};
+%      \draw [->,semithick,blue!70] (y22) to (x22);
+%      \draw [->,semithick,red!70]  (y12) to (x12);
+%      \draw [->,semithick,blue!70] (x22) to  (x2);
+%      \draw [->,semithick,red!70]  (x12) to  (x2);
+%
+%      \draw [->,semithick,blue!70] (x20) to (x21);
+%      \draw [->,semithick,blue!70] (x21) to (x22);
+%      \draw [->,semithick,red!70] (x10) to (x11);
+%      \draw [->,semithick,red!70] (x11) to (x12);
+%    \end{tikzpicture}
+%  \end{center}
+%  \begin{enumerate}
+%  \item Construct local estimators (which uses only the local measurements):
+%    \begin{align*}
+%      \hat x_i(k) = A \hat x_i(k) + L_i (y_i(k)-CA\hat x_i(k)).
+%    \end{align*}  
+%  \item Reconstruct the global estimator as
+%    \begin{align*}
+%      \hat x(k) = g(\hat x_1(k),\ldots,\hat x_m(k)).
+%    \end{align*}  
+%  \end{enumerate}
+%\end{frame}
+%
+%\begin{frame}{Local Estimator Design}
+%  \begin{enumerate}
+%  \item  Choose $L_i$ such that $A-L_iCA$ shares the same eigenvalues as $A-KCA$ (requires observability)
+%    \begin{align*}
+%      \hat x_i(k) = A \hat x_i(k) + L_i (y_i(k)-CA\hat x_i(k)).
+%    \end{align*}  
+%  \item The global estimate can be recovered as
+%    \begin{align*}
+%      \hat x(k) = F_1\hat x_1(k)+\dots+F_m\hat x_m(k).
+%    \end{align*}
+%  \item More importantly, it can be written as the solution of a quadratic programming problem:
+%    \begin{align*}
+%      &\mathop{\textrm{minimize}}\limits_{\hat x(k),\hat e(k)}&
+%      & \frac{1}{2}\hat e(k)^T \tilde W^{-1} \hat e(k)\\
+%      &\textrm{subject to} &
+%      &\hat x_i(k)  =  \hat x(k) + \hat e_i(k),&
+%    \end{align*}
+%  \end{enumerate}
+%\end{frame}
+%
+%\begin{frame}{Securing the Global Estimate}
+%  We can secure the global estimator using LASSO:
+%  \begin{align*}
+%    &\mathop{\textrm{minimize}}\limits_{\hat x(k),\hat e(k)}&
+%    & \frac{1}{2}\hat e(k)^T \tilde W^{-1} \hat e(k) + \gamma \sum_{i=1}^m \|\hat \nu_i(k)\|_1\\
+%    &\textrm{subject to} &
+%    &\hat x_i(k)  =  \hat x(k) + \hat e_i(k)+\hat \nu_i(k),&
+%  \end{align*}
+%\end{frame}
+%
+%\begin{frame}{Efficiency and Security}
+%  \begin{theorem}
+%    Assuming all sensors are benign, then the secure estimator recovers the Kalman estimation if the noise term $\tilde e(k)$ is ``small'', i.e.:
+%    \begin{align*}
+%      \left\|\tilde W^{-1} - H \begin{bmatrix}
+%          F_1&\dots&F_m
+%        \end{bmatrix}\tilde e(k) \right\|_\infty\leq \gamma.  
+%    \end{align*}
+%  \end{theorem}
+%  \begin{theorem}
+%    Assuming that less than half of the sensors are compromised, then the secure estimator is stable.
+%  \end{theorem}
+%\end{frame}
+%
+%\begin{frame}{Secure Control of Autonomous Vehicle}
+%\begin{figure}[ht]
+%  \centering
+%  \includegraphics[width=0.8\textwidth]{singpilot.jpg}
+%\end{figure}
+%
+%\end{frame}
+%
+%\begin{frame}{Localization of Autonomous Vehicles via Secure Sensor Fusion}
+%  \begin{columns}
+%    \begin{column}{0.48\textwidth}
+%      \begin{figure}
+%        \includegraphics[width=\textwidth]{gnssdrift.jpg}
+%        \caption{EKF}
+%      \end{figure}
+%    \end{column}
+%    \begin{column}{0.48\textwidth} 		
+%      \begin{figure}
+%        \includegraphics[width=\textwidth]{gnssdriftsafe.jpg}
+%        \caption{Secure EKF}
+%      \end{figure}
+%    \end{column}
+%  \end{columns}
+%\end{frame}
 
 
 \section{Conclusion}
 
+%\begin{frame}{Towards a Science of CPS Security}
+%  \begin{itemize}
+%  \item We consider both intrusion detection and the state estimation problem in adversarial environment and propose secure and efficient algorithm for both problems.
+%  \item How to systematically design algorithms that are both secure and efficient?
+%  \item How to combine information security with system theory to provide defense in depth?
+%  \end{itemize}
+%\end{frame}
+
+%\begin{frame}{Acknowledgement}
+%  \begin{itemize}
+%  \item Rohan Chabukswar, Sean Weerakkody
+%  \item Duo Han, Hanxiao Liu, Xinghua Liu, Liang Xu, Jiaqi Yan
+%  \item Bruno Sinopoli, Lihua Xie, Karl H. Johansson
+%  \item Danwei Wang, Jakub Tomasek, Qipeng Liu, Ehsan Mihankhah, Xiaoqiang Ren, Xiaoyu Mo 
+%  \end{itemize}
+%\end{frame}
+
+
 \begin{frame}{Towards a Science of CPS Security}
   \begin{itemize}
-  \item We consider both intrusion detection and the state estimation problem in adversarial environment and propose secure and efficient algorithm for both problems.
-  \item How to systematically design algorithms that are both secure and efficient?
+  \item We consider intrusion detection problem in adversarial environment and propose an active detection scheme.
+  \item How to systematically design secure algorithms?
   \item How to combine information security with system theory to provide defense in depth?
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Acknowledgement}
   \begin{itemize}
-  \item Rohan Chabukswar, Sean Weerakkody
-  \item Duo Han, Hanxiao Liu, Xinghua Liu, Liang Xu, Jiaqi Yan
+  \item Rohan Chabukswar, Sean Weerakkody, Hanxiao Liu, Jiaqi Yan
   \item Bruno Sinopoli, Lihua Xie, Karl H. Johansson
-  \item Danwei Wang, Jakub Tomasek, Qipeng Liu, Ehsan Mihankhah, Xiaoqiang Ren, Xiaoyu Mo 
   \end{itemize}
 \end{frame}
 
@@ -1099,8 +1138,3 @@ The TEP is created to provide a realistic industrial process for developing stud
 
 \end{document}
 
-%%% Local Variables: 
-%%% coding: utf-8
-%%% mode: latex
-%%% TeX-engine: xetex
-%%% End: 
