@@ -1,10 +1,17 @@
+% !TEX TS-program = xelatex
+% !TEX ecoding = UTF-8
+
 \documentclass[10pt]{beamer}
+
+\usepackage{xeCJK}
+\setCJKmainfont{Noto Sans CJK SC}
+\xeCJKsetup{PunctStyle=kaiming,CJKspace=true,CheckSingle=true} 
+
 \usepackage{subfigure}
 \usepackage{amssymb, amsmath, amsfonts,verbatim}
 \usepackage{tikz, booktabs}
 \graphicspath{ {./} }
 \usetikzlibrary{matrix,arrows,fit,backgrounds,mindmap,plotmarks,decorations.pathreplacing}
-
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.12}
 \pgfdeclarelayer{background}
@@ -47,16 +54,14 @@
 \let\Tiny\tiny
 
 \title[Secure Info Fusion]{Secure Information Fusion in Cyber-Physical Systems}
-\author[Yilin Mo]{Yilin Mo}
-\institute[Tsinghua]{
-  Department of Automation\\ Tsinghua University\\
-}
-\date[Jan 25, 2019]{Jan 25th, 2019 \\ 
-  \small Joint Work with Xiaoqiang Ren, Duo Han, Xinghua Liu, Jiaqi Yan,\\
-  Prof. Lihua Xie and Prof. Emanuele Garone}
+\author[Yilin Mo]{莫一林}
+\institute[Tsinghua]{清华大学    自动化系}
+
+\date[July 26, 2019]{2019年7月26日}
 
 \usetheme[subsectionpage=none,block=fill]{metropolis}
 \definecolor{thupurple}{RGB}{102,8,116}
+\definecolor{caltechcolor}{RGB}{102,8,116}
 \setbeamercolor{title separator}{fg=black!50}
 \setbeamercolor{frametitle}{bg=thupurple!70!black}
 
@@ -78,9 +83,9 @@
         \path[mindmap,concept color=black,text=white]
         node[concept] {\Huge CPS}
         [clockwise from=330]
-        child[concept color=green!50!black] { node[concept](communication) {\huge Comm} }
-        child[concept color=red] { node[concept](control) {\huge Control} }
-        child[concept color=blue] { node[concept](computation) {\huge Comp} };
+        child[concept color=green!50!black] { node[concept](communication) {\huge Comm.} }
+        child[concept color=red] { node[concept](control) {\huge Ctrl.} }
+        child[concept color=blue] { node[concept](computation) {\huge Comp.} };
       \end{tikzpicture}
     \end{center}
   \item Applications: aerospace, chemical processes, civil infrastructure, energy, manufacturing and transportation. 
@@ -109,7 +114,7 @@
 \begin{frame}{Industrial Control Systems}
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.6\textwidth]{cert.jpg}
+    \includegraphics[width=0.55\textwidth]{cert.jpg}
   \end{figure}
   In FY 2016, ICS-CERT (Industrial Control Systems Cyber Emergency Response Team) received and responded to 290 incidents as reported by asset owners and industry partners.
 \end{frame}
@@ -123,7 +128,6 @@
   \item  Malware infections within air-gapped control system networks,
   \item \dots
   \end{enumerate}
-
 \end{frame}
 
 \begin{frame}{Attack Through Compromised Supply Chain}
@@ -150,22 +154,31 @@
   \item Physical Attacks: GPS Spoofing, etc.
   \item Zero-day Attacks: Attack that exploits undiscovered vulnerabilities.
   \item Cost: Securing every single device is difficult and costly
-  \item High reliability requirement
+  \item High reliability, graceful performance degradation
   \end{enumerate}
 \end{frame}
 
-\begin{frame}{Defense in Depth}
-  \begin{figure}[<+htpb+>]
-    \begin{center}
-      \includegraphics[width=0.8\textwidth]{defense_in_depth.jpg}
-      \caption{Combining System Theory and Information Security to create better Protection for CPS}
-    \end{center}
+\begin{frame}{Defense in Depth for CPS Security}
+ \begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}
+      \node at (0,0) {\includegraphics[width=6cm]{defense.png}};
+      \node[anchor=south west] (1) at (4,1.8) {Prevention};
+      \node[anchor=south west] (2) at (4,.6) {Detection};
+      \node[anchor=south west] (3) at (4,-.6) {Resiliency};
+      \node[anchor=south west] (4) at (4,-1.8) {Recovery};
+      \draw[semithick] (2.2,0.5)--(4,1.8)--++(1.8,0);
+      \draw[semithick] (2,0.4)--(4,0.6)--++(1.8,0);
+      \draw[semithick] (1.2,0.6)--(4,-.6)--++(1.8,0);
+      \draw[semithick] (0.2,0.7)--(4,-1.8)--++(1.8,0);
+    \end{tikzpicture}
+  \caption{Protecting CPS with Multi-layer Defense}
   \end{figure}
 \end{frame}
 
 \begin{frame}{Hardening CPS Security using System Theory}
   \begin{itemize}
-  \item System and Attack Modelling
+  \item System and Attack Modeling
   \item Intrusion Detection and Isolation
   \item Resilient Algorithm Design
   \item Fundamental Limitations
@@ -1024,7 +1037,7 @@ I_0^{-1}\left(\frac{s}{m-n}\right)\leq I_1^{-1}\left(\frac{e}{m-n}\right),\, I_0
 
 \begin{frame}{Efficiency and Security}
   \begin{theorem}
-    Assuming all sensors are benign, then the secure estimator recovers the Kalman estimation if the following holds:
+    Assuming all sensors are benign, then the secure estimator recovers the Kalman estimation if the noise term $\tilde e(k)$ is ``small'', i.e.:
     \begin{align*}
       \left\|\tilde W^{-1} - H \begin{bmatrix}
           F_1&\dots&F_m
@@ -1034,42 +1047,56 @@ I_0^{-1}\left(\frac{s}{m-n}\right)\leq I_1^{-1}\left(\frac{e}{m-n}\right),\, I_0
   \begin{theorem}
     Assuming that less than half of the sensors are compromised, then the secure estimator is stable.
   \end{theorem}
-  Can be extend to the case where the system is not fully observable for each individual sensor.
 \end{frame}
 
-%\begin{frame}{Autonomous Vehicle Simulation}
-%  \centering
-%  \includemedia[width=0.96\linewidth,height=0.54\linewidth,activate=pageopen,
-%  passcontext,
-%  transparent,
-%  addresource=gps1.mp4,
-%  flashvars={source=gps1.mp4}
-%  ]{Autonomous Vehicle Under GPS Spoofing Attack}{VPlayer.swf} 
-%\end{frame}
-%
-%\begin{frame}{Autonomous Vehicle Simulation}
-%  \centering
-%  \includemedia[width=0.96\linewidth,height=0.54\linewidth,activate=pageopen,
-%  passcontext,
-%  transparent,
-%  addresource=gps2.mp4,
-%  flashvars={source=gps2.mp4}
-%  ]{Autonomous Vehicle Under GPS Spoofing Attack}{VPlayer.swf} 
-%\end{frame}
+\begin{frame}{Secure Control of Autonomous Vehicle}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.8\textwidth]{singpilot.jpg}
+\end{figure}
 
-\section{Conclusion and Future Works}
+\end{frame}
+
+\begin{frame}{Localization of Autonomous Vehicles via Secure Sensor Fusion}
+  \begin{columns}
+    \begin{column}{0.48\textwidth}
+      \begin{figure}
+        \includegraphics[width=\textwidth]{gnssdrift.jpg}
+        \caption{EKF}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.48\textwidth} 		
+      \begin{figure}
+        \includegraphics[width=\textwidth]{gnssdriftsafe.jpg}
+        \caption{Secure EKF}
+      \end{figure}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\section{Conclusion}
 
 \begin{frame}{Towards a Science of CPS Security}
   \begin{itemize}
-  \item We consider both the hypothesis testing and the state estimation in adversarial environment and propose secure and efficient algorithm for both problems.
-  \item System theory can help CPS to tolerate, detect and recover from malicious attacks.
+  \item We consider both intrusion detection and the state estimation problem in adversarial environment and propose secure and efficient algorithm for both problems.
   \item How to systematically design algorithms that are both secure and efficient?
   \item How to combine information security with system theory to provide defense in depth?
   \end{itemize}
 \end{frame}
 
-\begin{frame}[standout]
-  Thank you!
+\begin{frame}{Acknowledgement}
+  \begin{itemize}
+    \item 韩铎, 刘兴华, 闫嘉琦, 李子硕
+    \item Prof. 谢立华, 任肖强, 郝飞
+    \item Prof. Karl Johansson, Emanuele Garone
+    \item 莫小雨, 刘其朋, Jakub Tomasek, Ehsan Mihankhah, Prof. 王郸维 
+  \end{itemize}
 \end{frame}
+
+\begin{frame}[standout]
+  感谢聆听！请各位老师批评指正
+\end{frame}
+
 
 \end{document}
