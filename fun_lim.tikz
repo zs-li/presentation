@@ -187,7 +187,7 @@ legend style={legend cell align=left, align=left, draw=black}
 3.34	1.60107991769565\\
 3.35	1.5961616829785\\
 };
-%\addlegendentry{{\footnotesize$(m-n)I_1(I_0^{-1}(z/(m-n)))$}}
+%\addlegendentry{{\footnotesize$(m-p)I_1(I_0^{-1}(z/(m-p)))$}}
 
 \addplot [dashed, thick, color=red]
   table[row sep=crcr]{%
@@ -344,7 +344,7 @@ legend style={legend cell align=left, align=left, draw=black}
 3.34	0.978588270305296\\
 3.35	0.96997292343942\\
 };
-%\addlegendentry{{\footnotesize$(m-n)I_0(I_1^{-1}(z/(m-n)))$}}
+%\addlegendentry{{\footnotesize$(m-p)I_0(I_1^{-1}(z/(m-p)))$}}
 
 \addplot[fill=mycolor1, draw=black, forget plot] table[row sep=crcr]{%
 0	0\\
@@ -643,14 +643,14 @@ legend style={legend cell align=left, align=left, draw=black}
 2.55	2.55\\
 };
 \node[left, align=right]
-at (axis cs:2.138,2.238) {$((m-n)C,(m-n)C)$};
+at (axis cs:2.138,2.238) {$((m-p)C,(m-p)C)$};
 \addplot [color=black, dashdotted, forget plot]
   table[row sep=crcr]{%
 0	1.59873330905482\\
 1.59	1.59873330905482\\
 };
 \node[right, align=left]
-at (axis cs:0.03,1.699) {$(m-2n)C$};
+at (axis cs:0.03,1.699) {$(m-2p)C$};
 %\node[below right, align=left]
 %at (axis cs:2.778,0) {mC};
 \node[right, align=left]

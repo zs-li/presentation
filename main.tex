@@ -25,6 +25,9 @@
 \newcommand{\tikzdir}[1]{#1.tikz}
 \newcommand{\inputtikz}[1]{\input{\tikzdir{#1}}}
 
+\usepackage{biblatex} 
+\bibliography{ref.bib}
+
 \newcommand{\tI}{\tilde {\mathcal I}}
 \newcommand{\tA}{\tilde A}
 \newcommand{\ty}{\tilde y}
@@ -57,7 +60,7 @@
 \author[Yilin Mo]{莫一林}
 \institute[Tsinghua]{清华大学    自动化系}
 
-\date[July 26, 2019]{2019年7月26日}
+\date[July 26, 2020]{2020年7月26日}
 
 \usetheme[subsectionpage=none,block=fill]{metropolis}
 \definecolor{thupurple}{RGB}{102,8,116}
@@ -119,7 +122,6 @@
   In FY 2016, ICS-CERT (Industrial Control Systems Cyber Emergency Response Team) received and responded to 290 incidents as reported by asset owners and industry partners.
 \end{frame}
 
-
 \begin{frame}{Industrial Control Systems}
   The scope of incidents encompassed a vast range of threats and observed methods for attempting to gain access to both business and control systems infrastructure, including but not limited to the following:
   \begin{enumerate}
@@ -152,9 +154,9 @@
   \begin{enumerate}
   \item Physics
   \item Physical Attacks: GPS Spoofing, etc.
-  \item Zero-day Attacks: Attack that exploits undiscovered vulnerabilities.
+  \item Zero-day Attacks: Attack that exploits undiscovered vulnerabilities
   \item Cost: Securing every single device is difficult and costly
-  \item High reliability, graceful performance degradation
+  \item High reliability, graceful performance degradation requirements
   \end{enumerate}
 \end{frame}
 
@@ -187,7 +189,6 @@
   \end{itemize}
 \end{frame}
 
-\frame{\tableofcontents}
 
 \section{Hypothesis Testing}
 
@@ -251,29 +252,40 @@
     \end{displaymath}
   \item Clearly, $P_e(k)$ is a function of the detection strategy $f$ and the attack strategy $g$.
   \item  In general, for a fixed $k$, optimizing $P_e(k)$ directly (either from the system's perspective or the attacker's perspective) is difficult.
-  \item As a result, we will focus on the asymptotic performance when $k\rightarrow\infty$.
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Chernoff Information}
+\begin{frame}{Asymptotic Performance}
   \begin{itemize}
-  \item Suppose we have a single benign sensor, the Naive Bayes Detector takes the following form:
-    \begin{align*}
-      \hat \theta(k)=f_k(Z(k))=\begin{cases}
-        -1 &\text{if }\sum_{t=1}^k z_1(t)/k < 0\\
-        +1 &\text{if }\sum_{t=1}^k z_1(t)/k \geq 0\\
-      \end{cases}.
-    \end{align*}
-  \item By LLN, the probability of error goes to $0$.
-  \item Moreover, it goes to $0$ exponentially fast, i.e.,
-    \begin{displaymath}
-      \lim_{k\rightarrow\infty}-\frac{\log P_e(k)}{k}= \frac{1}{2}.
-    \end{displaymath}
-  \item For multiple benign sensors, the probability of error for the Naive Bayes Detector satisfies:
-    \begin{displaymath}
-      P_e(k)\approx e^{-\frac{1}{2}mk}.
-    \end{displaymath}
-  \item For general pair of distributions, one can prove that $P_e \approx e^{-mCk}$, where $C$ is the Chernoff information between the two distributions.
+    \item Suppose we have a single benign sensor, the Naive Bayes Detector takes the following form:
+      \begin{align*}
+	\hat \theta(k)=f_k(Z(k))=\begin{cases}
+	  -1 &\text{if }\sum_{t=1}^k z_1(t)/k < 0\\
+	  +1 &\text{if }\sum_{t=1}^k z_1(t)/k \geq 0\\
+	\end{cases}.
+      \end{align*}
+    \item By LLN, the probability of error goes to $0$.
+  \end{itemize}
+
+  \begin{center}
+    \setlength{\figureheight}{3cm}
+    \setlength{\figurewidth}{10cm}
+  \only<1> {\inputtikz{gaussian3}}
+  \only<2> {\inputtikz{gaussian2}}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Asymptotic Performance}
+  \begin{itemize}
+    \item By large deviation theory, it goes to $0$ exponentially fast, i.e.,
+      \begin{displaymath}
+	\lim_{k\rightarrow\infty}-\frac{\log P_e(k)}{k}= \frac{1}{2}.
+      \end{displaymath}
+    \item For multiple benign sensors, the probability of error for the Naive Bayes Detector satisfies:
+      \begin{displaymath}
+	P_e(k)\approx e^{-\frac{1}{2}mk}.
+      \end{displaymath}
+    \item For general pair of distributions, one can prove that $P_e \approx e^{-mCk}$, where $C$ is the Chernoff information between the two distributions.
   \end{itemize}
 \end{frame}
 
@@ -409,7 +421,7 @@
 
 \begin{frame}{Cost-Free Security}
   \begin{itemize}
-  \item The best security $(m-2n)C$ and the best efficiency $mC$ are achieved simultaneously
+  \item The best security $(m-2p)C$ and the best efficiency $mC$ are achieved simultaneously
   \item Security is ``cost-free''
     \begin{itemize}
     \item Computational burden: $O(m)$ versus $O(m\log m)$
@@ -442,15 +454,15 @@
   The above algorithm is optimal for any number of compromised sensors.
 \end{frame}
 
-\begin{frame}{General Case: Some Definitions from Large Deviation Theory}
-  \begin{center}
-    \inputtikz{rate_function}
-  \end{center}
-  \begin{itemize}
-  \item $I_\theta(y) \triangleq \sup_{w} yw - \log \mathbb E_\theta exp(\lambda w).$
-  \item $I_\theta(y)$ measures how typical a measurement $y$ is under each hypothesis.
-  \end{itemize}
-\end{frame}
+%\begin{frame}{General Case: Some Definitions from Large Deviation Theory}
+%  \begin{center}
+%    \inputtikz{rate_function}
+%  \end{center}
+%  \begin{itemize}
+%  \item $I_\theta(y) \triangleq \sup_{w} yw - \log \mathbb E_\theta exp(\lambda w).$
+%  \item $I_\theta(y)$ measures how typical a measurement $y$ is under each hypothesis.
+%  \end{itemize}
+%\end{frame}
 
 \begin{frame}{General Cases}
   \begin{center}
@@ -458,7 +470,7 @@
   \end{center}
   Fundamental Trade-off:
   \begin{align*}
-I_0^{-1}\left(\frac{s}{m-n}\right)\leq I_1^{-1}\left(\frac{e}{m-n}\right),\, I_0^{-1}\left(\frac{e}{m-n}\right)\leq I_1^{-1}\left(\frac{s}{m-n}\right). 
+I_0^{-1}\left(\frac{sec.}{m-p}\right)\leq I_1^{-1}\left(\frac{eff.}{m-p}\right),\, I_0^{-1}\left(\frac{eff.}{m-p}\right)\leq I_1^{-1}\left(\frac{sec.}{m-p}\right). 
   \end{align*}
   For the Gaussian case, the blue and red line will not cut the corner.
 \end{frame}
@@ -478,24 +490,6 @@ I_0^{-1}\left(\frac{s}{m-n}\right)\leq I_1^{-1}\left(\frac{e}{m-n}\right),\, I_0
     then choose $\hat \theta = 1$. 
   \item If none of the above conditions are satisfied, do a Naive Bayes test.
   \end{enumerate}
-\end{frame}
-
-\begin{frame}{Simulation}
-  Assuming the following distribution:
-  \begin{center}
-    \begin{tabular}{@{}llr@{}}
-      \toprule
-      & $z = 0$ & $z=1$\\
-      \midrule
-      $\theta=0$ &0.98&0.02\\
-      $\theta=1$ &0.4&0.6\\
-      \bottomrule
-    \end{tabular}
-  \end{center}  
-  We choose the detector with perfect efficiency:
-  \begin{center}
-    \inputtikz{finite_time}
-  \end{center}
 \end{frame}
 
 \section{State Estimation}
@@ -622,7 +616,6 @@ I_0^{-1}\left(\frac{s}{m-n}\right)\leq I_1^{-1}\left(\frac{e}{m-n}\right),\, I_0
 
   The estimator can be computed efficiently via convex optimization. 
 \end{frame}
-
 
 \begin{frame}{A General Convex Optimization Based Estimator}
   Our proposed estimator is very general since we can choose the right $f_i$ to get the following estimator:
@@ -767,17 +760,17 @@ I_0^{-1}\left(\frac{s}{m-n}\right)\leq I_1^{-1}\left(\frac{e}{m-n}\right),\, I_0
   \[ \sum_{i\in \mathcal I} |\alpha_i H_i u| = \sum_{i=\mathcal I^c} |\alpha_i H_i u|.\]
 \end{frame}
 
-\begin{frame}{How to Handle Correlated Noise}
-  Instead of the problem where the residues are decoupled:
-  \begin{align*}
-    g(y) = \argmin_{\hat x} \sum_{i=1}^m f_i(r_i),\text{s.t.}y_i = H_i\hat x+r_i,
-  \end{align*}
-  we could also consider the estimator where part of the residue are coupled via a quadratic term:
-  \begin{align*}
-    g(y) = \argmin_{\hat x}  w^TQw+\sum_{i=1}^m f_i(a_i),\text{s.t.}y_i = H_i\hat x+w_i+a_i.
-  \end{align*}
-  The sufficient condition for resiliency remains the same.
-\end{frame}
+%\begin{frame}{How to Handle Correlated Noise}
+%  Instead of the problem where the residues are decoupled:
+%  \begin{align*}
+%    g(y) = \argmin_{\hat x} \sum_{i=1}^m f_i(r_i),\text{s.t.}y_i = H_i\hat x+r_i,
+%  \end{align*}
+%  we could also consider the estimator where part of the residue are coupled via a quadratic term:
+%  \begin{align*}
+%    g(y) = \argmin_{\hat x}  w^TQw+\sum_{i=1}^m f_i(a_i),\text{s.t.}y_i = H_i\hat x+w_i+a_i.
+%  \end{align*}
+%  The sufficient condition for resiliency remains the same.
+%\end{frame}
 
 \begin{frame}{Simulation IEEE 14-bus System}
   \begin{figure}[ht]
@@ -1020,10 +1013,34 @@ I_0^{-1}\left(\frac{s}{m-n}\right)\leq I_1^{-1}\left(\frac{e}{m-n}\right),\, I_0
       &\mathop{\textrm{minimize}}\limits_{\hat x(k),\hat e(k)}&
       & \frac{1}{2}\hat e(k)^T \tilde W^{-1} \hat e(k)\\
       &\textrm{subject to} &
-      &\hat x_i(k)  =  \hat x(k) + \hat e_i(k),&
+      &\hat x_i(k)  =  \hat x(k) + \hat e_i(k).&
     \end{align*}
   \end{enumerate}
 \end{frame}
+
+\begin{frame}{General Case}
+  \begin{enumerate}
+  \item If the system is not fully observable for individual sensors:
+    \begin{align*}
+      \hat \zeta_i(k+1) = \mathcal J \zeta_i(k) + \mathbf 1 y_i(k+1),
+    \end{align*}  
+    where $\mathcal J$ is the Jordan standard form of $A-KCA$.
+  \item $\zeta_i$ is a stable estimate of $\mathcal G_i x$. 
+  \item Similarly, the global estimate can be recovered in linear form:
+    \begin{align*}
+      \hat x(k) = F_1\hat \zeta_1(k)+\dots+F_m\hat \zeta_m(k),
+    \end{align*}
+    or as the solution of a quadratic programming problem:
+    \begin{align*}
+      &\mathop{\textrm{minimize}}\limits_{\hat x(k),\hat e(k)}&
+      & \frac{1}{2}\hat e(k)^T \tilde W^{-1} \hat e(k)\\
+      &\textrm{subject to} &
+      &\hat \zeta_i(k)  = \mathcal G_i \hat x(k) + \hat e_i(k).&
+    \end{align*}
+  \end{enumerate}
+\end{frame}
+
+
 
 \begin{frame}{Securing the Global Estimate}
   We can secure the global estimator using LASSO:
@@ -1057,29 +1074,23 @@ I_0^{-1}\left(\frac{s}{m-n}\right)\leq I_1^{-1}\left(\frac{e}{m-n}\right),\, I_0
 
 \end{frame}
 
-\begin{frame}{Localization of Autonomous Vehicles via Secure Sensor Fusion}
-  \begin{columns}
-    \begin{column}{0.48\textwidth}
+\begin{frame}{Localization of Autonomous Vehicles via Extended Kalman Filter}
       \begin{figure}
-        \includegraphics[width=\textwidth]{gnssdrift.jpg}
-        \caption{EKF}
+        \includegraphics[width=.8\textwidth]{gnssdrift.jpg}
       \end{figure}
-    \end{column}
-    \begin{column}{0.48\textwidth} 		
-      \begin{figure}
-        \includegraphics[width=\textwidth]{gnssdriftsafe.jpg}
-        \caption{Secure EKF}
-      \end{figure}
-    \end{column}
-  \end{columns}
 \end{frame}
 
+\begin{frame}{Localization of Autonomous Vehicles via Secure Sensor Fusion}
+      \begin{figure}
+        \includegraphics[width=.8\textwidth]{gnssdriftsafe.jpg}
+      \end{figure}
+\end{frame}
 
 \section{Conclusion}
 
 \begin{frame}{Towards a Science of CPS Security}
   \begin{itemize}
-  \item We consider both intrusion detection and the state estimation problem in adversarial environment and propose secure and efficient algorithm for both problems.
+  \item We consider both hypothesis testing and the state estimation problem in adversarial environment and propose secure and efficient algorithm for both problems.
   \item How to systematically design algorithms that are both secure and efficient?
   \item How to combine information security with system theory to provide defense in depth?
   \end{itemize}
@@ -1088,15 +1099,18 @@ I_0^{-1}\left(\frac{s}{m-n}\right)\leq I_1^{-1}\left(\frac{e}{m-n}\right),\, I_0
 \begin{frame}{Acknowledgement}
   \begin{itemize}
     \item 韩铎, 刘兴华, 闫嘉琦, 李子硕
-    \item Prof. 谢立华, 任肖强, 郝飞
-    \item Prof. Karl Johansson, Emanuele Garone
-    \item 莫小雨, 刘其朋, Jakub Tomasek, Ehsan Mihankhah, Prof. 王郸维 
+    \item Prof. 谢立华, 任肖强, 郝飞, Emanuele Garone
+    \item 莫小雨, Jakub Tomasek, Ehsan Mihankhah, Prof. 王郸维, 刘其朋
   \end{itemize}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{References}
+  \nocite{Ren2018, Ren2018a, 9030036, Han2019, Liu2017}
+      \printbibliography[heading=none]
 \end{frame}
 
 \begin{frame}[standout]
   感谢聆听！请各位老师批评指正
 \end{frame}
-
 
 \end{document}
