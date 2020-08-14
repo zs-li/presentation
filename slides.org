@@ -1,0 +1,40 @@
+# Local IspellDict: en
+#+STARTUP: showeverything
+#+SPDX-FileCopyrightText: 2017-2020 Mo, Yilin
+#+SPDX-License-Identifier: CC-BY-SA-4.0
+
+# Apply standard settings of oer-reveal.
+#+INCLUDE: "~/.emacs.d/oer-reveal-org/config.org"
+
+# Use custom title slide.
+#+REVEAL_TITLE_SLIDE: title-slide.html
+
+# Generate bibliography with LaTeX
+#+LATEX_HEADER: \usepackage[backend=biber,style=alphabetic]{biblatex}
+#+LATEX_HEADER: \addbibresource{references.bib}
+
+#+TITLE: 信息物理系统
+#+AUTHOR: 莫一林(清华大学  自动化系)
+#+DATE:  信息物理系统专委会 (Aug 21, 2020)
+
+#+KEYWORDS: 
+#+DESCRIPTION: 
+
+* Introduction
+
+** Testing 
+
+cite:ricker1993model
+
+** Bibliography
+   :PROPERTIES:
+   :CUSTOM_ID: bibliography
+   :END:
+
+printbibliography:references.bib
+
+
+# Local Variables:
+# indent-tabs-mode: nil
+# org-src-preserve-indentation: t
+# End:
