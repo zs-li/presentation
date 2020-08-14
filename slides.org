@@ -21,10 +21,29 @@
 #+DESCRIPTION: 
 
 * Introduction
+** Definition of Cyber-Physical System
+ 
+** Hybrid Systems
+   
+** Sensor Networks
+   
+** Communication + Computation
 
-** Testing 
+* Networked Control System
+  
+* Security and Privacy of Cyber-Physical System
+  
+* Other Important Area
+  
+** Hybrid Systems
+  
+* Applications
+  
+** Smart Transportation
+** Cyber-Physical-Energy System
+** Smart Building
 
-cite:ricker1993model
+* Conclusion
 
 ** Bibliography
    :PROPERTIES:
