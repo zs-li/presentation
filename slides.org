@@ -17,8 +17,8 @@
 #+AUTHOR: 莫一林(清华大学  自动化系)
 #+DATE:  信息物理系统专委会 (Aug 21, 2020)
 
-#+KEYWORDS: 
-#+DESCRIPTION: 
+#+KEYWORDS: Cyber-Physical System, Networked Control, Security, Control
+#+DESCRIPTION: A brief overview of the current researches on control and CPS.
 
 * Introduction
 ** Definition of Cyber-Physical System
@@ -26,13 +26,47 @@
 ** Hybrid Systems
    
 ** Sensor Networks
-   
-** Communication + Computation
+
+** Networked Control System   
 
 * Networked Control System
+
+
   
-* Security and Privacy of Cyber-Physical System
+* Security and Privacy of CPS
+
+** Smarter CPS  
+  - The next generation CPS: Smart Grids, Smart Buildings, Smart Home, Internet of Things, will make extensive use of widespread sensing and networking.
+  - As the CPSs become "smarter", they are also more vulnerable to malicious attacks.
+ 
+** Stuxnet
+
+  - Stuxnet is the first discovered malware that spies on and subverts industrial control systems. It was discovered in June 2010.
   
+** Industrial Control Systems
+   
+  In FY 2016, ICS-CERT (Industrial Control Systems Cyber Emergency Response Team) received and responded to *290* incidents. The scope of incidents includes but not limited to the following:
+  - Unauthorized access and exploitation of Internet facing ICS/Supervisory Control and Data Acquisition (SCADA) devices,
+  - Exploitation of zero-day vulnerabilities in control system devices and software, 
+  - Malware infections within air-gapped control system networks,
+
+** Attack Through Supply Chain
+   
+** Black Energy
+ 
+** Defense in Depth 
+   
+** Privacy 
+
+** Differential Privacy
+
+** Informational Privacy
+   
+** Privacy Preserving Average Consensus
+   
+
+** Homomorphic Encryption
+   
 * Other Important Area
   
 ** Hybrid Systems
@@ -41,7 +75,6 @@
   
 ** Smart Transportation
 ** Cyber-Physical-Energy System
-** Smart Building
 
 * Conclusion
 
@@ -50,10 +83,9 @@
    :CUSTOM_ID: bibliography
    :END:
 
-printbibliography:references.bib
+   printbibliography:references.bib
 
-
-# Local Variables:
-# indent-tabs-mode: nil
-# org-src-preserve-indentation: t
-# End:
+   # Local Variables:
+   # indent-tabs-mode: nil
+   # org-src-preserve-indentation: t
+   # End:
