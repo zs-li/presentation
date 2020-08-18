@@ -56,6 +56,8 @@
  
 ** Defense in Depth 
    
+   {{{reveallicense("./defense.meta","20vh",nil,'none)}}}
+   
 ** Privacy 
 
 ** Differential Privacy
