@@ -60,6 +60,8 @@
    
 ** Privacy 
 
+   {{{reveallicense("./template.meta","20vh",nil,'none)}}}
+   \(x^2 + y^2 = 1\)
 ** Differential Privacy
 
 ** Informational Privacy
