@@ -9,6 +9,9 @@
 # Use custom title slide.
 #+REVEAL_TITLE_SLIDE: title-slide.html
 
+# Use 16:9 aspect ratio
+#+REVEAL_EXTRA_OPTIONS: width: 1280, height: 720
+
 # Generate bibliography with LaTeX
 #+LATEX_HEADER: \usepackage[backend=biber,style=alphabetic]{biblatex}
 #+LATEX_HEADER: \addbibresource{references.bib}
@@ -35,46 +38,64 @@
   
 * Security and Privacy of CPS
 
-** Smarter CPS  
-  - The next generation CPS: Smart Grids, Smart Buildings, Smart Home, Internet of Things, will make extensive use of widespread sensing and networking.
-  - As the CPSs become "smarter", they are also more vulnerable to malicious attacks.
- 
-** Stuxnet
+** Security Risks 
+  - The next generation CPS: *Smart Grids*, *Smart Buildings*, *Internet of Things*, will make extensive use of widespread sensing and networking.
+  - As the CPSs become "/smarter/", they are also more vulnerable to malicious attacks.
+ {{{revealgrid(1, "./smartcps.grid", 50, 3, 1, "\"ga1 ga2 ga3\"")}}}
+   
+*** The First CPS Malware: Stuxnet
 
   - Stuxnet is the first discovered malware that spies on and subverts industrial control systems. It was discovered in June 2010.
-  
-** Industrial Control Systems
+   {{{revealimg("./stuxnet.meta","Stuxnet Incident","45vh",nil,'none)}}}
    
-  In FY 2016, ICS-CERT (Industrial Control Systems Cyber Emergency Response Team) received and responded to *290* incidents. The scope of incidents includes but not limited to the following:
-  - Unauthorized access and exploitation of Internet facing ICS/Supervisory Control and Data Acquisition (SCADA) devices,
-  - Exploitation of zero-day vulnerabilities in control system devices and software, 
-  - Malware infections within air-gapped control system networks,
+*** Threats to Industrial Control Systems
+   
+- In FY 2016, ICS-CERT received *290* incidents. The scope of incidents includes: {{{reveallicense("./cert.meta","40vh",nil,'none)}}}
+  * Unauthorized access, 
+  * Exploitation of zero-day vulnerabilities,  
+  * Malware infections within air-gapped control system networks.
 
-** Attack Through Supply Chain
+*** Attack Through Supply Chain
+
+- 70% of the components for Boeing 787 are manufactured by other suppliers.  
+   {{{revealimg("./boeing.meta","Supply Chain for Boeing 787","45vh",nil,'none)}}}
    
-** Black Energy
+*** Black Energy
+
+- A Successful attack on *critical infrastructure* can be devastating.
+ {{{revealgrid(2, "./powergridattack.grid", 70, 2, 2, "\"ga1 ga2 \" \"ga3 ga3\"")}}}
+
+** Cyber-Physical Security
+   
+- Confidentiality
+- Integrity
+- Availability
  
-** Defense in Depth 
+*** Defense in Depth 
    
-   {{{reveallicense("./defense.meta","20vh",nil,'none)}}}
+   {{{revealimg("./defense.meta","A Medieval Castel","45vh",nil,'none)}}}
+- Prevention
+- Detection
+- Resiliency
+- Recovery
+
+** Confidentiality
+
+** Integrity
    
+** Availability
+ 
 ** Privacy 
 
-   {{{reveallicense("./template.meta","20vh",nil,'none)}}}
-   \(x^2 + y^2 = 1\)
-** Differential Privacy
+*** Differential Privacy
 
-** Informational Privacy
+*** Informational Privacy
    
-** Privacy Preserving Average Consensus
+*** Privacy Preserving Average Consensus
    
 
-** Homomorphic Encryption
+*** Homomorphic Encryption
    
-* Other Important Area
-  
-** Hybrid Systems
-  
 * Applications
   
 ** Smart Transportation
