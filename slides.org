@@ -41,24 +41,24 @@
 ** Security Risks 
   - The next generation CPS: *Smart Grids*, *Smart Buildings*, *Internet of Things*, will make extensive use of widespread sensing and networking.
   - As the CPSs become "/smarter/", they are also more vulnerable to malicious attacks.
- {{{revealgrid(1, "./smartcps.grid", 50, 3, 1, "\"ga1 ga2 ga3\"")}}}
+ {{{revealgrid(1, "./smartcps.grid", 40, 3, 1, "\"ga1 ga2 ga3\"")}}}
    
 *** The First CPS Malware: Stuxnet
 
   - Stuxnet is the first discovered malware that spies on and subverts industrial control systems. It was discovered in June 2010.
-   {{{revealimg("./stuxnet.meta","Stuxnet Incident","45vh",nil,'none)}}}
+   {{{revealimg("./stuxnet.meta","Stuxnet Incident","auto",nil,'none)}}}
    
 *** Threats to Industrial Control Systems
    
-- In FY 2016, ICS-CERT received *290* incidents. The scope of incidents includes: {{{reveallicense("./cert.meta","40vh",nil,'none)}}}
+- In FY 2016, ICS-CERT received *290* incidents. The scope of incidents includes: {{{reveallicense("./cert.meta","auto",nil,'none)}}}
   * Unauthorized access, 
   * Exploitation of zero-day vulnerabilities,  
   * Malware infections within air-gapped control system networks.
 
 *** Attack Through Supply Chain
 
-- 70% of the components for Boeing 787 are manufactured by other suppliers.  
-   {{{revealimg("./boeing.meta","Supply Chain for Boeing 787","45vh",nil,'none)}}}
+- 70% of the components for Boeing 787 are manufactured by other suppliers cite:Tang2009
+   {{{revealimg("./boeing.meta","Supply Chain for Boeing 787","auto",nil,'none)}}}
    
 *** Black Energy
 
@@ -67,32 +67,82 @@
 
 ** Cyber-Physical Security
    
-- Confidentiality
-- Integrity
-- Availability
+- CIA Triad: *Confidentiality*, *Integrity*, *Availability*
+- A case study for smart grid cite:Mo2011
+|                 | Control Signal                | Measurements                   | Software           |
+| Confidentiality | Exposure of System Structure  | Unauthorized Access            | Piracy             |
+| Integrity       | *Changes of Control Command*  | *Incorrect Data*              | *Malicious Software* |
+| Availability    | *Inability to Control the Grid* | *Unavailability of Measurements* | N/A                |
  
-*** Defense in Depth 
+
+*** Threat Modelling 
+
+- cite:Teixeira2015 proposes a 3-dimension attack space:{{{reveallicense("./cpsattackspace.meta","auto",nil,'none)}}}
+  - *System Knowledge*: Knowledge of off-line system parameters
+  - *Disclosure Resources*: Knowledge of on-line signals
+  - *Disruption Resources*: Manipulation of on-line signals
+- Food for Thought: Can disclosure resources be used to gain system knowledge (data-driven attack)? cite:Park2019, cite:Yuan2020
+
+*** Threat Analysis
    
-   {{{revealimg("./defense.meta","A Medieval Castel","45vh",nil,'none)}}}
-- Prevention
+*** Countermeasures: Defense in Depth 
+   
+- Prevention{{{reveallicense("./defense.meta","auto",nil,'none)}}}
+  - Using cryptography/coding to preserve confidentiality (privacy)
 - Detection
+  - Fault Detection and Isolation (FDI)
+  - Active Detection
 - Resiliency
+  - Secure information fusion: detection, estimation, ...
+  - Robust system topology design
 - Recovery
+  - Software rejuvenation
+  - Patching 
+- ...
 
 ** Confidentiality
 
-** Integrity
+
+** Active Detection against Replay Attack
+
+*** Stuxnet 
+    
+- NY times: /The worm itself now appears to have included two major components. One was designed to send Iran's nuclear centrifuges spinning wildly out of control. Another seems right out of the movies: *The computer program also secretly recorded what normal operations at the nuclear plant looked like, then played those readings back to plant operators*, like a pre-recorded security tape in a bank heist, so that it would appear that everything was operating normally while the centrifuges were actually tearing themselves apart./
+ 
+*** System Description
+   #+BEGIN_leftcol
+    #+HTML: <div class="r-stack">
+    #+ATTR_HTML: :class fragment fade-out :data-fragment-index 0
+    [[./replaydiagramone.svg]]
+    #+ATTR_HTML: :class fragment :data-fragment-index 0
+    [[./replaydiagramtwo.svg]]
+    #+HTML: </div>
+- Assumptions: Linear Gaussian systems, Linear state estimator+state feedback, \(\chi_2\) failure detector.
+   #+END_leftcol
+   #+ATTR_REVEAL: :frag appear
+   #+BEGIN_rightcol
+   {{{revealimg("./replayunstableA.meta","Detection Rate v.s. Time",nil,nil,'none)}}}
+   Not all system can detect replay attack!
+   #+END_rightcol
+ 
+*** Active Detection via Physical Watermarking
+
+    
+*** Extensions
+
+** Secure State Estimation
+
+*** Dynamic State Estimation
    
 ** Availability
+
+*** Robust System Topology Design
  
 ** Privacy 
 
 *** Differential Privacy
 
-*** Informational Privacy
-   
 *** Privacy Preserving Average Consensus
-   
 
 *** Homomorphic Encryption
    
