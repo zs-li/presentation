@@ -32,11 +32,17 @@
 
 ** Networked Control System   
 
-* Networked Control System
+* Networked Control 
+
+** Control over Networks
+   
+- Communication is *imperfect*: quantization, delay, packet drops
+- Communication is *expensive*: offline scheduling, event-based scheduling
+- *Multiple participants* and *local information*: multi-agent system
 
 
   
-* Security and Privacy of CPS
+* CPS Security and Privacy 
 
 ** Security Risks 
   - The next generation CPS: *Smart Grids*, *Smart Buildings*, *Internet of Things*, will make extensive use of widespread sensing and networking.
@@ -93,8 +99,8 @@
   - Fault Detection and Isolation (FDI)
   - Active Detection
 - Resiliency
-  - Secure information fusion: detection, estimation, ...
-  - Robust system topology design
+  - Off-line: Resilient system design
+  - On-line: Secure information fusion, control
 - Recovery
   - Software rejuvenation
   - Patching 
@@ -126,33 +132,106 @@
    #+END_rightcol
  
 *** Active Detection via Physical Watermarking
-
-    
-*** Extensions
+   #+BEGIN_leftcol
+- Change the control law by adding a zero mean i.i.d. Gaussian watermarking signal \(\zeta(k)\):
+\[ u(k) = \text{Optimal LQG Control}+ \zeta(k).\]
+  {{{revealimg("./replaywithphywatermark.meta","40vh",nil,nil,'none)}}}
+   #+END_leftcol
+   #+BEGIN_rightcol
+- Optimizing the covariance of \(\zeta(k)\):
+\[\max\;Detection\;Performance,\,s.t.,\,Control\;Loss\leq \delta.\]
+- Can be relaxed into semidefinite programming cite
+- The problem can be solved on-line, without explicit system knowledge cite
+- Other watermarking schemes (e.g., multiplicative watermark) cite
+   #+END_rightcol
+   
+*** Simulation: Tennessee Eastman Process
+   #+BEGIN_leftcol
+- The TEP is created to provide a realistic industrial process for developing studying and evaluating process control technology.
+  {{{revealimg("./simplifiedmodel.meta","40vh",nil,nil,'none)}}}
+- The simplified model contain 4 inputs, 4 outputs and 7 internal states.
+   #+END_leftcol
+   #+BEGIN_rightcol
+  {{{revealimg("./gng_te.meta","40vh",nil,nil,'none)}}}
+  - Physical watermarks enable replay attack detection.
+  - The optimal watermark signal and detector can be learned using data-driven approach.
+   #+END_rightcol
 
 ** Secure State Estimation
 
-*** Dynamic State Estimation
-   
-** Availability
+*** Static State Estimation
+- Sensor model:
+\[\begin{bmatrix}
+y_1\\
+\vdots\\
+y_m
+\end{bmatrix} = Hx + noise + attack. \]
+- The noise is *small* (zero mean Gaussian or bounded) but *ubiquitous*.
+- The attack is \(p\)-*sparse* but can be *arbitrarily large*.
+- Originally proposed by Peng et al.cite:Peng2009 in the context of DC power flow model.
 
-*** Robust System Topology Design
+*** Fundamental Limit for Noiseless Case
+- The system is called \(p\)-observable if $H$ is full column rank even after removing rows corresponding to an arbitrary set of \(p\) sensors.
+- The system is NOT \(p\)-observable \(\Rightarrow\) There exists undetectable attack.
+- The system is NOT \(2p\)-observable \(\Rightarrow\) There exists unidentifiable attack.
+- The system is NOT \(2p\)-observable \(\Rightarrow\) One cannot "securely" estimate the state with bounded error.
+- The "secure" estimation problem is *NP-hard* in general cite
+  
+*** Secure Static Estimator
+   #+BEGIN_leftcol
+   - Estimator with Combinatorial Complexity cite, e.g.,
+    \begin{align*}
+      & \mathop{\textit{minimize}}\limits_{\hat x,a,w}&
+      & \|w\|^2 \\
+      &\text{subject to}&
+      &y = H \hat x + w + a,\,\|a\|_0\leq p.
+    \end{align*}
+   - Require \(2p\)-observable to be "secure"
+   - Achieves fundamental limit
+   #+END_leftcol
+   #+BEGIN_rightcol
+   - Convex optimization based estimator cite
+   \[\hat x = \argmin f_i (y_i - H_i\hat x)\]
+   - Require stronger condition than \(2p\)-observable to generate "secure" estimate.
+   #+END_rightcol
+   
+*** Simulation: IEEE 14-Bus System 
+   #+BEGIN_leftcol
+   - Consider the DC power flow model of IEEE 14-Bus system
+   - The system has 27 sensors and 13 states
+   {{{revealimg("./ieee14.meta","IEEE 14-Bus System","40vh",nil,'none)}}}
+   - The power flow meter on the red line is being attacked
+   #+END_leftcol
+   #+BEGIN_rightcol
+   {{{revealimg("./ieee14lasso.meta","Stuxnet Incident","40vh",nil,'none)}}}
+   - With fine-tuned parameters, we can design a "good" estimator both in the *absence* and in the *presence* of attacks.
+   #+END_rightcol
+   
+*** Dynamic State Estimation
+
+** Robust System Topology Design
  
 ** Privacy 
 
 *** Differential Privacy
 
-*** Privacy Preserving Average Consensus
+*** Information Privacy
+
+
 
 *** Homomorphic Encryption
+    
+*** Secure Multiparty Computing
    
 * Applications
   
 ** Smart Transportation
+   
 ** Cyber-Physical-Energy System
 
 * Conclusion
 
+   
 ** Bibliography
    :PROPERTIES:
    :CUSTOM_ID: bibliography
