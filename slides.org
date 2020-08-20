@@ -367,15 +367,32 @@ cite
     
 ** Privacy 
 
+
+
 *** Differential Privacy
-- \(\epsilon\)-private: 
- 
+- \(\epsilon\)-private: Let \(\mathcal M\) be a randomized algorithm that takes certain data $x$ as input. \(\mathcal M\) is \(\epsilon\) differentially private if 
+\[\exp(-\epsilon) P(\mathcal A(x_2)\in S) \leq P(\mathcal A(x_1)\in S) \leq \exp(\epsilon) P(\mathcal A(x_2)\in S).\]
+for any adjacent \(x_1\) and \(x_2\) and measurable set \(S\).
 - Other privacy metrics exists, e.g., \((\epsilon,\delta)\)-privacy, mutual information, information leakage, ...
 
+*** Additive Noise Mechanism
+- A deterministic function \(f\) 
+- Laplacian Mechanism: 
+\[\mathcal M_{f,\epsilon}(x) = f(x) + Lap(\mu = 0)\]
+- Gaussian Mechanism: 
+\[\mathcal M_{f,\epsilon}(x) = f(x) + \mathcal N(\mu = 0)\]
+
 *** Privacy Preserving Distributed Algorithms
+   
+ 
     
 *** Homomorphic Encryption
-    
+
+- Partially Homomorphic:
+
+- Fully Homomorphic:
+ 
+- Enables computation on the ciphertext
    
 * Application: Cyber-Physical-Energy System
 
