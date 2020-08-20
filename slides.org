@@ -40,10 +40,10 @@
   
 ** Convergence of Computation and Control 
 
+- 1948: The term "Cybernetics" was coined by Norbert Wiener.
 - 1970s: Real time system
 - 1990s: Hybrid system
 - 2006: The term "Cyber-Physical System" was coined by NSF.
-- 1948: The term "cybernetics" was coined by Norbert Wiener.
 
 ** Convergence of Communication and Control
 - 1971: [[https://en.wikipedia.org/wiki/ALOHAnet][ALOHAnet]], first public wireless packet data network
@@ -54,20 +54,121 @@
 /Networks of sensory or actuator nodes with computational capabilities, connected wirelessly or by wires, can form an orchestra which controls our physical environment./
 
 ** Many-Sidedness of CPS
-  {{{revealimg("./blindmenandelephant.meta","The Blinded Men and an Elephant","70vh",nil,'none)}}}
+    #+BEGIN_leftcol
+    #+HTML: <div class="r-stack">
+    #+ATTR_HTML: :class fragment fade-out :data-fragment-index 0
+    [[./blindmenandelephant.jpg]]
+    #+ATTR_HTML: :class fragment :data-fragment-index 0
+    [[./singpilot.jpg]]
+    #+HTML: </div>
+    #+END_leftcol
+    #+ATTR_REVEAL: :frag appear
+    #+BEGIN_rightcol
+    {{{revealimg("./acronis.meta","Diagram of Autonomous Car","40vh",nil,'none)}}}
+    #+END_rightcol
 
 * Networked Control 
 
-** Control over Networks
-   
-   - Communication is *imperfect*: quantization, delay, packet drops
-   - Communication is *expensive*: offline scheduling, event-based scheduling
-   - *Multiple participants* and *local information*: multi-agent system
-
-** Control over Lossy Channels
-
-** Scheduling for Estimation    
+** Definition of Networked Control System
+/Networked control systems are spatially distributed systems in which the communication between sensors, actuators, and controllers occurs through a shared band-limited digital communication network./
+  #+BEGIN_right 
+  cite:Zhang2020, Journal of Automatica Sinica
+  #+END_right
+    {{{revealimg("./ncs.meta","","40vh",nil,'none)}}}
   
+- Control over Networks:   
+  - Communication is *imperfect*: quantization, delay, packet drops
+  - Communication is *expensive*: offline scheduling, event-based scheduling
+  - *Multiple participants* and *local information*: multi-agent system
+- Control of Networks
+ 
+** Estimation and Control over Lossy Channels
+
+*** Estimation over Lossy Channels
+
+- Problem proposed by Sinopoli et al. cite
+- System model:
+\[x_{t+1} = A x_t + w_t,\,y_t = C x_t + v_t\]
+- Erasure channel model:
+\[\tilde y_t = \gamma_t y_t\]
+  {{{revealimg("./estoverlossy.meta","Estimation over Lossy Channels","40vh",nil,'none)}}}
+- Goal: given \(\gamma_{0:t},\,\tilde y_{0:t}\), estimate $x_t$.
+#+REVEAL: split
+- Optimal estimator is a Kalman filter with a time varying gain depending on the packet loss process \(\{\gamma_t\}\).
+- The estimator is stable (in the mean square sense) only when the packet arrival rate is larger than a critical value \(\gamma_c\).
+- A lower bound of \(\lambda_c\) is derived in cite
+\[\lambda_c \geq 1-\frac{1}{\rho(A)^2}\]
+
+*** Lower Bound is not Tight
+- Counterexample:
+  \[x_{t+1} = \begin{bmatrix} 0 & 2\\ 2 & 0\end{bmatrix} x_t + w_t,\,y_t = \begin{bmatrix} 1&0\end{bmatrix}x_t + v_t.\]
+  {{{revealimg("./criticalvaluecounter.meta","Information Flow","40vh",nil,'none)}}}
+- Critical packet arrival probability is \(15/16\), not \(3/4\).
+- The lower bound is tight if the system is non-degenerate, i.e., observability is preserved under different sampling frequency cite
+- For degenerate system, the exact critical value is derived by Sui et al. cite
+
+*** Control over Lossy Channels: TCP case
+- System model:
+\[x_{t+1} = A x_t + B \tilde u_t + w_t ,\,y_t = C x_t + v_t\]
+- Channel model:
+\[\tilde u_t = \nu_t u_t, \tilde y_t = \gamma_t y_t.\]
+  {{{revealimg("./ctrloverlossy.meta","Control over Lossy Channels","40vh",nil,'none)}}}
+- TCP information set: \(\nu_{0:t},\gamma_{0:t},\tilde y_{0:t}\)
+- Optimal control policy (in the LQG sense): cite
+  - Kalman filter with time varying gain
+  - Fixed gain state feedback (Gain is derived from an Modified Algebraic Riccati Equation)
+  - Separation principle holds
+- Stability criteria:
+  - Measurement packet arrival rate greater than $\lambda_c$
+  - MARE has a fixed point solution
+ 
+*** Control over Lossy Channels: UDP case
+- UDP information set: \(\gamma_{0:t},\tilde y_{0:t}\)
+- Optimal control policy (in the LQG sense): cite
+  - State follows a Gaussian mixture distribution cite
+  - Optimal control is an open problem
+  - Separation principle does NOT hold
+- Stability criteria:
+  - Open problem
+ 
+** Scheduling for State Estimation    
+- System model:
+\[x_{t+1} = A x_t + w_t,\,y_t = C x_t + v_t\]
+- Erasure channel model:
+\[\tilde y_t = \gamma_t y_t\]
+  {{{revealimg("./estoverlossy.meta","Estimation over Lossy Channels","40vh",nil,'none)}}}
+- Goal: Design \(\{\gamma_t\}\) to minimize estimation error, while satisfying energy, bandwidth, topological constraints.
+
+*** Off-line Schedule
+- The schedule is based on the statistics of the system, and hence can be determined off-line:
+  - Deterministic Schedule: send the measurement only at even time.
+  - Stochastic Schedule: send the measurement with 50% probability at each time
+- The "optimal" schedule is periodic cite
+- For special cases, closed form solution can be obtained. cite
+- For general cases, convex relaxation cite or submodularity cite can be exploited.
+
+*** Event-based Schedule
+- The schedule depends on both the statistics and the realization of the
+system.
+- For example: send the temperature if the temperature is outside \([25, 30]\).
+- /No news is good news:/ If receiving no measurement at time \(t\), the fusion center knows the measurement is within \([25, 30]\)
+ 
+*** Deterministic Trigger 
+   {{{revealgrid(3, "./det.grid", 40, 3, 1, "\"ga1 ga2 ga3\"")}}}
+- When \(\gamma_t = 0\), \(y_t\) follows a truncated Gaussian distribution.
+- The optimal filter is given by the forward algorithm of hidden Markov model.
+- Need to keep track of the pdf of \(x_t\) given \(y_{0:t}\).
+
+*** Stochastic Trigger
+   {{{revealgrid(4, "./rand.grid", 40, 3, 1, "\"ga1 ga2 ga3\"")}}}
+- At each time k, the sensor generates a random variable \(\zeta_t \sim U[0,1]\)
+- Decide whether to send or not based on the following rule:
+\[\gamma_t= \begin{cases}
+0&\zeta_t \leq \Phi(y_t)\\
+1&\zeta_t > \Phi(y_t)
+\end{cases},\text{ with } \Phi(y) = \exp\left( -\frac{1}{2}y'Yy \right). \]
+- The closed-form solution of the optimal filter is a Kalman like filter.
+ 
 * CPS Security and Privacy 
 
 ** Security Risks 
@@ -262,27 +363,42 @@ cite
 *** Dynamic Estimator: Local Fusion Approach
     {{{revealimg("./secureest2.meta","Secure Estimator Design with Local Estimators","40vh",nil,'none)}}}
     cite 
+*** Case Study: Secure Est against GPS Spoofing for Vehicle Localization
+    
 ** Privacy 
 
 *** Differential Privacy
 - \(\epsilon\)-private: 
  
-- Other privacy metrics exists, e.g., \(\epsilon,\delta\)-privacy, mutual information, information leakage, ...
+- Other privacy metrics exists, e.g., \((\epsilon,\delta)\)-privacy, mutual information, information leakage, ...
 
 *** Privacy Preserving Distributed Algorithms
     
 *** Homomorphic Encryption
     
-*** Secure Multiparty Computing
    
-* Applications
-  
-   
-** Cyber-Physical-Energy System
-** Cyber-Physical-Human System
+* Application: Cyber-Physical-Energy System
 
 * Conclusion
 
+** Modelling and Analysis of Cyber-Physical System
+ /All models are wrong, but some are useful/  
+  #+BEGIN_right 
+  George Box 
+  #+END_right 
+  
+** Design of Cyber-Physical System
+
+- Cross-layered Design
+- Modular Design
+- Managing Complexity
+  
+** Towards a Science of Cyber-Physical System
+- Much important work remains to be done: cite
+  + To capture and analyze the dynamics of the communications, computation, control, and applications in a unified theoretical framework.
+  + To understand and predict complex behaviors caused by tight interactions between cyber and physical domains.
+  + High-level decision making based on information collected from different sources at different spatial and temporal scales
+** Thank you for your time!
    
 ** Bibliography
    :PROPERTIES:
