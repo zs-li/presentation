@@ -12,222 +12,274 @@
 # Use 16:9 aspect ratio
 #+REVEAL_EXTRA_OPTIONS: width: 1280, height: 720
 
+#+HTML_HEAD: <style type="text/css"> div.right {text-align:right;} </style>
+
 # Generate bibliography with LaTeX
 #+LATEX_HEADER: \usepackage[backend=biber,style=alphabetic]{biblatex}
 #+LATEX_HEADER: \addbibresource{references.bib}
 
-#+TITLE: 信息物理系统
-#+AUTHOR: 莫一林(清华大学  自动化系)
-#+DATE:  信息物理系统专委会 (Aug 21, 2020)
+#+TITLE: A Personal Take on Cyber Physical Systems
+#+AUTHOR: Mo, Yilin (Department of Automation, Tsinghua University)
+#+DATE: TC on Cyber-Physical Systems Meetings (Aug 21, 2020)
 
-#+KEYWORDS: Cyber-Physical System, Networked Control, Security, Control
+#+KEYWORDS: Cyber-Physical System, Networked Control, Security, Privacy, Smart Grid, Smart Transportation, Control
 #+DESCRIPTION: A brief overview of the current researches on control and CPS.
 
 * Introduction
+  
 ** Definition of Cyber-Physical System
+  {{{revealimg("./cps.meta","Cyber-Physical System","40vh",nil,'none)}}}
+ /CPSs refer to the next generation of engineered systems that require tight integration of *computing*, *communication*, and *control* technologies to achieve *stability*, *performance*, *reliability*, *robustness*, and *efficiency* in dealing with physical systems of many application domains./
  
-** Hybrid Systems
-   
-** Sensor Networks
+  #+BEGIN_right 
+  cite:Kumar, Proceedings of the IEEE, 2012
+  #+END_right 
+  
+*** Applications
+  {{{revealimg("./BMW.meta","Coordination of Multiple Robitic Arms","40vh",nil,'none)}}}
+  
+** Convergence of Computation and Control 
 
-** Networked Control System   
+- 1970s: Real time system
+- 1990s: Hybrid system
+- 2006: The term "Cyber-Physical System" was coined by NSF.
+- 1948: The term "cybernetics" was coined by Norbert Wiener.
+
+** Convergence of Communication and Control
+- 1971: [[https://en.wikipedia.org/wiki/ALOHAnet][ALOHAnet]], first public wireless packet data network
+- 1997: IEEE 802.11 (Wifi) was introduced
+- 1997: [[https://en.wikipedia.org/wiki/Smartdust][Smart Dust Project]] proposed by researchers from UCB
+- 1999: The term [[https://en.wikipedia.org/wiki/Internet_of_things][Internet of Things]] was invented.
+- 2000: Panel on Future Directions in Control, Dynamics, and Systems, Control in an Information Rich World:
+/Networks of sensory or actuator nodes with computational capabilities, connected wirelessly or by wires, can form an orchestra which controls our physical environment./
+
+** Many-Sidedness of CPS
+  {{{revealimg("./blindmenandelephant.meta","The Blinded Men and an Elephant","70vh",nil,'none)}}}
 
 * Networked Control 
 
 ** Control over Networks
    
-- Communication is *imperfect*: quantization, delay, packet drops
-- Communication is *expensive*: offline scheduling, event-based scheduling
-- *Multiple participants* and *local information*: multi-agent system
+   - Communication is *imperfect*: quantization, delay, packet drops
+   - Communication is *expensive*: offline scheduling, event-based scheduling
+   - *Multiple participants* and *local information*: multi-agent system
 
+** Control over Lossy Channels
 
+** Scheduling for Estimation    
   
 * CPS Security and Privacy 
 
 ** Security Risks 
-  - The next generation CPS: *Smart Grids*, *Smart Buildings*, *Internet of Things*, will make extensive use of widespread sensing and networking.
-  - As the CPSs become "/smarter/", they are also more vulnerable to malicious attacks.
- {{{revealgrid(1, "./smartcps.grid", 40, 3, 1, "\"ga1 ga2 ga3\"")}}}
+   - The next generation CPS: *Smart Grids*, *Smart Buildings*, *Internet of Things*, will make extensive use of widespread sensing and networking.
+   - As the CPSs become "/smarter/", they are also more vulnerable to malicious attacks.
+   {{{revealgrid(1, "./smartcps.grid", 40, 3, 1, "\"ga1 ga2 ga3\"")}}}
    
 *** The First CPS Malware: Stuxnet
 
-  - Stuxnet is the first discovered malware that spies on and subverts industrial control systems. It was discovered in June 2010.
-   {{{revealimg("./stuxnet.meta","Stuxnet Incident","auto",nil,'none)}}}
-   
+    - Stuxnet is the first discovered malware that spies on and subverts industrial control systems. It was discovered in June 2010.
+      {{{revealimg("./stuxnet.meta","Stuxnet Incident","auto",nil,'none)}}}
+
 *** Threats to Industrial Control Systems
    
-- In FY 2016, ICS-CERT received *290* incidents. The scope of incidents includes: {{{reveallicense("./cert.meta","auto",nil,'none)}}}
-  * Unauthorized access, 
-  * Exploitation of zero-day vulnerabilities,  
-  * Malware infections within air-gapped control system networks.
+    - In FY 2016, ICS-CERT received *290* incidents. The scope of incidents includes: {{{reveallicense("./cert.meta","auto",nil,'none)}}}
+      * Unauthorized access, 
+      * Exploitation of zero-day vulnerabilities,  
+      * Malware infections within air-gapped control system networks.
 
 *** Attack Through Supply Chain
 
-- 70% of the components for Boeing 787 are manufactured by other suppliers cite:Tang2009
-   {{{revealimg("./boeing.meta","Supply Chain for Boeing 787","auto",nil,'none)}}}
-   
+    - 70% of the components for Boeing 787 are manufactured by other suppliers cite:Tang2009
+      {{{revealimg("./boeing.meta","Supply Chain for Boeing 787","auto",nil,'none)}}}
+
 *** Black Energy
 
-- A Successful attack on *critical infrastructure* can be devastating.
- {{{revealgrid(2, "./powergridattack.grid", 70, 2, 2, "\"ga1 ga2 \" \"ga3 ga3\"")}}}
+    - A Successful attack on *critical infrastructure* can be devastating.
+      {{{revealgrid(2, "./powergridattack.grid", 70, 2, 2, "\"ga1 ga2 \" \"ga3 ga3\"")}}}
 
 ** Cyber-Physical Security
    
-- CIA Triad: *Confidentiality*, *Integrity*, *Availability*
-- A case study for smart grid cite:Mo2011
-|                 | Control Signal                | Measurements                   | Software           |
-| Confidentiality | Exposure of System Structure  | Unauthorized Access            | Piracy             |
-| Integrity       | *Changes of Control Command*  | *Incorrect Data*              | *Malicious Software* |
-| Availability    | *Inability to Control the Grid* | *Unavailability of Measurements* | N/A                |
+   - CIA Triad: *Confidentiality*, *Integrity*, *Availability*
+   - A case study for smart grid cite:Mo2011
+   |                 | Control Signal                | Measurements                   | Software           |
+   | Confidentiality | Exposure of System Structure  | Unauthorized Access            | Piracy             |
+   | Integrity       | *Changes of Control Command*  | *Incorrect Data*              | *Malicious Software* |
+   | Availability    | *Inability to Control the Grid* | *Unavailability of Measurements* | N/A                |
  
 
 *** Threat Modelling 
 
-- cite:Teixeira2015 proposes a 3-dimension attack space:{{{reveallicense("./cpsattackspace.meta","auto",nil,'none)}}}
-  - *System Knowledge*: Knowledge of off-line system parameters
-  - *Disclosure Resources*: Knowledge of on-line signals
-  - *Disruption Resources*: Manipulation of on-line signals
-- Food for Thought: Can disclosure resources be used to gain system knowledge (data-driven attack)? cite:Park2019, cite:Yuan2020
+    - cite:Teixeira2015 proposes a 3-dimension attack space:{{{reveallicense("./cpsattackspace.meta","auto",nil,'none)}}}
+      - *System Knowledge*: Knowledge of off-line system parameters
+      - *Disclosure Resources*: Knowledge of on-line signals
+      - *Disruption Resources*: Manipulation of on-line signals
+    - Can disclosure resources be used to gain system knowledge (data-driven attack)? cite:Park2019, cite:Yuan2020
 
-*** Threat Analysis
+*** Threat Analysis and Design
+    
+    #+BEGIN_leftcol
+    Adversary's Perspective: 
+    - Maximize impact 
+    - Minimize required resources
+    - Stealthiness constraints
+    #+END_leftcol
+
+    #+BEGIN_rightcol
+    System's Perspective:
+    - Fundamental limit
+    - Stability under attack
+    - Performance under attack
+    - Cost of Security
+    {{{reveallicense("./velocityone.meta","40vh",nil,'none)}}}
+    #+END_rightcol
    
 *** Countermeasures: Defense in Depth 
    
-- Prevention{{{reveallicense("./defense.meta","auto",nil,'none)}}}
-  - Using cryptography/coding to preserve confidentiality (privacy)
-- Detection
-  - Fault Detection and Isolation (FDI)
-  - Active Detection
-- Resiliency
-  - Off-line: Resilient system design
-  - On-line: Secure information fusion, control
-- Recovery
-  - Software rejuvenation
-  - Patching 
-- ...
-
-** Confidentiality
-
+    - Prevention{{{reveallicense("./defense.meta","auto",nil,'none)}}}
+      - Using cryptography/coding to preserve confidentiality (privacy)
+    - Detection
+      - Fault Detection and Isolation (FDI)
+      - Active Detection
+    - Resiliency
+      - Off-line: Resilient system design
+      - On-line: Secure information fusion, control
+    - Recovery
+      - Software rejuvenation
+      - Patching 
+    - ...
 
 ** Active Detection against Replay Attack
 
 *** Stuxnet 
     
-- NY times: /The worm itself now appears to have included two major components. One was designed to send Iran's nuclear centrifuges spinning wildly out of control. Another seems right out of the movies: *The computer program also secretly recorded what normal operations at the nuclear plant looked like, then played those readings back to plant operators*, like a pre-recorded security tape in a bank heist, so that it would appear that everything was operating normally while the centrifuges were actually tearing themselves apart./
- 
+    - NY times: /The worm itself now appears to have included two major components. One was designed to send Iran's nuclear centrifuges spinning wildly out of control. Another seems right out of the movies: *The computer program also secretly recorded what normal operations at the nuclear plant looked like, then played those readings back to plant operators*, like a pre-recorded security tape in a bank heist, so that it would appear that everything was operating normally while the centrifuges were actually tearing themselves apart./
+
 *** System Description
-   #+BEGIN_leftcol
+    #+BEGIN_leftcol
     #+HTML: <div class="r-stack">
     #+ATTR_HTML: :class fragment fade-out :data-fragment-index 0
     [[./replaydiagramone.svg]]
     #+ATTR_HTML: :class fragment :data-fragment-index 0
     [[./replaydiagramtwo.svg]]
     #+HTML: </div>
-- Assumptions: Linear Gaussian systems, Linear state estimator+state feedback, \(\chi_2\) failure detector.
-   #+END_leftcol
-   #+ATTR_REVEAL: :frag appear
-   #+BEGIN_rightcol
-   {{{revealimg("./replayunstableA.meta","Detection Rate v.s. Time",nil,nil,'none)}}}
-   Not all system can detect replay attack!
-   #+END_rightcol
+    - Assumptions: Linear Gaussian systems, Linear state estimator+state feedback, \(\chi_2\) failure detector.
+    #+END_leftcol
+    #+ATTR_REVEAL: :frag appear
+    #+BEGIN_rightcol
+    {{{revealimg("./replayunstableA.meta","Detection Rate v.s. Time","40vh",nil,'none)}}}
+    Not all system can detect replay attack!
+    #+END_rightcol
  
 *** Active Detection via Physical Watermarking
-   #+BEGIN_leftcol
-- Change the control law by adding a zero mean i.i.d. Gaussian watermarking signal \(\zeta(k)\):
-\[ u(k) = \text{Optimal LQG Control}+ \zeta(k).\]
-  {{{revealimg("./replaywithphywatermark.meta","40vh",nil,nil,'none)}}}
-   #+END_leftcol
-   #+BEGIN_rightcol
-- Optimizing the covariance of \(\zeta(k)\):
-\[\max\;Detection\;Performance,\,s.t.,\,Control\;Loss\leq \delta.\]
-- Can be relaxed into semidefinite programming cite
-- The problem can be solved on-line, without explicit system knowledge cite
-- Other watermarking schemes (e.g., multiplicative watermark) cite
-   #+END_rightcol
+    #+BEGIN_leftcol
+    - Change the control law by adding a zero mean i.i.d. Gaussian watermarking signal \(\zeta(k)\):
+    \[ u(k) = \text{Optimal LQG Control}+ \zeta(k).\]
+    {{{revealimg("./replaywithphywatermark.meta","Watermark","40vh",nil,'none)}}}
+    #+END_leftcol
+    #+BEGIN_rightcol
+    - Optimizing the covariance of \(\zeta(k)\):
+    \[\max\;Detection\;Performance,\,s.t.,\,Control\;Loss\leq \delta.\]
+    - Can be relaxed into semidefinite programming cite:Mo2014
+    - The problem can be solved on-line, without explicit system knowledge cite:Liu2020
+    - Other watermarking schemes (e.g., multiplicative watermark) cite:Ferrari2020, cite:Satchidanandan2017
+    #+END_rightcol
    
 *** Simulation: Tennessee Eastman Process
-   #+BEGIN_leftcol
-- The TEP is created to provide a realistic industrial process for developing studying and evaluating process control technology.
-  {{{revealimg("./simplifiedmodel.meta","40vh",nil,nil,'none)}}}
-- The simplified model contain 4 inputs, 4 outputs and 7 internal states.
-   #+END_leftcol
-   #+BEGIN_rightcol
-  {{{revealimg("./gng_te.meta","40vh",nil,nil,'none)}}}
-  - Physical watermarks enable replay attack detection.
-  - The optimal watermark signal and detector can be learned using data-driven approach.
-   #+END_rightcol
+    #+BEGIN_leftcol
+    - The TEP is created to provide a realistic industrial process for developing studying and evaluating process control technology.
+      {{{revealimg("./simplifiedmodel.meta","TEP Model","40vh",nil,'none)}}}
+    - The simplified model contain 4 inputs, 4 outputs and 7 internal states.
+    #+END_leftcol
+    #+BEGIN_rightcol
+    {{{revealimg("./gng_te.meta","Detection Performance","40vh",nil,'none)}}}
+    - Physical watermarks enable replay attack detection.
+    - The optimal watermark signal and detector can be learned using data-driven approach.
+    #+END_rightcol
 
 ** Secure State Estimation
 
 *** Static State Estimation
-- Sensor model:
-\[\begin{bmatrix}
-y_1\\
-\vdots\\
-y_m
-\end{bmatrix} = Hx + noise + attack. \]
-- The noise is *small* (zero mean Gaussian or bounded) but *ubiquitous*.
-- The attack is \(p\)-*sparse* but can be *arbitrarily large*.
-- Originally proposed by Peng et al.cite:Peng2009 in the context of DC power flow model.
+    - Sensor model:
+    \[\begin{bmatrix}
+    y_1\\
+    \vdots\\
+    y_m
+    \end{bmatrix} = Hx + noise + attack. \]
+    - The noise is *small* (zero mean Gaussian or bounded) but *ubiquitous*.
+    - The attack is \(p\)-*sparse* but can be *arbitrarily large*.
+    - Originally proposed by Peng et al.cite:Liu2011 in the context of DC power flow model.
 
 *** Fundamental Limit for Noiseless Case
-- The system is called \(p\)-observable if $H$ is full column rank even after removing rows corresponding to an arbitrary set of \(p\) sensors.
-- The system is NOT \(p\)-observable \(\Rightarrow\) There exists undetectable attack.
-- The system is NOT \(2p\)-observable \(\Rightarrow\) There exists unidentifiable attack.
-- The system is NOT \(2p\)-observable \(\Rightarrow\) One cannot "securely" estimate the state with bounded error.
-- The "secure" estimation problem is *NP-hard* in general cite
-  
+    - The system is called \(p\)-observable if $H$ is full column rank even after removing rows corresponding to an arbitrary set of \(p\) sensors.
+    - The system is NOT \(p\)-observable \(\Rightarrow\) There exists undetectable attack.
+    - The system is NOT \(2p\)-observable \(\Rightarrow\) There exists unidentifiable attack.
+    - The system is NOT \(2p\)-observable \(\Rightarrow\) One cannot "securely" estimate the state with bounded error.
+    - The "secure" estimation problem is *NP-hard* in general cite:Hendrickx2014, cite:Mao2019
+
 *** Secure Static Estimator
-   #+BEGIN_leftcol
-   - Estimator with Combinatorial Complexity cite, e.g.,
-    \begin{align*}
-      & \mathop{\textit{minimize}}\limits_{\hat x,a,w}&
-      & \|w\|^2 \\
-      &\text{subject to}&
-      &y = H \hat x + w + a,\,\|a\|_0\leq p.
-    \end{align*}
-   - Require \(2p\)-observable to be "secure"
-   - Achieves fundamental limit
-   #+END_leftcol
-   #+BEGIN_rightcol
-   - Convex optimization based estimator cite
-   \[\hat x = \argmin f_i (y_i - H_i\hat x)\]
-   - Require stronger condition than \(2p\)-observable to generate "secure" estimate.
-   #+END_rightcol
+    #+BEGIN_leftcol
+    - Estimator with Combinatorial Complexity cite:Fawzi2014, cite:Ren2020, e.g.,
+      \begin{align*}
+        & \mathop{\textit{minimize}}\limits_{\hat x,a,w}&
+        & \|w\|^2 \\
+        &\text{subject to}&
+        &y = H \hat x + w + a,\,\|a\|_0\leq p.
+      \end{align*}
+    - Require \(2p\)-observable to be "secure"
+    - Achieves fundamental limit
+    #+END_leftcol
+    #+BEGIN_rightcol
+    - Convex optimization based estimator cite:Han2019
+    \[\hat x = \mathop{argmin}_{\hat x} f_i (y_i - H_i\hat x)\]
+    - Require stronger condition than \(2p\)-observable to generate "secure" estimate.
+    #+END_rightcol
    
 *** Simulation: IEEE 14-Bus System 
-   #+BEGIN_leftcol
-   - Consider the DC power flow model of IEEE 14-Bus system
-   - The system has 27 sensors and 13 states
-   {{{revealimg("./ieee14.meta","IEEE 14-Bus System","40vh",nil,'none)}}}
-   - The power flow meter on the red line is being attacked
-   #+END_leftcol
-   #+BEGIN_rightcol
-   {{{revealimg("./ieee14lasso.meta","Stuxnet Incident","40vh",nil,'none)}}}
-   - With fine-tuned parameters, we can design a "good" estimator both in the *absence* and in the *presence* of attacks.
-   #+END_rightcol
+    #+BEGIN_leftcol
+    - Consider the DC power flow model of IEEE 14-Bus system
+    - The system has 27 sensors and 13 states
+    {{{revealimg("./ieee14.meta","IEEE 14-Bus System","40vh",nil,'none)}}}
+    - The power flow meter on the red line is being attacked
+    #+END_leftcol
+    #+BEGIN_rightcol
+    {{{revealimg("./ieee14lasso.meta","Stuxnet Incident","40vh",nil,'none)}}}
+    - With fine-tuned parameters, we can design a "good" estimator both in the *absence* and in the *presence* of attacks.
+    #+END_rightcol
    
 *** Dynamic State Estimation
-
-** Robust System Topology Design
+- System Model:
+\[x_{t+1} = A x_t + w_t,\,y_t = C x_t + v_t + a_t\]
+- \(p\)-sparse attack model: At most \(p\) sensors are compromised (\(a_i(t) \neq 0\)) during operation.
+- Fundamental limit: The state can be "securely" estimated with bounded error only if the system is \(2p\)-detectable.cite
  
+*** Dynamic Estimator: Moving Horizon Approach
+    {{{revealimg("./secureest1.meta","Moving Horizon with Window Size 3","40vh",nil,'none)}}}
+cite 
+    
+*** Dynamic Estimator: Switching Approach
+    {{{revealimg("./secureest3.meta","Secure Estimator Design with Switching","40vh",nil,'none)}}}
+    cite
+*** Dynamic Estimator: Local Fusion Approach
+    {{{revealimg("./secureest2.meta","Secure Estimator Design with Local Estimators","40vh",nil,'none)}}}
+    cite 
 ** Privacy 
 
 *** Differential Privacy
+- \(\epsilon\)-private: 
+ 
+- Other privacy metrics exists, e.g., \(\epsilon,\delta\)-privacy, mutual information, information leakage, ...
 
-*** Information Privacy
-
-
-
+*** Privacy Preserving Distributed Algorithms
+    
 *** Homomorphic Encryption
     
 *** Secure Multiparty Computing
    
 * Applications
   
-** Smart Transportation
    
 ** Cyber-Physical-Energy System
+** Cyber-Physical-Human System
 
 * Conclusion
 
