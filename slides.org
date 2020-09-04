@@ -18,7 +18,7 @@
 #+LATEX_HEADER: \usepackage[backend=biber,style=alphabetic]{biblatex}
 #+LATEX_HEADER: \addbibresource{references.bib}
 
-#+TITLE: A Personal Take on Cyber Physical Systems
+#+TITLE: A Personal Take on Cyber-Physical Systems
 #+AUTHOR: Mo, Yilin (Department of Automation, Tsinghua University)
 #+DATE: TC on Cyber-Physical Systems Meetings (Aug 21, 2020)
 
@@ -28,19 +28,32 @@
 * Introduction
   
 ** Definition of Cyber-Physical System
-  {{{revealimg("./cps.meta","Cyber-Physical System","40vh",nil,'none)}}}
+  {{{revealimg("./cps.meta","","35vh",nil,'none)}}}
  /CPSs refer to the next generation of engineered systems that require tight integration of *computing*, *communication*, and *control* technologies to achieve *stability*, *performance*, *reliability*, *robustness*, and *efficiency* in dealing with physical systems of many application domains./
- 
   #+BEGIN_right 
   cite:Kumar, Proceedings of the IEEE, 2012
   #+END_right 
   
-*** Applications
-  {{{revealimg("./BMW.meta","Coordination of Multiple Robitic Arms","40vh",nil,'none)}}}
+** Applications
+   {{{revealgrid(6, "./cps.grid", 60, 2, 2, "\"ga1 ga2\" \"ga1 ga3\"")}}}
+   
+*** Cyber-Physical-Human Energy System
+   Complex interaction between humans, HVAC and grid. cite:Guan2010, cite:Jia2018
+   {{{revealgrid(5, "./cpes.grid", 40, 2, 1, "\"ga1 ga2\"")}}}
   
 ** Convergence of Computation and Control 
+    #+BEGIN_leftcol
+    - Cyber Space
+   {{{revealgrid(7, "./cyber.grid", 50, 1, 2, "\"ga1\" \"ga2\"")}}}
+    #+END_leftcol
+    #+BEGIN_rightcol
+    - Physical Space
+  {{{revealimg("./hvac.meta","","40vh",nil,'none)}}}
+  \[\dot{x} = f(x)\]
+    #+END_rightcol
 
-- 1948: The term "Cybernetics" was coined by Norbert Wiener.
+#+REVEAL: split
+- 1948: The term "Cybernetics" was coined by Norbert Wiener. {{{reveallicense("./wiener.meta","auto",nil,'none)}}}
 - 1970s: Real time system
 - 1990s: Hybrid system
 - 2006: The term "Cyber-Physical System" was coined by NSF.
@@ -49,8 +62,10 @@
 - 1971: [[https://en.wikipedia.org/wiki/ALOHAnet][ALOHAnet]], first public wireless packet data network
 - 1997: IEEE 802.11 (Wifi) was introduced
 - 1997: [[https://en.wikipedia.org/wiki/Smartdust][Smart Dust Project]] proposed by researchers from UCB
+  {{{revealimg("./smartdust.meta","","30vh",nil,'none)}}}
 - 1999: The term [[https://en.wikipedia.org/wiki/Internet_of_things][Internet of Things]] was invented.
-- 2000: Panel on Future Directions in Control, Dynamics, and Systems, Control in an Information Rich World:
+#+REVEAL: split
+- 2000: Panel on Future Directions in Control, Dynamics, and Systems cite:Murray2003 
 /Networks of sensory or actuator nodes with computational capabilities, connected wirelessly or by wires, can form an orchestra which controls our physical environment./
 
 ** Many-Sidedness of CPS
@@ -64,18 +79,20 @@
     #+END_leftcol
     #+ATTR_REVEAL: :frag appear
     #+BEGIN_rightcol
-    {{{revealimg("./acronis.meta","Diagram of Autonomous Car","40vh",nil,'none)}}}
+    {{{revealimg("./acronis.meta","Simplified Diagram of Autonomous Car","40vh",nil,'none)}}}
     #+END_rightcol
 
-* Networked Control 
+* Networked Control System
 
 ** Definition of Networked Control System
 /Networked control systems are spatially distributed systems in which the communication between sensors, actuators, and controllers occurs through a shared band-limited digital communication network./
   #+BEGIN_right 
   cite:Zhang2020, Journal of Automatica Sinica
   #+END_right
-    {{{revealimg("./ncs.meta","","40vh",nil,'none)}}}
+    {{{revealimg("./ncs.meta","Diagram of Networked Control System","40vh",nil,'none)}}}
   
+#+REVEAL: split
+
 - Control over Networks:   
   - Communication is *imperfect*: quantization, delay, packet drops
   - Communication is *expensive*: offline scheduling, event-based scheduling
@@ -86,35 +103,36 @@
 
 *** Estimation over Lossy Channels
 
-- Problem proposed by Sinopoli et al. cite
+- Problem proposed by Sinopoli et al. cite:Sinopoli2004
 - System model:
 \[x_{t+1} = A x_t + w_t,\,y_t = C x_t + v_t\]
 - Erasure channel model:
 \[\tilde y_t = \gamma_t y_t\]
-  {{{revealimg("./estoverlossy.meta","Estimation over Lossy Channels","40vh",nil,'none)}}}
+  {{{revealimg("./estoverlossy.meta","","10vh",nil,'none)}}}
 - Goal: given \(\gamma_{0:t},\,\tilde y_{0:t}\), estimate $x_t$.
 #+REVEAL: split
 - Optimal estimator is a Kalman filter with a time varying gain depending on the packet loss process \(\{\gamma_t\}\).
 - The estimator is stable (in the mean square sense) only when the packet arrival rate is larger than a critical value \(\gamma_c\).
-- A lower bound of \(\lambda_c\) is derived in cite
+- A lower bound of \(\lambda_c\):
 \[\lambda_c \geq 1-\frac{1}{\rho(A)^2}\]
-
 *** Lower Bound is not Tight
 - Counterexample:
   \[x_{t+1} = \begin{bmatrix} 0 & 2\\ 2 & 0\end{bmatrix} x_t + w_t,\,y_t = \begin{bmatrix} 1&0\end{bmatrix}x_t + v_t.\]
-  {{{revealimg("./criticalvaluecounter.meta","Information Flow","40vh",nil,'none)}}}
+  {{{revealimg("./criticalvaluecounter.meta","","20vh",nil,'none)}}}
 - Critical packet arrival probability is \(15/16\), not \(3/4\).
-- The lower bound is tight if the system is non-degenerate, i.e., observability is preserved under different sampling frequency cite
-- For degenerate system, the exact critical value is derived by Sui et al. cite
+- The lower bound is tight if the system is non-degenerate, i.e., observability is preserved under different sampling frequency cite:Mo2012
+- For degenerate system, the exact critical value is derived in cite:Sui2015
 
-*** Control over Lossy Channels: TCP case
+*** Control over Lossy Channels cite:Schenato2007
 - System model:
 \[x_{t+1} = A x_t + B \tilde u_t + w_t ,\,y_t = C x_t + v_t\]
 - Channel model:
 \[\tilde u_t = \nu_t u_t, \tilde y_t = \gamma_t y_t.\]
-  {{{revealimg("./ctrloverlossy.meta","Control over Lossy Channels","40vh",nil,'none)}}}
+  {{{revealimg("./ctrloverlossy.meta","","20vh",nil,'none)}}}
+  
+*** Control over Lossy Channels: TCP case
 - TCP information set: \(\nu_{0:t},\gamma_{0:t},\tilde y_{0:t}\)
-- Optimal control policy (in the LQG sense): cite
+- Optimal control policy (in the LQG sense): 
   - Kalman filter with time varying gain
   - Fixed gain state feedback (Gain is derived from an Modified Algebraic Riccati Equation)
   - Separation principle holds
@@ -124,28 +142,27 @@
  
 *** Control over Lossy Channels: UDP case
 - UDP information set: \(\gamma_{0:t},\tilde y_{0:t}\)
-- Optimal control policy (in the LQG sense): cite
-  - State follows a Gaussian mixture distribution cite
-  - Optimal control is an open problem
+- Optimal control policy (in the LQG sense): 
+  - State follows a Gaussian mixture distribution cite:Lin2016
+  - Optimal control is an *open problem*
   - Separation principle does NOT hold
-- Stability criteria:
-  - Open problem
+- Stability criteria: *Open problem*
  
 ** Scheduling for State Estimation    
 - System model:
 \[x_{t+1} = A x_t + w_t,\,y_t = C x_t + v_t\]
 - Erasure channel model:
 \[\tilde y_t = \gamma_t y_t\]
-  {{{revealimg("./estoverlossy.meta","Estimation over Lossy Channels","40vh",nil,'none)}}}
+  {{{revealimg("./estoverlossy.meta","","10vh",nil,'none)}}}
 - Goal: Design \(\{\gamma_t\}\) to minimize estimation error, while satisfying energy, bandwidth, topological constraints.
 
 *** Off-line Schedule
 - The schedule is based on the statistics of the system, and hence can be determined off-line:
   - Deterministic Schedule: send the measurement only at even time.
   - Stochastic Schedule: send the measurement with 50% probability at each time
-- The "optimal" schedule is periodic cite
-- For special cases, closed form solution can be obtained. cite
-- For general cases, convex relaxation cite or submodularity cite can be exploited.
+- The "optimal" schedule is periodic cite:Mo2014, cite:Zhao2014
+- For special cases, closed form solution can be obtained. cite:Shi2011
+- For general cases, convex relaxation cite:Mo2011 or submodularity cite:Shamaiah2010 can be exploited.
 
 *** Event-based Schedule
 - The schedule depends on both the statistics and the realization of the
@@ -154,27 +171,28 @@ system.
 - /No news is good news:/ If receiving no measurement at time \(t\), the fusion center knows the measurement is within \([25, 30]\)
  
 *** Deterministic Trigger 
-   {{{revealgrid(3, "./det.grid", 40, 3, 1, "\"ga1 ga2 ga3\"")}}}
+   {{{revealgrid(3, "./det.grid", 20, 3, 1, "\"ga1 ga2 ga3\"")}}}
 - When \(\gamma_t = 0\), \(y_t\) follows a truncated Gaussian distribution.
 - The optimal filter is given by the forward algorithm of hidden Markov model.
 - Need to keep track of the pdf of \(x_t\) given \(y_{0:t}\).
+- Near optimal filter with low complexity can be used. cite:Wu2013, cite:Shi2014 
 
 *** Stochastic Trigger
-   {{{revealgrid(4, "./rand.grid", 40, 3, 1, "\"ga1 ga2 ga3\"")}}}
+   {{{revealgrid(4, "./rand.grid", 20, 3, 1, "\"ga1 ga2 ga3\"")}}}
 - At each time k, the sensor generates a random variable \(\zeta_t \sim U[0,1]\)
 - Decide whether to send or not based on the following rule:
 \[\gamma_t= \begin{cases}
 0&\zeta_t \leq \Phi(y_t)\\
 1&\zeta_t > \Phi(y_t)
 \end{cases},\text{ with } \Phi(y) = \exp\left( -\frac{1}{2}y'Yy \right). \]
-- The closed-form solution of the optimal filter is a Kalman like filter.
+- The closed-form solution of the optimal filter is a Kalman like filter cite:Han2013
  
 * CPS Security and Privacy 
 
 ** Security Risks 
    - The next generation CPS: *Smart Grids*, *Smart Buildings*, *Internet of Things*, will make extensive use of widespread sensing and networking.
    - As the CPSs become "/smarter/", they are also more vulnerable to malicious attacks.
-   {{{revealgrid(1, "./smartcps.grid", 40, 3, 1, "\"ga1 ga2 ga3\"")}}}
+   {{{revealgrid(1, "./smartcps.grid", 20, 3, 1, "\"ga1 ga2 ga3\"")}}}
    
 *** The First CPS Malware: Stuxnet
 
@@ -196,7 +214,7 @@ system.
 *** Black Energy
 
     - A Successful attack on *critical infrastructure* can be devastating.
-      {{{revealgrid(2, "./powergridattack.grid", 70, 2, 2, "\"ga1 ga2 \" \"ga3 ga3\"")}}}
+      {{{revealgrid(2, "./powergridattack.grid", 50, 2, 1, "\"ga1 ga2 \"")}}}
 
 ** Cyber-Physical Security
    
@@ -223,6 +241,7 @@ system.
     - Maximize impact 
     - Minimize required resources
     - Stealthiness constraints
+    {{{reveallicense("./zero.meta","40vh",nil,'none)}}}
     #+END_leftcol
 
     #+BEGIN_rightcol
@@ -235,8 +254,8 @@ system.
     #+END_rightcol
    
 *** Countermeasures: Defense in Depth 
-   
-    - Prevention{{{reveallicense("./defense.meta","auto",nil,'none)}}}
+  - Defense in Depth{{{reveallicense("./defense.meta","40vh",nil,'none)}}} 
+    - Prevention
       - Using cryptography/coding to preserve confidentiality (privacy)
     - Detection
       - Fault Detection and Isolation (FDI)
@@ -279,7 +298,12 @@ system.
     #+END_leftcol
     #+BEGIN_rightcol
     - Optimizing the covariance of \(\zeta(k)\):
-    \[\max\;Detection\;Performance,\,s.t.,\,Control\;Loss\leq \delta.\]
+     \[ \begin{align*}
+        & \mathop{\textit{max}}&
+        & Detection\;Performance \\
+        &\text{s.t.}&
+        &Ctrl\;Loss\leq\delta
+      \end{align*}\]
     - Can be relaxed into semidefinite programming cite:Mo2014
     - The problem can be solved on-line, without explicit system knowledge cite:Liu2020
     - Other watermarking schemes (e.g., multiplicative watermark) cite:Ferrari2020, cite:Satchidanandan2017
@@ -287,7 +311,7 @@ system.
    
 *** Simulation: Tennessee Eastman Process
     #+BEGIN_leftcol
-    - The TEP is created to provide a realistic industrial process for developing studying and evaluating process control technology.
+    - The TEP is a realistic industrial model for process control.
       {{{revealimg("./simplifiedmodel.meta","TEP Model","40vh",nil,'none)}}}
     - The simplified model contain 4 inputs, 4 outputs and 7 internal states.
     #+END_leftcol
@@ -320,12 +344,14 @@ system.
 *** Secure Static Estimator
     #+BEGIN_leftcol
     - Estimator with Combinatorial Complexity cite:Fawzi2014, cite:Ren2020, e.g.,
-      \begin{align*}
+\[  \begin{align*}
         & \mathop{\textit{minimize}}\limits_{\hat x,a,w}&
         & \|w\|^2 \\
         &\text{subject to}&
-        &y = H \hat x + w + a,\,\|a\|_0\leq p.
-      \end{align*}
+        &y = H \hat x + w + a,\\
+    &&
+    &\|a\|_0\leq p.
+      \end{align*}\]
     - Require \(2p\)-observable to be "secure"
     - Achieves fundamental limit
     #+END_leftcol
@@ -337,7 +363,6 @@ system.
    
 *** Simulation: IEEE 14-Bus System 
     #+BEGIN_leftcol
-    - Consider the DC power flow model of IEEE 14-Bus system
     - The system has 27 sensors and 13 states
     {{{revealimg("./ieee14.meta","IEEE 14-Bus System","40vh",nil,'none)}}}
     - The power flow meter on the red line is being attacked
@@ -351,67 +376,80 @@ system.
 - System Model:
 \[x_{t+1} = A x_t + w_t,\,y_t = C x_t + v_t + a_t\]
 - \(p\)-sparse attack model: At most \(p\) sensors are compromised (\(a_i(t) \neq 0\)) during operation.
-- Fundamental limit: The state can be "securely" estimated with bounded error only if the system is \(2p\)-detectable.cite
+- Fundamental limit: The state can be "securely" estimated with bounded error only if the system is \(2p\)-detectable cite:Nakahira2018
  
 *** Dynamic Estimator: Moving Horizon Approach
     {{{revealimg("./secureest1.meta","Moving Horizon with Window Size 3","40vh",nil,'none)}}}
-cite 
+cite:Fawzi2014, cite:Shoukry2017
+    
+*** Dynamic Estimator: Local Fusion Approach
+    {{{revealimg("./secureest2.meta","Secure Estimator Design with Local Estimators","40vh",nil,'none)}}}
+    cite:Liu2017, cite:Mao2019
     
 *** Dynamic Estimator: Switching Approach
     {{{revealimg("./secureest3.meta","Secure Estimator Design with Switching","40vh",nil,'none)}}}
-    cite
-*** Dynamic Estimator: Local Fusion Approach
-    {{{revealimg("./secureest2.meta","Secure Estimator Design with Local Estimators","40vh",nil,'none)}}}
-    cite 
-*** Case Study: Secure Est against GPS Spoofing for Vehicle Localization
+    cite:Nakahira2018, cite:An2018
     
+*** Case Study: Secure Est against GPS Spoofing for Vehicle Localization
+    #+BEGIN_leftcol
+    {{{revealimg("./gnssdrift.meta","EKF under GPS Spoofing","70vh",nil,'none)}}}
+    #+END_leftcol
+    #+BEGIN_rightcol
+    {{{revealimg("./gnssdriftsafe.meta","Secure Filter under GPS Spoofing","70vh",nil,'none)}}}
+    #+END_rightcol
+
 ** Privacy 
 
-
-
 *** Differential Privacy
-- \(\epsilon\)-private: Let \(\mathcal M\) be a randomized algorithm that takes certain data $x$ as input. \(\mathcal M\) is \(\epsilon\) differentially private if 
-\[\exp(-\epsilon) P(\mathcal A(x_2)\in S) \leq P(\mathcal A(x_1)\in S) \leq \exp(\epsilon) P(\mathcal A(x_2)\in S).\]
+- \(\epsilon\)-private: Let \(\mathcal M\) be a randomized algorithm that takes certain data $x$ as input. \(\mathcal M\) is \(\epsilon\)-differentially private if 
+\[\exp(-\epsilon) P(\mathcal A(x_2)\in S) \leq P(\mathcal A(x_1)\in S) \leq \exp(\epsilon) P(\mathcal A(x_2)\in S),\]
 for any adjacent \(x_1\) and \(x_2\) and measurable set \(S\).
 - Other privacy metrics exists, e.g., \((\epsilon,\delta)\)-privacy, mutual information, information leakage, ...
+- Trade-off: Utility v.s. Privacy
 
 *** Additive Noise Mechanism
-- A deterministic function \(f\) 
+    #+BEGIN_leftcol
 - Laplacian Mechanism: 
-\[\mathcal M_{f,\epsilon}(x) = f(x) + Lap(\mu = 0)\]
+\[\mathcal M_{f,\epsilon}(x) = f(x) + Lap\]
+    {{{revealimg("./laplace.meta","","40vh",nil,'none)}}}
+    #+END_leftcol
+    #+BEGIN_rightcol
 - Gaussian Mechanism: 
-\[\mathcal M_{f,\epsilon}(x) = f(x) + \mathcal N(\mu = 0)\]
+\[\mathcal M_{f,\epsilon}(x) = f(x) + \mathcal N\]
+    {{{revealimg("./gauss3.meta","","40vh",nil,'none)}}}
+    #+END_rightcol
 
-*** Privacy Preserving Distributed Algorithms
-   
- 
-    
+*** Privacy Preserving Consensus
+- The goal:{{{reveallicense("./dist.meta","30vh",nil,'none)}}}
+  - Utility: Converges to the average of the initial states
+  - Privacy: Not revealing the exact initial state to other agents
+- Algorithm: cite:Mo2017
+\[x_i^+(k) = x_i(k) + v_i(k),\,x_i(k+1) = a_{ii}x_i^+(k) + \sum_{j\in\mathcal N(i)} a_{ij} x_j^+(k)\]
+- Utility: Converges to the exact average (as fast as the noiseless consensus)
+- Privacy: Privacy of an agent is preserved as long as it has no super neighbor.
+- Additive noise mechanism for other distributed algorithms, e.g., estimation, optimization cite:Liu2019, cite:Wang2019, cite:He2020, cite:LeNy2014, cite:Cortes2016
 *** Homomorphic Encryption
-
-- Partially Homomorphic:
-
-- Fully Homomorphic:
- 
-- Enables computation on the ciphertext
-   
-* Application: Cyber-Physical-Energy System
+    
+- Partially Homomorphic Encryption:
+  - There exists \(\oplus\), s.t.: \(\mathcal E(m_1) \oplus \mathcal E(m_2)  = \mathcal E(m_1 + m_2)\);
+  - Or there exists \(\otimes\), s.t.: \(\mathcal E(m_1) \otimes \mathcal E(m_2)  = \mathcal E(m_1 \times m_2)\)
+  - One additively homomorphic encryption is [[https://en.wikipedia.org/wiki/Paillier_cryptosystem][Paillier cryptosystem]].
+  - Given \(A\) and \(\mathcal E(x)\), one can compute \(\mathcal E(Ax)\), if additively homomorphic.
+- Fully Homomorphic Encryption:  cite:Gentry2009
+  - Both \(\oplus,\otimes\) exist
+  - Computationally expensive
+- Control algorithms based on homomorphic encryption: cite:Hadjicostis2019, cite:Shoukry2015, cite:Fang2018, cite:Yan2020
 
 * Conclusion
 
-** Modelling and Analysis of Cyber-Physical System
- /All models are wrong, but some are useful/  
-  #+BEGIN_right 
-  George Box 
-  #+END_right 
-  
-** Design of Cyber-Physical System
-
-- Cross-layered Design
-- Modular Design
-- Managing Complexity
+** Modelling and Design of Cyber-Physical System
+ /All models are wrong, but some are useful./  -- George Box 
+- What is a good control model/abstraction for computation and communication?
+- Modular versus Cross-Layered Design {{{reveallicense("./cross.meta","40vh",nil,'none)}}}
+- Model-based versus Data-driven?
   
 ** Towards a Science of Cyber-Physical System
-- Much important work remains to be done: cite
+- Much important work remains to be done: cite:Kumar
   + To capture and analyze the dynamics of the communications, computation, control, and applications in a unified theoretical framework.
   + To understand and predict complex behaviors caused by tight interactions between cyber and physical domains.
   + High-level decision making based on information collected from different sources at different spatial and temporal scales
