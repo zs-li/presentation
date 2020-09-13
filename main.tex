@@ -63,7 +63,7 @@
 \definecolor{caltechcolor}{RGB}{102,8,116}
 \setbeamercolor{title separator}{fg=black!50}
 \setbeamercolor{frametitle}{bg=thupurple!70!black}
- 
+
 
 \begin{document}
 
@@ -73,29 +73,29 @@
 
 \begin{frame}{Cyber-Physical System}
   \begin{itemize}
-  \item Cyber-Physical Systems (CPSs) refer to the embedding of computation, communication and control into physical spaces.
-    \begin{center}
-      \begin{tikzpicture}[scale=0.45,transform shape,level distance=0cm,
-        level 1 concept/.append style={sibling angle=120,minimum size = 3cm},
-        ]
-        \path [draw=thupurple!50,fill=thupurple!20,thick,rounded corners] (-10,-4.5) rectangle (10,7);
-        \node at (-9,6) [anchor=north west] {\Huge Physical Space};
-        \path[mindmap,concept color=black,text=white]
-        node[concept] {\Huge CPS}
-        [clockwise from=330]
-        child[concept color=green!50!black] { node[concept](communication) {\huge Comm.} }
-        child[concept color=red] { node[concept](control) {\huge Ctrl.} }
-        child[concept color=blue] { node[concept](computation) {\huge Comp.} };
-      \end{tikzpicture}
-    \end{center}
-  \item Applications: aerospace, chemical processes, civil infrastructure, energy, manufacturing and transportation. 
+    \item Cyber-Physical Systems (CPSs) refer to the embedding of computation, communication and control into physical spaces.
+      \begin{center}
+	\begin{tikzpicture}[scale=0.45,transform shape,level distance=0cm,
+	  level 1 concept/.append style={sibling angle=120,minimum size = 3cm},
+	  ]
+	  \path [draw=thupurple!50,fill=thupurple!20,thick,rounded corners] (-10,-4.5) rectangle (10,7);
+	  \node at (-9,6) [anchor=north west] {\Huge Physical Space};
+	  \path[mindmap,concept color=black,text=white]
+	    node[concept] {\Huge CPS}
+	    [clockwise from=330]
+	    child[concept color=green!50!black] { node[concept](communication) {\huge Comm.} }
+	    child[concept color=red] { node[concept](control) {\huge Ctrl.} }
+	    child[concept color=blue] { node[concept](computation) {\huge Comp.} };
+	\end{tikzpicture}
+      \end{center}
+    \item Applications: aerospace, chemical processes, civil infrastructure, energy, manufacturing and transportation. 
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Security Threats for the CPS}
   \begin{itemize}
-  \item The next generation CPS: Smart Grids, Smart Buildings, Smart Home, Internet of Things, will make extensive use of widespread sensing and networking.
-  \item As the CPSs become ``smarter'', they are also more vulnerable to malicious attacks.
+    \item The next generation CPS: Smart Grids, Smart Buildings, Smart Home, Internet of Things, will make extensive use of widespread sensing and networking.
+    \item As the CPSs become ``smarter'', they are also more vulnerable to malicious attacks.
   \end{itemize}
   \begin{figure}[ht]
     \centering
@@ -111,6 +111,15 @@
   Stuxnet is the first discovered malware that spies on and subverts industrial control systems. It was discovered in June 2010. 
 \end{frame}
 
+\begin{frame}{2015 Ukraine Power Outage}
+  \begin{figure}[<+htpb+>]
+    \begin{center}
+      \includegraphics[width=0.60\textwidth]{ukraine.jpg}
+      \caption{A successful attack on CPS can have devastating effects.}
+    \end{center}
+  \end{figure}
+\end{frame}
+
 \begin{frame}{Industrial Control Systems}
   \begin{figure}[ht]
     \centering
@@ -119,14 +128,13 @@
   In FY 2016, ICS-CERT (Industrial Control Systems Cyber Emergency Response Team) received and responded to 290 incidents as reported by asset owners and industry partners.
 \end{frame}
 
-
 \begin{frame}{Industrial Control Systems}
-   The scope of incidents encompassed a vast range of threats and observed methods for attempting to gain access to both business and control systems infrastructure, including but not limited to the following:
+  The scope of incidents encompassed a vast range of threats and observed methods for attempting to gain access to both business and control systems infrastructure, including but not limited to the following:
   \begin{enumerate}
-  \item  Unauthorized access and exploitation of Internet facing ICS/Supervisory Control and Data Acquisition (SCADA) devices,
-  \item 	 Exploitation of zero-day vulnerabilities in control system devices and software, 
-  \item  	 Malware infections within air-gapped control system networks,
-  \item \dots
+    \item  Unauthorized access and exploitation of Internet facing ICS/Supervisory Control and Data Acquisition (SCADA) devices,
+    \item 	 Exploitation of zero-day vulnerabilities in control system devices and software, 
+    \item  	 Malware infections within air-gapped control system networks,
+    \item \dots
   \end{enumerate}
 
 \end{frame}
@@ -139,25 +147,23 @@
   \end{figure}
 \end{frame}
 
-\begin{frame}{2015 Ukraine Power Outage}
+\begin{frame}{Hacker Taking Control of a Chrysler Jeep}
   \begin{figure}[<+htpb+>]
     \begin{center}
-      \includegraphics[width=0.60\textwidth]{ukraine.jpg}
-      \caption{A successful attack on CPS can have devastating effects.}
+      \includegraphics[width=0.80\textwidth]{jeep.jpg}
+      \caption{Hacker take control of the steering and brake of a Jeep car in 2015}
     \end{center}
   \end{figure}
 \end{frame}
 
-%
-%\begin{frame}{2003 Northeast Blackout}
-%  \begin{figure}[<+htpb+>]
-%    \begin{center}
-%      \includegraphics[width=0.60\textwidth]{blackout.jpg}
-%      \caption{A successful attack on CPS can have devastating effects.}
-%    \end{center}
-%  \end{figure}
-%\end{frame}
-
+\begin{frame}{What is New in CPS Security?}
+  \begin{itemize}
+    \item Physics
+    \item Inertia: The system cannot be stopped at will
+    \item Continuous operation, Graceful degradation
+    \item High reliability requirement: $10^{-9}$ for air plane
+  \end{itemize}
+\end{frame}
 
 \begin{frame}{Defense in Depth for CPS Security}
   \begin{figure}[ht]
@@ -173,8 +179,17 @@
       \draw[semithick] (1.2,0.6)--(4,-.6)--++(1.8,0);
       \draw[semithick] (0.2,0.7)--(4,-1.8)--++(1.8,0);
     \end{tikzpicture}
-  \caption{Protecting CPS with Multi-layer Defense}
+    \caption{Protecting CPS with Multi-layer Defense}
   \end{figure}
+\end{frame}
+
+\begin{frame}{What Control/System Theory Can Provide?}
+  \begin{itemize}
+    \item Robustness/Resiliency in off-line Design
+    \item Intrusion Detection \& Isolation
+    \item Secure Information Fusion/Control
+    \item Security Investment
+  \end{itemize}
 \end{frame}
 
 \section{Active Intrusion Detection}
@@ -187,203 +202,203 @@
 
 \begin{frame}{System Model}
   \begin{block}{System Description}
+    \begin{displaymath}
+      \begin{split}
+	x(k+1) &= Ax(k)  + Bu(k)+w(k),\\
+	y(k) &= C x(k) + v(k).
+      \end{split}
+    \end{displaymath}
+  \end{block}
+  \begin{itemize}
+    \item $x(k) \in \mathbb R^n$ is the state vector.
+    \item  $y(k) \in \mathbb R^m$ is the measurements from the sensors.
+    \item  $u(k) \in \mathbb R^p$ is the control input.
+    \item $w(k),v(k),x(0)$ are independent Gaussian random vectors, and $x(0) \sim \mathcal N(0,\;\Sigma)$, $w(k) \sim \mathcal N(0,\;Q)$ and $v(k) \sim \mathcal N(0,\;R)$ with $Q,R>0$.
+    \item The system is assumed to be controllable and observable.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{LQG Controller and Kalman filter}
+  \begin{itemize}
+    \item We assume that the system operator wants to minimize the following cost function:
       \begin{displaymath}
-	\begin{split}
-	  x(k+1) &= Ax(k)  + Bu(k)+w(k),\\
-	  y(k) &= C x(k) + v(k).
-	\end{split}
+	J = \lim_{T\rightarrow \infty}\min_{u(0),\ldots,u(T)}E\frac{1}{T}\left[\sum_{k=0}^{T-1} x(k)'Wx(k)+u(k)'Uu(k)\right],
       \end{displaymath}
-    \end{block}
-    \begin{itemize}
-      \item $x(k) \in \mathbb R^n$ is the state vector.
-      \item  $y(k) \in \mathbb R^m$ is the measurements from the sensors.
-      \item  $u(k) \in \mathbb R^p$ is the control input.
-      \item $w(k),v(k),x(0)$ are independent Gaussian random vectors, and $x(0) \sim \mathcal N(0,\;\Sigma)$, $w(k) \sim \mathcal N(0,\;Q)$ and $v(k) \sim \mathcal N(0,\;R)$ with $Q,R>0$.
-      \item The system is assumed to be controllable and observable.
-    \end{itemize}
-  \end{frame}
-
-  \begin{frame}{LQG Controller and Kalman filter}
-    \begin{itemize}
-      \item We assume that the system operator wants to minimize the following cost function:
-	\begin{displaymath}
-	  J = \lim_{T\rightarrow \infty}\min_{u(0),\ldots,u(T)}E\frac{1}{T}\left[\sum_{k=0}^{T-1} x(k)'Wx(k)+u(k)'Uu(k)\right],
-	\end{displaymath}
-	where $W, U$ are positive semidefinite matrices. 
-      \item The optimal controller is a fixed gain controller, which takes the following form:
-	\begin{displaymath}
-	  u(k) =  L^*\hat x(k),
-	\end{displaymath}
-      \item The optimal estimator (Kalman filter) follows the following update equations:
-	\begin{align*}
-	  \hat x(k+1|k) &= A\hat x(k)+Bu(k),\\
-	  \hat x(k+1) &= \hat x(k+1|k) + K^*\left[y(k+1) - C\hat x(k+1|k)\right],
-	\end{align*}
-    \end{itemize}
-  \end{frame}
-
-  \begin{frame}{$\chi^2$ Failure Detector}
-    \begin{itemize}
-      \item The residue $z(k)$ of the Kalman filter is defined as
-	\begin{displaymath}
-	  z(k) \triangleq y(k) - C\hat x(k|k-1),
-	\end{displaymath} 
-	which is i.i.d. Gaussian distributed with zero mean. 
-      \item $\chi^2$ detector triggers an alarm based on the following event:
-	\begin{displaymath}
-	  g(k)=  z(k)^T\mathcal P^{-1}z(k)> threshold,
-	\end{displaymath}
-	where $\mathcal P$ is the covariance matrix of $z(j)$ and $\mathcal T$ is the window size.
-      \item The alarm rate at time $k$ is 
-	\begin{displaymath}
-	  \beta(k) = P(g(k) > threshold).
-	\end{displaymath}
-	If the system is operating normally, then the alarm rate is a constant, which we denote as the false alarm rate $\alpha$.
-    \end{itemize}
-  \end{frame}
-
-  \begin{frame}{System Diagram}
-    \begin{figure}[htpb]
-      \begin{center}
-	\inputtikz{systemdiagram}
-      \end{center}
-    \end{figure}
-    Assumptions: Linear System, Kalman Filter, LQG controller and $\chi^2$ detector.
-  \end{frame}
-
-  \begin{frame}{Replay Attack Model}
-    \begin{enumerate}
-      \item The attacker can read and modify all the measurements $y(k)$ arbitrarily.
-      \item It can inject an external control input $u^a(k)$ into the system. 
-    \end{enumerate}
-    The strategy of the attacker can be divided into two stages:
-    \begin{enumerate}
-      \item The attacker records a sufficient number of $y(k)$s without injecting any control input $u^a(k)$. 
-      \item The attacker injects a sequence of desired control input $u^a(k)$ while replaying the previous recorded $y(k)$s starting from time $0$.
-    \end{enumerate}
-    When the system is under attack, the controller will be unable to perform closed-loop control. Hence the only way to counter this attack is to detect its presence. 
-  \end{frame}
-
-  \begin{frame}{Replay Attack: First Stage}
-    \begin{figure}[htpb]
-      \begin{center}
-	\inputtikz{replaydiagramone}
-      \end{center}
-    \end{figure}
-  \end{frame}
-
-  \begin{frame}{Replay Attack: Second Stage}
-    \begin{figure}[htpb]
-      \begin{center}
-	\inputtikz{replaydiagramtwo}
-      \end{center}
-    \end{figure}
-  \end{frame}
-
-  \begin{frame}{Feasibility of Replay Attacks}
-    \begin{figure}[htpb]
-      \setlength\figureheight{4.5cm}
-      \setlength\figurewidth{10cm}
-      \begin{center}
-	\inputtikz{replayunstableA2}
-      \end{center}
-    \end{figure}
-    Replay attack is not always feasible!
-  \end{frame}
-
-  \begin{frame}{Feasibility of Replay Attacks}
-    \begin{figure}[htpb]
-      \begin{center}
-	\inputtikz{replaydiagramthree}
-      \end{center}
-    \end{figure}
-  \end{frame}
-
-  \begin{frame}{Feasibility of Replay Attacks}
-    The update equation of Kalman filter follows:
-    \begin{align*}
-      \hat{x}(k+1|k)&=A\hat{x}(k)+Bu(k)=\left(A+BL^*\right)\hat{x}(k)\\
-      &=\left(A+BL^*\right)\left(I-K^*C\right)\hat{x}(k|k-1)+\left(A+BL^*\right)K^*y(k).
-    \end{align*}
-
-    \begin{theorem}
-      If $\mathcal A = (A+BL^*)(I-K^*C)$ is stable, then the detection rate of $\chi^2$ detector $\beta^c(k)$ converges to the false alarm rate $\alpha$ during the attack, i.e.,
+      where $W, U$ are positive semidefinite matrices. 
+    \item The optimal controller is a fixed gain controller, which takes the following form:
       \begin{displaymath}
-	\lim_{k\rightarrow\infty}\beta^c(k) = \alpha.  
+	u(k) =  L^*\hat x(k),
       \end{displaymath}
-      On the other hand, if $\mathcal A$ is strictly unstable, then the detection rate $\beta^c(k)$ converges to $1$, i.e.,
-      \begin{displaymath}
-	\lim_{k\rightarrow\infty}\beta^c(k) = 1.  
-      \end{displaymath}
-    \end{theorem}
-  \end{frame}
+    \item The optimal estimator (Kalman filter) follows the following update equations:
+      \begin{align*}
+	\hat x(k+1|k) &= A\hat x(k)+Bu(k),\\
+	\hat x(k+1) &= \hat x(k+1|k) + K^*\left[y(k+1) - C\hat x(k+1|k)\right],
+      \end{align*}
+  \end{itemize}
+\end{frame}
 
-  \begin{frame}{Countermeasures: Authentication via Watermarking}
-    \begin{itemize}
-      \item We could change the control law by adding a random watermarking signal:
-	\begin{displaymath}
-	  u(k) = \text{Optimal LQG Control}+ \zeta(k).
-	\end{displaymath}
-      \item The watermarking signal $\zeta(k)$ acts as a ``challenge'' and the sensor measurement is the ``response''. 
-      \item During normal operation, the ``challenge'' and ``response'' are correlated through the system dynamics, while the correlation cease to exist when the replay begins.
-      \item The CPS will remain stable. However, we sacrifice LQG performance since the control is not optimal.
-    \end{itemize}
-  \end{frame}
+\begin{frame}{$\chi^2$ Failure Detector}
+  \begin{itemize}
+    \item The residue $z(k)$ of the Kalman filter is defined as
+      \begin{displaymath}
+	z(k) \triangleq y(k) - C\hat x(k|k-1),
+      \end{displaymath} 
+      which is i.i.d. Gaussian distributed with zero mean. 
+    \item $\chi^2$ detector triggers an alarm based on the following event:
+      \begin{displaymath}
+	g(k)=  z(k)^T\mathcal P^{-1}z(k)> threshold,
+      \end{displaymath}
+      where $\mathcal P$ is the covariance matrix of $z(j)$ and $\mathcal T$ is the window size.
+    \item The alarm rate at time $k$ is 
+      \begin{displaymath}
+	\beta(k) = P(g(k) > threshold).
+      \end{displaymath}
+      If the system is operating normally, then the alarm rate is a constant, which we denote as the false alarm rate $\alpha$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{System Diagram}
+  \begin{figure}[htpb]
+    \begin{center}
+      \inputtikz{systemdiagram}
+    \end{center}
+  \end{figure}
+  Assumptions: Linear System, Kalman Filter, LQG controller and $\chi^2$ detector.
+\end{frame}
+
+\begin{frame}{Replay Attack Model}
+  \begin{enumerate}
+    \item The attacker can read and modify all the measurements $y(k)$ arbitrarily.
+    \item It can inject an external control input $u^a(k)$ into the system. 
+  \end{enumerate}
+  The strategy of the attacker can be divided into two stages:
+  \begin{enumerate}
+    \item The attacker records a sufficient number of $y(k)$s without injecting any control input $u^a(k)$. 
+    \item The attacker injects a sequence of desired control input $u^a(k)$ while replaying the previous recorded $y(k)$s starting from time $0$.
+  \end{enumerate}
+  When the system is under attack, the controller will be unable to perform closed-loop control. Hence the only way to counter this attack is to detect its presence. 
+\end{frame}
+
+\begin{frame}{Replay Attack: First Stage}
+  \begin{figure}[htpb]
+    \begin{center}
+      \inputtikz{replaydiagramone}
+    \end{center}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Replay Attack: Second Stage}
+  \begin{figure}[htpb]
+    \begin{center}
+      \inputtikz{replaydiagramtwo}
+    \end{center}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Feasibility of Replay Attacks}
+  \begin{figure}[htpb]
+    \setlength\figureheight{4.5cm}
+    \setlength\figurewidth{10cm}
+    \begin{center}
+      \inputtikz{replayunstableA2}
+    \end{center}
+  \end{figure}
+  Replay attack is not always feasible!
+\end{frame}
+
+\begin{frame}{Feasibility of Replay Attacks}
+  \begin{figure}[htpb]
+    \begin{center}
+      \inputtikz{replaydiagramthree}
+    \end{center}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Feasibility of Replay Attacks}
+  The update equation of Kalman filter follows:
+  \begin{align*}
+    \hat{x}(k+1|k)&=A\hat{x}(k)+Bu(k)=\left(A+BL^*\right)\hat{x}(k)\\
+		  &=\left(A+BL^*\right)\left(I-K^*C\right)\hat{x}(k|k-1)+\left(A+BL^*\right)K^*y(k).
+  \end{align*}
+
+  \begin{theorem}
+    If $\mathcal A = (A+BL^*)(I-K^*C)$ is stable, then the detection rate of $\chi^2$ detector $\beta^c(k)$ converges to the false alarm rate $\alpha$ during the attack, i.e.,
+    \begin{displaymath}
+      \lim_{k\rightarrow\infty}\beta^c(k) = \alpha.  
+    \end{displaymath}
+    On the other hand, if $\mathcal A$ is strictly unstable, then the detection rate $\beta^c(k)$ converges to $1$, i.e.,
+    \begin{displaymath}
+      \lim_{k\rightarrow\infty}\beta^c(k) = 1.  
+    \end{displaymath}
+  \end{theorem}
+\end{frame}
+
+\begin{frame}{Countermeasures: Authentication via Watermarking}
+  \begin{itemize}
+    \item We could change the control law by adding a random watermarking signal:
+      \begin{displaymath}
+	u(k) = \text{Optimal LQG Control}+ \zeta(k).
+      \end{displaymath}
+    \item The watermarking signal $\zeta(k)$ acts as a ``challenge'' and the sensor measurement is the ``response''. 
+    \item During normal operation, the ``challenge'' and ``response'' are correlated through the system dynamics, while the correlation cease to exist when the replay begins.
+    \item The CPS will remain stable. However, we sacrifice LQG performance since the control is not optimal.
+  \end{itemize}
+\end{frame}
 
 \begin{frame}{System with Physical Watermarks}
-    \begin{figure}[htpb]
-      \begin{center}
-	\inputtikz{replaywithphywatermark}
-      \end{center}
-    \end{figure}
+  \begin{figure}[htpb]
+    \begin{center}
+      \inputtikz{replaywithphywatermark}
+    \end{center}
+  \end{figure}
 \end{frame}
 
 \begin{frame}{Active Detection of Replay Attack}
   \setlength{\figureheight}{6cm}
   \setlength{\figurewidth}{7cm}
-    \begin{figure}[htpb]
-      \begin{center}
-	\inputtikz{replay1}
-      \end{center}
-    \end{figure}
+  \begin{figure}[htpb]
+    \begin{center}
+      \inputtikz{replay1}
+    \end{center}
+  \end{figure}
 \end{frame}
 
 \begin{frame}{Detection Performance v.s. Control Performance}
   \begin{itemize}
-  \item Assuming the watermarking signal is i.i.d. zero mean Gaussian with covariance $U$.
-  \item The optimal watermarking signal design problem can be written as
-    \begin{align*}
+    \item Assuming the watermarking signal is i.i.d. zero mean Gaussian with covariance $U$.
+    \item The optimal watermarking signal design problem can be written as
+      \begin{align*}
       &\mathop{\textrm{maximize}}\limits_{U\geq 0}&
       & Detection\;Performance\\
       &\textrm{subject to}&
       & Additional\;LQG\;Cost \leq \delta.
-    \end{align*}
-  \item The above problem can be relaxed into an Semi-Definite Programming problem. The optimal solution can be derived analytically using generalized eigenvectors.
+      \end{align*}
+    \item The above problem can be relaxed into an Semi-Definite Programming problem. The optimal solution can be derived analytically using generalized eigenvectors.
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Stationary Watermarking}
-  \begin{itemize}
-    \item We can consider a zero mean stationary Gaussian signal, with autocovariance function:
-      \begin{align*}
-	\Gamma(d) = \mathbb E \zeta(k)\zeta(k+d)^T.
-      \end{align*}
-    \item All autocovariance functions form a convex cone.
-    \item The optimal trade-off is attained at the boundary of the cone, consisting of signals of the following form: 
-      \begin{align*}
-        \zeta(k) = H \xi(k),
-      \end{align*}
-      where $\xi(k)\in \mathbb R^2$ is a hidden state satisfies:
-      \begin{align*}
-      \xi(k+1) = \begin{bmatrix}
-	  \cos 2\pi\omega & -\sin 2\pi\omega \\
-	  \sin 2\pi\omega & \cos 2\pi\omega \\
-	\end{bmatrix} \xi(k).
-      \end{align*}
-  \end{itemize} 
-\end{frame}
+%\begin{frame}{Stationary Watermarking}
+%  \begin{itemize}
+%    \item We can consider a zero mean stationary Gaussian signal, with autocovariance function:
+%      \begin{align*}
+%	\Gamma(d) = \mathbb E \zeta(k)\zeta(k+d)^T.
+%      \end{align*}
+%    \item All autocovariance functions form a convex cone.
+%    \item The optimal trade-off is attained at the boundary of the cone, consisting of signals of the following form: 
+%      \begin{align*}
+%        \zeta(k) = H \xi(k),
+%      \end{align*}
+%      where $\xi(k)\in \mathbb R^2$ is a hidden state satisfies:
+%      \begin{align*}
+%      \xi(k+1) = \begin{bmatrix}
+%	  \cos 2\pi\omega & -\sin 2\pi\omega \\
+%	  \sin 2\pi\omega & \cos 2\pi\omega \\
+%	\end{bmatrix} \xi(k).
+%      \end{align*}
+%  \end{itemize} 
+%\end{frame}
 
-\section{An Online Approach to Replay Attack Detection}
+%\section{An Online Approach to Replay Attack Detection}
 
 \begin{frame}{Data-Driven Approach}
   \begin{figure}[htpb]
@@ -403,30 +418,30 @@
     \end{tikzpicture}
   \end{figure}
   \begin{enumerate}
-  \item System Dynamics:
-  \begin{align*}
-    x(k+1) = A x(k) + B\zeta(k)+w(k), \;y(k)  &= C x(k) + v(k) . 
-  \end{align*}
-  \item LQG cost:
-	\begin{align*}
-		J = \lim_{T \to +\infty} \mathbb E\left [\frac{1}{T}\sum_{k=0}^{T-1} \begin{bmatrix}
-		y(k)\\
-		\zeta(k)
-		\end{bmatrix}^TX \begin{bmatrix}
-		y(k)\\
-		\zeta(k)
-		\end{bmatrix} \right ],
-	\end{align*}
+    \item System Dynamics:
+      \begin{align*}
+	x(k+1) = A x(k) + B\zeta(k)+w(k), \;y(k)  &= C x(k) + v(k) . 
+      \end{align*}
+    \item LQG cost:
+      \begin{align*}
+	J = \lim_{T \to +\infty} \mathbb E\left [\frac{1}{T}\sum_{k=0}^{T-1} \begin{bmatrix}
+	    y(k)\\
+	    \zeta(k)
+	    \end{bmatrix}^TX \begin{bmatrix}
+	    y(k)\\
+	    \zeta(k)
+	\end{bmatrix} \right ],
+      \end{align*}
   \end{enumerate}
 \end{frame}
 
 \begin{frame}{Assumptions}
   \begin{itemize}
-  \item The system is stable (or has been stabilized by some inner-loop controller), controllable and observable.
-  \item $A$ is diagonalizable.
-  \item We can observe $y(k)$, and we know the dimension of the $x(k)$.
-  \item The LQG weight matrix $X$ is known.
-  \item The noise are all zero mean i.i.d. Gaussian.
+    \item The system is stable (or has been stabilized by some inner-loop controller), controllable and observable.
+    \item $A$ is diagonalizable.
+    \item We can observe $y(k)$, and we know the dimension of the $x(k)$.
+    \item The LQG weight matrix $X$ is known.
+    \item The noise are all zero mean i.i.d. Gaussian.
   \end{itemize}
   \textbf{No additional knowledge} on the $A,B,C$ matrices or the covariance of the noise is assumed.
 \end{frame}
@@ -438,32 +453,32 @@
   \end{displaymath}
   where $\mathcal X$ is given by:
   \begin{align*}
-  \mathcal X &\triangleq \sum_{k=0}^\infty\textcolor{thupurple}{\left(CA^kB\right)^T} X_{yy}\textcolor{thupurple}{\left(CA^kB\right)}+ \textcolor{thupurple}{\left(CB\right)^T}X_{y\phi} + X_{\phi y}\textcolor{thupurple}{CB}+ X_{\phi \phi}\\
-  &= \sum_{k=0}^\infty \textcolor{thupurple}{H_k^T} X_{yy}\textcolor{thupurple}{H_k}+ \textcolor{thupurple}{H_0^T}X_{y\phi} + X_{\phi y}\textcolor{thupurple}{H_0}+ X_{\phi \phi}.
+    \mathcal X &\triangleq \sum_{k=0}^\infty\textcolor{thupurple}{\left(CA^kB\right)^T} X_{yy}\textcolor{thupurple}{\left(CA^kB\right)}+ \textcolor{thupurple}{\left(CB\right)^T}X_{y\phi} + X_{\phi y}\textcolor{thupurple}{CB}+ X_{\phi \phi}\\
+	       &= \sum_{k=0}^\infty \textcolor{thupurple}{H_k^T} X_{yy}\textcolor{thupurple}{H_k}+ \textcolor{thupurple}{H_0^T}X_{y\phi} + X_{\phi y}\textcolor{thupurple}{H_0}+ X_{\phi \phi}.
   \end{align*}
 \end{frame}
 %
 %
 \begin{frame}{Detecting Replay Attacks}
   \begin{itemize}
-  \item In the absence of the attack:  
-    \begin{align*} 
-      y(k) &=\textcolor{red}{\boxed{\sum_{t=0}^{k-1} CA^{t}B  \zeta(k-1-t)}} + \textcolor{blue}{\boxed{\sum_{t=0}^{k-1}  CA^{t} w(k-1-t)+v(k) }}\\ 
-            &=\textcolor{red}{\gamma(k-1)} +\textcolor{blue} {\vartheta(k-1)},
-    \end{align*}
-  \item  In the presence of the attack:
-    \begin{align*}
-      y^c(k) = y(k-\Delta k) = \textcolor{red}{\gamma(k-1-\Delta k)} + \textcolor{blue}{\vartheta(k-1-\Delta k)}.
-    \end{align*}
-  \item The KL divergence between ``compromised'' measurement $y^c(k)$ and ``normal'' measurement $y(k)$ is a convex function $U$:
-    \begin{displaymath}
-      \tr\left( U \mathcal P  \right) - \frac{1}{2}\logdet\left( I+ U \mathcal P \right),
-    \end{displaymath}
-    where
-    \begin{align*}
-      \mathcal P \triangleq\sum_{k=0}^\infty \textcolor{thupurple}{H_k^T\mathcal W^{-1}H_k},\\
-    \end{align*}
-    where $\mathcal W$ is the covariance of $\vartheta_{k-1}$.
+    \item In the absence of the attack:  
+      \begin{align*} 
+	y(k) &=\textcolor{red}{\boxed{\sum_{t=0}^{k-1} CA^{t}B  \zeta(k-1-t)}} + \textcolor{blue}{\boxed{\sum_{t=0}^{k-1}  CA^{t} w(k-1-t)+v(k) }}\\ 
+	     &=\textcolor{red}{\gamma(k-1)} +\textcolor{blue} {\vartheta(k-1)},
+      \end{align*}
+    \item  In the presence of the attack:
+      \begin{align*}
+	y^c(k) = y(k-\Delta k) = \textcolor{red}{\gamma(k-1-\Delta k)} + \textcolor{blue}{\vartheta(k-1-\Delta k)}.
+      \end{align*}
+    \item The KL divergence between ``compromised'' measurement $y^c(k)$ and ``normal'' measurement $y(k)$ is a convex function $U$:
+      \begin{displaymath}
+	\tr\left( U \mathcal P  \right) - \frac{1}{2}\logdet\left( I+ U \mathcal P \right),
+      \end{displaymath}
+      where
+      \begin{align*}
+	\mathcal P \triangleq\sum_{k=0}^\infty \textcolor{thupurple}{H_k^T\mathcal W^{-1}H_k},\\
+      \end{align*}
+      where $\mathcal W$ is the covariance of $\vartheta_{k-1}$.
   \end{itemize}
 \end{frame}
 
@@ -479,10 +494,10 @@
   \end{block}
   \centering
   \begin{tikzpicture}[domain=-2:2.5]
-\draw[semithick] plot (\x,{\x*\x/4});
-\draw[semithick,->] (-2.5,-0.5)--(3,-0.5);
-\draw[dashed] (-2,-0.5)--(-2,1);
-\draw[dashed] (2.5,-0.5)--(2.5,1.5625);
+    \draw[semithick] plot (\x,{\x*\x/4});
+    \draw[semithick,->] (-2.5,-0.5)--(3,-0.5);
+    \draw[dashed] (-2,-0.5)--(-2,1);
+    \draw[dashed] (2.5,-0.5)--(2.5,1.5625);
   \end{tikzpicture}
 
   The solution lies on the boundary of the feasible set!
@@ -490,10 +505,10 @@
 
 \begin{frame}{Optimal Watermark}
   \begin{enumerate}
-  \item The boundary of the set of positive semi-definite matrices are rank $1$ matrix:
-    \[U = \alpha vv^T.\] 
-  \item $v$ is the generalized eigenvector s.t. $\mathcal Pv = \lambda\mathcal Xv$, where $\lambda$ is the largest generalized eigenvalue.
-  \item $\alpha$ is chosen such that $\tr(U\mathcal X)=\delta$.
+    \item The boundary of the set of positive semi-definite matrices are rank $1$ matrix:
+      \[U = \alpha vv^T.\] 
+    \item $v$ is the generalized eigenvector s.t. $\mathcal Pv = \lambda\mathcal Xv$, where $\lambda$ is the largest generalized eigenvalue.
+    \item $\alpha$ is chosen such that $\tr(U\mathcal X)=\delta$.
   \end{enumerate}
 \end{frame}
 
@@ -510,18 +525,18 @@
     \end{tikzpicture}
   \end{figure}
   \begin{itemize}
-  \item Generate the ``optimal'' $U$ (based on our current knowledge):
-    \begin{align*}
-      \hat U_k=&\mathop{\textrm{argmax}}\limits_{U\geq 0}&
-      & \tr (U\textcolor{thupurple}{\hat  P_k})\\
-               &\textrm{subject to}&
-      & \tr (U\textcolor{thupurple}{\hat  X_k}) \leq \delta.
-    \end{align*}
-  \item Generate the watermark signal:
-    \begin{align*}
-      \zeta(k) = \left(\hat U_k+k^{-\beta}I\right)^{1/2}\phi(k),\,where\; \phi(k)\sim\mathcal N(0,I).
-    \end{align*}
-  \item Update the estimated system parameters using the cross correlation between $y$ and $u$.
+    \item Generate the ``optimal'' $U$ (based on our current knowledge):
+      \begin{align*}
+	\hat U_k=&\mathop{\textrm{argmax}}\limits_{U\geq 0}&
+		 & \tr (U\textcolor{thupurple}{\hat  P_k})\\
+		 &\textrm{subject to}&
+		 & \tr (U\textcolor{thupurple}{\hat  X_k}) \leq \delta.
+      \end{align*}
+    \item Generate the watermark signal:
+      \begin{align*}
+	\zeta(k) = \left(\hat U_k+k^{-\beta}I\right)^{1/2}\phi(k),\,where\; \phi(k)\sim\mathcal N(0,I).
+      \end{align*}
+    \item Update the estimated system parameters using the cross correlation between $y$ and $u$.
   \end{itemize}
 \end{frame}
 %
@@ -610,13 +625,13 @@
 
 \begin{frame}{Balance Exploration and Exploitation}
   \begin{itemize}
-  \item The solution of the optimization problem is a rank one matrix: Pure \textcolor{red}{Exploitation}.
-  \item We could also consider classical system identification techniques, which use $\hat U_k=I$: Pure \textcolor{blue}{Exploration}.
-  \item To achieve a balance, choose
-    \begin{align*}
-      \hat U_k = \text{``optimal'' } U + k^{-\beta} I.
-    \end{align*}
-  \item More \textcolor{blue}{exploration} at the beginning and more \textcolor{red}{exploitation} towards the end.
+    \item The solution of the optimization problem is a rank one matrix: Pure \textcolor{red}{Exploitation}.
+    \item We could also consider classical system identification techniques, which use $\hat U_k=I$: Pure \textcolor{blue}{Exploration}.
+    \item To achieve a balance, choose
+      \begin{align*}
+	\hat U_k = \text{``optimal'' } U + k^{-\beta} I.
+      \end{align*}
+    \item More \textcolor{blue}{exploration} at the beginning and more \textcolor{red}{exploitation} towards the end.
   \end{itemize}
 \end{frame}
 
@@ -630,23 +645,23 @@
 \end{frame}
 
 \begin{frame}{Tennessee Eastman Process}
-The TEP is created to provide a realistic industrial process for developing studying and evaluating process control technology. 
+  The TEP is created to provide a realistic industrial process for developing studying and evaluating process control technology. 
   \begin{columns}
     \begin{column}{0.45\textwidth}
       \begin{figure}
-        \includegraphics[width=0.9\textwidth]{simplifiedmodel.png}
-        \caption{The simplified process}
+	\includegraphics[width=0.9\textwidth]{simplifiedmodel.png}
+	\caption{The simplified process}
       \end{figure}
     \end{column}
     \begin{column}{0.55\textwidth} 		
       \begin{itemize}
-      \item The vessel: a combination of the reactor and separation system in the original TE Process;
-      \item Feed 1: A, C and trace amounts of an inert B;
-      \item Feed 2: pure A;
-      \item Stream 3: purge rate;
-      \item Stream 4: product rate;
-      \item Vapor: A, B, C;\\
-        Liquid: D.
+	\item The vessel: a combination of the reactor and separation system in the original TE Process;
+	\item Feed 1: A, C and trace amounts of an inert B;
+	\item Feed 2: pure A;
+	\item Stream 3: purge rate;
+	\item Stream 4: product rate;
+	\item Vapor: A, B, C;\\
+	  Liquid: D.
       \end{itemize}
     \end{column}
   \end{columns}
@@ -658,24 +673,24 @@ The TEP is created to provide a realistic industrial process for developing stud
   \begin{columns}
     \begin{column}{0.6\textwidth}
       \begin{figure}[h!]
-        \inputtikz{errU1_te}
+	\inputtikz{errU1_te}
       \end{figure}
     \end{column}
     \begin{column}{0.4\textwidth}
       \begin{itemize}
-      \item $U$: the optimal covariance of the watermark signal;
-      \item $U_k$: the estimation of $U$.
+	\item $U$: the optimal covariance of the watermark signal;
+	\item $U_k$: the estimation of $U$.
       \end{itemize}
     \end{column}
   \end{columns}
- ~\\
+  ~\\
   As time $k$ goes to infinity, $U_k$ converges to the optimal covariance of the watermark signal, $U$.
 \end{frame}
 
 \begin{frame}{The detection performance}
   \begin{itemize}
-  \item $g$: the output of the failure detector designed with know parameters
-  \item $\hat g$: the output of the failure detector when the parameters of the system are inferred through the learning technique. 
+    \item $g$: the output of the failure detector designed with know parameters
+    \item $\hat g$: the output of the failure detector when the parameters of the system are inferred through the learning technique. 
   \end{itemize}
   \begin{figure}[h!]
     \centering
@@ -687,14 +702,14 @@ The TEP is created to provide a realistic industrial process for developing stud
 
 \begin{frame}{Static State Estimation}
   \begin{enumerate}
-  \item We assume the following sensor model:
-    \begin{align*}
-  \begin{bmatrix}z_1\\\vdots\\z_m\end{bmatrix} =  z = Hx + w.
-    \end{align*}
-  \item The optimal state estimator is of the form
-    \begin{align*}
-      \hat x = Kz, \text{ where }K = (H^TH)^{-1}H^T.
-    \end{align*}
+    \item We assume the following sensor model:
+      \begin{align*}
+	\begin{bmatrix}z_1\\\vdots\\z_m\end{bmatrix} =  z = Hx + w.
+      \end{align*}
+    \item The optimal state estimator is of the form
+      \begin{align*}
+	\hat x = Kz, \text{ where }K = (H^TH)^{-1}H^T.
+      \end{align*}
   \end{enumerate}
 \end{frame}
 
@@ -716,48 +731,48 @@ The TEP is created to provide a realistic industrial process for developing stud
 
 \begin{frame}{Problem Formulation}
   \begin{enumerate}
-  \item Assume that at most $p$ sensors are compromised.
-  \item The sensory model is given by
-    \begin{align*}
-      y = z + a = Hx + w +a,
-    \end{align*}
-    where $a$ is a $p$-sparse vector indicating the attacker's action.
-  \item We will call an estimator $\hat x = g(y)$ to be resilient if
-    \begin{align*}
-      \|g(y) - g(z)\|\text{ is bounded for all $p$-sparse $a$}.
-    \end{align*}
+    \item Assume that at most $p$ sensors are compromised.
+    \item The sensory model is given by
+      \begin{align*}
+	y = z + a = Hx + w +a,
+      \end{align*}
+      where $a$ is a $p$-sparse vector indicating the attacker's action.
+    \item We will call an estimator $\hat x = g(y)$ to be resilient if
+      \begin{align*}
+	\|g(y) - g(z)\|\text{ is bounded for all $p$-sparse $a$}.
+      \end{align*}
   \end{enumerate}
 \end{frame}
 
-\begin{frame}{Some Related Research}
-  \begin{enumerate}
-  \item The following estimator is resilient under $2p$ observable condition:
-    \begin{align*}
-      & \mathop{\textit{minimize}}\limits_{\hat x,a,w}&
-      & \|w\|^2 \\
-      &\text{subject to}&
-      &y = H \hat x + w + a,\,\|a\|_0\leq p.
-    \end{align*}
-    The drawback: The optimization problem is not convex and solving it is computationally difficult.
-  \item Can we design a secure and computationally efficient estimators?
-  \end{enumerate}
-\end{frame}
+%\begin{frame}{Some Related Research}
+%  \begin{enumerate}
+%  \item The following estimator is resilient under $2p$ observable condition:
+%    \begin{align*}
+%      & \mathop{\textit{minimize}}\limits_{\hat x,a,w}&
+%      & \|w\|^2 \\
+%      &\text{subject to}&
+%      &y = H \hat x + w + a,\,\|a\|_0\leq p.
+%    \end{align*}
+%    The drawback: The optimization problem is not convex and solving it is computationally difficult.
+%  \item Can we design a secure and computationally efficient estimators?
+%  \end{enumerate}
+%\end{frame}
 
 \begin{frame}{A General Convex Optimization Based Estimator}
   Least Square Estimator:
- \begin{align*}
-      g(y) = \argmin_{\hat x} \|y-H\hat x\|_2^2= \argmin_{\hat x}  \sum_{i=1}^m (y_i-H_i\hat x)^2.
- \end{align*}
- 
+  \begin{align*}
+    g(y) = \argmin_{\hat x} \|y-H\hat x\|_2^2= \argmin_{\hat x}  \sum_{i=1}^m (y_i-H_i\hat x)^2.
+  \end{align*}
+
   We consider the following estimator
   \begin{align*}
     \hat x = g(y) \triangleq \argmin_{\hat x} \sum_{i=1}^m f_i(y_i-H_i \hat x),
   \end{align*}
   where the following properties of function $f_i:\mathbb R\mapsto \mathbb R$ are assumed:
   \begin{enumerate}
-  \item $f_i$ is convex.
-  \item $f_i$ is symmetric, i.e., $f_i(u) = f_i(-u)$.
-  \item $f_i$ is non-negative and $f_i(0) = 0$.
+    \item $f_i$ is convex.
+    \item $f_i$ is symmetric, i.e., $f_i(u) = f_i(-u)$.
+    \item $f_i$ is non-negative and $f_i(0) = 0$.
   \end{enumerate} 
 
   Many estimators, such as least square estimator, L1 estimator and LASSO estimation can be included in this framework, by choosing a suitable $f_i$.
@@ -765,18 +780,126 @@ The TEP is created to provide a realistic industrial process for developing stud
   The estimator can be computed efficiently via convex optimization. 
 \end{frame}
 
+\begin{frame}{A General Convex Optimization Based Estimator}
+  Our proposed estimator is very general since we can choose the right $f_i$ to get the following estimator:
+  \begin{enumerate}
+  \item Linear Estimator:
+    \begin{align*}
+      g(y) = \argmin_{\hat x} \|y-H\hat x\|_2^2= \argmin_{\hat x}  \sum_{i=1}^m (y_i-H_i\hat x)^2.
+    \end{align*}
+  \item $L_1$ Estimator:
+    \begin{align*}
+      g(y) = \argmin_{\hat x} \|y-H\hat x\|_1=\argmin_{\hat x} \sum_{i=1}^m |y_i-H_i\hat x|.
+    \end{align*}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{A General Convex Optimization Based Estimator}
+  \begin{enumerate}  \setcounter{enumi}{2}
+  \item LASSO:
+    \begin{align*}
+      g(y) = \argmin_{\hat x} \|w\|^2+\lambda \|a\|_1, \text{ s.t. }y=H\hat x+w+a.
+    \end{align*}
+    After some manipulations, we can rewrite the optimization problem as
+    \begin{align*}
+      g(y) = \argmin_{\hat x} \sum_{i=1}^m f(y_i-H_i\hat x)
+    \end{align*}
+    where
+    \begin{align*}
+      f(r) = \min_{w} w^2 + \lambda |r-w| = \begin{cases}
+        r^2 & \text{if } r \leq \lambda/2\\
+        \lambda |r|-\lambda^2/4 & \text{if } r\geq \lambda/2\\
+      \end{cases}.
+    \end{align*}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Example}
+  Suppose the following sensory model:
+  \begin{align*}
+    y = \begin{bmatrix}
+      1\\
+      1\\
+      1
+    \end{bmatrix}x + w+a,\,\|a\|_0\leq 1.
+  \end{align*}
+  Then the following estimator is resilient (in fact, it is the median of $y_i$):
+  \begin{align*}
+    g(y) = \argmin_{\hat x}  |y_1-\hat x|+|y_2-\hat x|+|y_3-\hat x|.
+  \end{align*}
+\end{frame}
+
+\begin{frame}{Example}
+  \begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}[yscale=0.4]
+      \draw[thick,->] (0,0)--(9,0);
+      \node [anchor=west] at (9,0) {$\hat x$};
+      \draw[thin,gray] (2,0)--(2,0.1);
+      \draw[thin,gray] (5,0)--(5,0.1);
+      \draw[thin,gray] (7,0)--(7,0.1);
+      \draw[thick](1,11)--(2,8)--(5,5)--(7,7)--(8,10);
+      \node [anchor=north] at (2,0) {\color{red}{$y_1$}};
+      \node [anchor=north] at (5,0) {\color{blue}{$y_2$}};
+      \node [anchor=north] at (7,0) {\color{brown}{$y_3$}};
+    \end{tikzpicture}
+  \end{figure}
+  \color{white}{If we interpret the function $|y_i-\hat x|$ as a potential function generate by sensor $i$, then we can see that sensor $i$ is dragging $\hat x$ towards $y_i$ with $1$ unit of force. The equilibrium point will be at the middle $y_i$.}
+\end{frame}
+
+\begin{frame}{Interpretation}
+  \begin{figure}[ht]
+    \centering
+    \begin{tikzpicture}[yscale=0.4]
+      \draw[thick,->] (0,0)--(9,0);
+      \node [anchor=west] at (9,0) {$\hat x$};
+      \draw[thin,gray] (2,0)--(2,0.1);
+      \draw[thin,gray] (5,0)--(5,0.1);
+      \draw[thin,gray] (7,0)--(7,0.1);
+      \draw[thick,white](1,11)--(2,8)--(5,5)--(7,7)--(8,10);
+      \node [anchor=north] at (2,0) {\color{red}{$y_1$}};
+      \draw[semithick,red](1,1)--(2,0)--(8,6);
+      \node [anchor=north] at (5,0) {\color{blue}{$y_2$}};
+      \draw[semithick,blue](1,4)--(5,0)--(8,3);
+      \node [anchor=north] at (7,0) {\color{brown}{$y_3$}};
+      \draw[semithick,brown](1,6)--(7,0)--(8,1);
+    \end{tikzpicture}
+  \end{figure}
+  If we interpret the function $|y_i-\hat x|$ as a potential function generate by sensor $i$, then we can see that sensor $i$ is dragging $\hat x$ towards $y_i$ with $1$ unit of force. The equilibrium point will be at the middle $y_i$.
+\end{frame}
+
+\begin{frame}{Another Example}
+  Suppose the following sensory model:
+  \begin{align*}
+    y = \begin{bmatrix}
+      1\\
+      1\\
+      3
+    \end{bmatrix}x + w+a ,\,\|a\|_0\leq 1.
+  \end{align*}
+  Then the following estimator is not resilient:
+  \begin{align*}
+    g(y) = \argmin_{\hat x}  |y_1-\hat x|+|y_2-\hat x|+|y_3-3\hat x|.
+  \end{align*}
+  In fact, we can rewrite it as
+  \begin{align*}
+    g(y) = \argmin_{\hat x}  |y_1-\hat x|+|y_2-\hat x|+3\left|\frac{y_3}{3}-\hat x\right| = \frac{y_3}{3}
+  \end{align*}
+  Sensor $3$ generates $3$ unit of force comparing to $1$ unit of force from sensor $1$ and $2$.
+\end{frame}
+
 \begin{frame}{Sufficient Condition For Resiliency}
   \begin{theorem}
     If the following conditions hold, then the estimation is resilient:
     \begin{enumerate}
-    \item For all $i$, the following limit is well-defined:
-      \begin{align*}
-        \lim_{t\rightarrow\infty}\frac{f_i(t)}{t} = \alpha_i < \infty.
-      \end{align*}
-    \item For any $u\neq 0$ and any index set $\mathcal I$ of cardinality $p$, the following inequality hold:
-      \begin{align*}
-        \sum_{i\in \mathcal I} |\alpha_i H_i u| < \sum_{i\in \mathcal I^c} |\alpha_i H_i u|.
-      \end{align*}
+      \item For all $i$, the following limit is well-defined:
+	\begin{align*}
+	  \lim_{t\rightarrow\infty}\frac{f_i(t)}{t} = \alpha_i < \infty.
+	\end{align*}
+      \item For any $u\neq 0$ and any index set $\mathcal I$ of cardinality $p$, the following inequality hold:
+	\begin{align*}
+	  \sum_{i\in \mathcal I} |\alpha_i H_i u| < \sum_{i\in \mathcal I^c} |\alpha_i H_i u|.
+	\end{align*}
     \end{enumerate}
   \end{theorem}
   Roughly speaking $|\alpha_i H_i u|$ characterize how powerful a single sensor $i$ is. The condition can be interpreted as the no $p$ sensors combined can be more powerful than the remaining $m-p$ sensors.
@@ -786,14 +909,14 @@ The TEP is created to provide a realistic industrial process for developing stud
   \begin{theorem}
     If the one of the following conditions is violated, then the estimation is not resilient:
     \begin{enumerate}
-    \item There exists an $i$, such that
-      \begin{align*}
-        \lim_{t\rightarrow\infty}\frac{f_i(t)}{t} = \infty.
-      \end{align*}
-    \item There exists a $u\neq 0$ and an index set $\mathcal I$ of cardinality $p$, such that
-      \begin{align*}
-        \sum_{i\in \mathcal I} |\alpha_i H_i u| > \sum_{i=\mathcal I^c} |\alpha_i H_i u|.
-      \end{align*}
+      \item There exists an $i$, such that
+	\begin{align*}
+	  \lim_{t\rightarrow\infty}\frac{f_i(t)}{t} = \infty.
+	\end{align*}
+      \item There exists a $u\neq 0$ and an index set $\mathcal I$ of cardinality $p$, such that
+	\begin{align*}
+	  \sum_{i\in \mathcal I} |\alpha_i H_i u| > \sum_{i=\mathcal I^c} |\alpha_i H_i u|.
+	\end{align*}
     \end{enumerate}
   \end{theorem}
   Notice that we only have a trivial gap for the case:
@@ -811,80 +934,80 @@ The TEP is created to provide a realistic industrial process for developing stud
 \begin{frame}{Simulation IEEE 14-bus System}
   \begin{figure}[ht]
     \begin{center}
-      
+
       \setlength{\figureheight}{6cm}
       \setlength{\figurewidth}{10cm}
       \definecolor{mycolor1}{rgb}{1.00000,0.00000,1.00000}%
       % 
       \begin{tikzpicture}
 
-        \begin{axis}[%
-          width=\figurewidth,
-          height=\figureheight,
-          at={(1.527in,1.083in)},
-          scale only axis,
-          xmin=0.95,
-          xmax=2.4,
-          xlabel={Normalized MSE of the estimators without attack},
-          xmajorgrids,
-          ymin=0.95,
-          ymax=2.5,
-          ylabel={Normalized MSE when under attack},
-          ymajorgrids,
-          axis background/.style={fill=white},
-          legend style={at={(0.597,0.528)},anchor=south west,legend cell align=left,align=left,draw=white!15!black}
-          ]
-          \addplot [color=blue,dashed,line width=1.5pt,mark=triangle,mark options={solid},forget plot]
-          table[row sep=crcr]{%
-            2.16434829886514	2.41673714136766\\
-            1.49824142620916	1.6273922047888\\
-            1.46836558726546	1.61304395019434\\
-            1.42878218405531	1.58080265845186\\
-            1.33509034059386	1.48317348510781\\
-            1.24979953097586	1.4011442907391\\
-            1.20190884155895	1.36475282176979\\
-            1.14816845697376	1.32743887772808\\
-            1.104692902235	1.30458587111275\\
-            1.0727554366346	1.2930587844785\\
-            1.04837293442887	1.29286647088633\\
-            1.03276380632143	1.30464750437787\\
-            1.02491383863213	1.32636243694814\\
-            1.0209295289153	1.35606289076979\\
-            1.01470702949196	1.40680155569416\\
-            1.00686189169388	1.48274325705327\\
-            1.00166658882151	1.69020329692052\\
-            1.00012894457222	2.29806950301701\\
-          };
+	\begin{axis}[%
+	  width=\figurewidth,
+	  height=\figureheight,
+	  at={(1.527in,1.083in)},
+	  scale only axis,
+	  xmin=0.95,
+	  xmax=2.4,
+	  xlabel={Normalized MSE of the estimators without attack},
+	  xmajorgrids,
+	  ymin=0.95,
+	  ymax=2.5,
+	  ylabel={Normalized MSE when under attack},
+	  ymajorgrids,
+	  axis background/.style={fill=white},
+	  legend style={at={(0.597,0.528)},anchor=south west,legend cell align=left,align=left,draw=white!15!black}
+	  ]
+	  \addplot [color=blue,dashed,line width=1.5pt,mark=triangle,mark options={solid},forget plot]
+	    table[row sep=crcr]{%
+	      2.16434829886514	2.41673714136766\\
+	      1.49824142620916	1.6273922047888\\
+	      1.46836558726546	1.61304395019434\\
+	      1.42878218405531	1.58080265845186\\
+	      1.33509034059386	1.48317348510781\\
+	      1.24979953097586	1.4011442907391\\
+	      1.20190884155895	1.36475282176979\\
+	      1.14816845697376	1.32743887772808\\
+	      1.104692902235	1.30458587111275\\
+	      1.0727554366346	1.2930587844785\\
+	      1.04837293442887	1.29286647088633\\
+	      1.03276380632143	1.30464750437787\\
+	      1.02491383863213	1.32636243694814\\
+	      1.0209295289153	1.35606289076979\\
+	      1.01470702949196	1.40680155569416\\
+	      1.00686189169388	1.48274325705327\\
+	      1.00166658882151	1.69020329692052\\
+	      1.00012894457222	2.29806950301701\\
+	    };
 
-          \addplot [color=mycolor1,dashed,forget plot]
-          table[row sep=crcr]{%
-            1	1\\
-            2.2	1\\
-          };
-          \addplot [color=mycolor1,dashed,forget plot]
-          table[row sep=crcr]{%
-            1	1\\
-            1	2.5\\
-          };
-          \node[right, align=left, text=blue]
-          at (axis cs:2.164,2.417) {$\text{   }\leftarrow\text{ }\lambda\rightarrow 0$};
-          \node[right, align=left, text=blue]
-          at (axis cs:1.335,1.483) {$\text{   }\leftarrow\text{ }\lambda\text{=0.5}$};
-          \node[right, align=left, text=blue]
-          at (axis cs:1.202,1.365) {$\text{   }\leftarrow\text{ }\lambda\text{=1}$};
-          \node[right, align=left, text=blue]
-          at (axis cs:1.073,1.293) {$\text{   }\leftarrow\text{ }\lambda\text{=1.9}$};
-          \node[right, align=left, text=blue]
-          at (axis cs:1.02,1.356) {$\leftarrow\lambda\text{=3}$};
-          \node[right, align=left, text=blue]
-          at (axis cs:1,2.298) {$\text{   }\leftarrow\text{ }\lambda\text{=7}$};
-          \node[right, align=left, text=mycolor1]
-          at (axis cs:1,2.4) {$\text{   }\leftarrow\text{ LSE}$};
-          \node[right, align=left, text=mycolor1]
-          at (axis cs:1.9,1.14) {Oracle LSE};
-          \node[right, align=left, text=mycolor1]
-          at (axis cs:1.9,1.07) {$\text{     ~~~~~}\downarrow$};
-        \end{axis}
+	  \addplot [color=mycolor1,dashed,forget plot]
+	    table[row sep=crcr]{%
+	      1	1\\
+	      2.2	1\\
+	    };
+	  \addplot [color=mycolor1,dashed,forget plot]
+	    table[row sep=crcr]{%
+	      1	1\\
+	      1	2.5\\
+	    };
+	  \node[right, align=left, text=blue]
+	  at (axis cs:2.164,2.417) {$\text{   }\leftarrow\text{ }\lambda\rightarrow 0$};
+	  \node[right, align=left, text=blue]
+	  at (axis cs:1.335,1.483) {$\text{   }\leftarrow\text{ }\lambda\text{=0.5}$};
+	  \node[right, align=left, text=blue]
+	  at (axis cs:1.202,1.365) {$\text{   }\leftarrow\text{ }\lambda\text{=1}$};
+	  \node[right, align=left, text=blue]
+	  at (axis cs:1.073,1.293) {$\text{   }\leftarrow\text{ }\lambda\text{=1.9}$};
+	  \node[right, align=left, text=blue]
+	  at (axis cs:1.02,1.356) {$\leftarrow\lambda\text{=3}$};
+	  \node[right, align=left, text=blue]
+	  at (axis cs:1,2.298) {$\text{   }\leftarrow\text{ }\lambda\text{=7}$};
+	  \node[right, align=left, text=mycolor1]
+	  at (axis cs:1,2.4) {$\text{   }\leftarrow\text{ LSE}$};
+	  \node[right, align=left, text=mycolor1]
+	  at (axis cs:1.9,1.14) {Oracle LSE};
+	  \node[right, align=left, text=mycolor1]
+	  at (axis cs:1.9,1.07) {$\text{     ~~~~~}\downarrow$};
+	\end{axis}
       \end{tikzpicture}%
     \end{center}
   \end{figure}
@@ -892,44 +1015,44 @@ The TEP is created to provide a realistic industrial process for developing stud
 
 \begin{frame}{Dynamic State Estimation}
   \begin{enumerate}
-  \item Consider the following dynamic system
-    \begin{align}
-      x(k+1) = A x(k) + w(k),\, y(k) = C x(k) + v(k) + a(k).
-    \end{align}
-  \item A linear fixed-gain estimator:
-    \begin{align}
-      \hat x(k+1) = A \hat x(k) + K(y(k+1)-CA\hat x(k)),
-    \end{align}
-    where $K$ is the estimation gain, and $A-KCA$ is stable.
-    \begin{center}
-      \begin{tikzpicture}[x=2cm, y=0.75cm]
-        \node at (-0.7,0) {State Est:};
-        \node [blue!70] at (-0.7,1) {Sensor 2:};
-        \node [red!70] at (-0.7,-1) {Sensor 1:};
+    \item Consider the following dynamic system
+      \begin{align}
+	x(k+1) = A x(k) + w(k),\, y(k) = C x(k) + v(k) + a(k).
+      \end{align}
+    \item A linear fixed-gain estimator:
+      \begin{align}
+	\hat x(k+1) = A \hat x(k) + K(y(k+1)-CA\hat x(k)),
+      \end{align}
+      where $K$ is the estimation gain, and $A-KCA$ is stable.
+      \begin{center}
+	\begin{tikzpicture}[x=2cm, y=0.75cm]
+	  \node at (-0.7,0) {State Est:};
+	  \node [blue!70] at (-0.7,1) {Sensor 2:};
+	  \node [red!70] at (-0.7,-1) {Sensor 1:};
 
-        \node            (x0)  at (0,0) {$\hat x(0)$};
-        \node [blue!70] (y20)  at (0,1)    {$y_2(0)$};
-        \node [red!70]  (y10)  at (0,-1)   {$y_1(0)$};
-        \draw [->,semithick,blue!70] (y20) to (x0);
-        \draw [->,semithick,red!70]  (y10) to (x0);
+	  \node            (x0)  at (0,0) {$\hat x(0)$};
+	  \node [blue!70] (y20)  at (0,1)    {$y_2(0)$};
+	  \node [red!70]  (y10)  at (0,-1)   {$y_1(0)$};
+	  \draw [->,semithick,blue!70] (y20) to (x0);
+	  \draw [->,semithick,red!70]  (y10) to (x0);
 
-        \node            (x1)  at (1,0) {$\hat x(1)$};
-        \node [blue!70] (y21)  at (1,1)    {$y_2(1)$};
-        \node [red!70]  (y11)  at (1,-1)   {$y_1(1)$};
-        \draw [->,semithick,blue!70] (y21) to (x1);
-        \draw [->,semithick,red!70]  (y11) to (x1);
+	  \node            (x1)  at (1,0) {$\hat x(1)$};
+	  \node [blue!70] (y21)  at (1,1)    {$y_2(1)$};
+	  \node [red!70]  (y11)  at (1,-1)   {$y_1(1)$};
+	  \draw [->,semithick,blue!70] (y21) to (x1);
+	  \draw [->,semithick,red!70]  (y11) to (x1);
 
-        \node            (x2)  at (2,0) {$\hat x(2)$};
-        \node [blue!70] (y22)  at (2,1)    {$y_2(2)$};
-        \node [red!70]  (y12)  at (2,-1)   {$y_1(2)$};
-        \draw [->,semithick,blue!70] (y22) to (x2);
-        \draw [->,semithick,red!70]  (y12) to (x2);
+	  \node            (x2)  at (2,0) {$\hat x(2)$};
+	  \node [blue!70] (y22)  at (2,1)    {$y_2(2)$};
+	  \node [red!70]  (y12)  at (2,-1)   {$y_1(2)$};
+	  \draw [->,semithick,blue!70] (y22) to (x2);
+	  \draw [->,semithick,red!70]  (y12) to (x2);
 
-        \draw [->,semithick] (x0) to (x1);
-        \draw [->,semithick] (x1) to (x2);
-      \end{tikzpicture}
-    \end{center}
-  \item The error introduced by the attack may accumulate over time.
+	  \draw [->,semithick] (x0) to (x1);
+	  \draw [->,semithick] (x1) to (x2);
+	\end{tikzpicture}
+      \end{center}
+    \item The error introduced by the attack may accumulate over time.
   \end{enumerate}
 \end{frame}
 
@@ -1015,34 +1138,34 @@ The TEP is created to provide a realistic industrial process for developing stud
     \end{tikzpicture}
   \end{center}
   \begin{enumerate}
-  \item Construct local estimators (which uses only the local measurements):
-    \begin{align*}
-      \hat x_i(k) = A \hat x_i(k) + L_i (y_i(k)-CA\hat x_i(k)).
-    \end{align*}  
-  \item Reconstruct the global estimator as
-    \begin{align*}
-      \hat x(k) = g(\hat x_1(k),\ldots,\hat x_m(k)).
-    \end{align*}  
+    \item Construct local estimators (which uses only the local measurements):
+      \begin{align*}
+	\hat x_i(k) = A \hat x_i(k) + L_i (y_i(k)-CA\hat x_i(k)).
+      \end{align*}  
+    \item Reconstruct the global estimator as
+      \begin{align*}
+	\hat x(k) = g(\hat x_1(k),\ldots,\hat x_m(k)).
+      \end{align*}  
   \end{enumerate}
 \end{frame}
 
 \begin{frame}{Local Estimator Design}
   \begin{enumerate}
-  \item  Choose $L_i$ such that $A-L_iCA$ shares the same eigenvalues as $A-KCA$ (requires observability)
-    \begin{align*}
-      \hat x_i(k) = A \hat x_i(k) + L_i (y_i(k)-CA\hat x_i(k)).
-    \end{align*}  
-  \item The global estimate can be recovered as
-    \begin{align*}
-      \hat x(k) = F_1\hat x_1(k)+\dots+F_m\hat x_m(k).
-    \end{align*}
-  \item More importantly, it can be written as the solution of a quadratic programming problem:
-    \begin{align*}
+    \item  Choose $L_i$ such that $A-L_iCA$ shares the same eigenvalues as $A-KCA$ (requires observability)
+      \begin{align*}
+	\hat x_i(k) = A \hat x_i(k) + L_i (y_i(k)-CA\hat x_i(k)).
+      \end{align*}  
+    \item The global estimate can be recovered as
+      \begin{align*}
+	\hat x(k) = F_1\hat x_1(k)+\dots+F_m\hat x_m(k).
+      \end{align*}
+    \item More importantly, it can be written as the solution of a quadratic programming problem:
+      \begin{align*}
       &\mathop{\textrm{minimize}}\limits_{\hat x(k),\hat e(k)}&
       & \frac{1}{2}\hat e(k)^T \tilde W^{-1} \hat e(k)\\
       &\textrm{subject to} &
       &\hat x_i(k)  =  \hat x(k) + \hat e_i(k),&
-    \end{align*}
+      \end{align*}
   \end{enumerate}
 \end{frame}
 
@@ -1061,8 +1184,8 @@ The TEP is created to provide a realistic industrial process for developing stud
     Assuming all sensors are benign, then the secure estimator recovers the Kalman estimation if the noise term $\tilde e(k)$ is ``small'', i.e.:
     \begin{align*}
       \left\|\tilde W^{-1} - H \begin{bmatrix}
-          F_1&\dots&F_m
-        \end{bmatrix}\tilde e(k) \right\|_\infty\leq \gamma.  
+	F_1&\dots&F_m
+      \end{bmatrix}\tilde e(k) \right\|_\infty\leq \gamma.  
     \end{align*}
   \end{theorem}
   \begin{theorem}
@@ -1071,10 +1194,10 @@ The TEP is created to provide a realistic industrial process for developing stud
 \end{frame}
 
 \begin{frame}{Secure Control of Autonomous Vehicle}
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.8\textwidth]{singpilot.jpg}
-\end{figure}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{singpilot.jpg}
+  \end{figure}
 
 \end{frame}
 
@@ -1082,14 +1205,14 @@ The TEP is created to provide a realistic industrial process for developing stud
   \begin{columns}
     \begin{column}{0.48\textwidth}
       \begin{figure}
-        \includegraphics[width=\textwidth]{gnssdrift.jpg}
-        \caption{EKF}
+	\includegraphics[width=\textwidth]{gnssdrift.jpg}
+	\caption{EKF}
       \end{figure}
     \end{column}
     \begin{column}{0.48\textwidth} 		
       \begin{figure}
-        \includegraphics[width=\textwidth]{gnssdriftsafe.jpg}
-        \caption{Secure EKF}
+	\includegraphics[width=\textwidth]{gnssdriftsafe.jpg}
+	\caption{Secure EKF}
       \end{figure}
     \end{column}
   \end{columns}
@@ -1100,18 +1223,18 @@ The TEP is created to provide a realistic industrial process for developing stud
 
 \begin{frame}{Towards a Science of CPS Security}
   \begin{itemize}
-  \item We consider both intrusion detection and the state estimation problem in adversarial environment and propose secure and efficient algorithm for both problems.
-  \item How to systematically design algorithms that are both secure and efficient?
-  \item How to combine information security with system theory to provide defense in depth?
+    \item We consider both intrusion detection and the state estimation problem in adversarial environment and propose secure and efficient algorithm for both problems.
+    \item How to systematically design algorithms that are both secure and efficient?
+    \item How to combine information security with system theory to provide defense in depth?
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Acknowledgement}
   \begin{itemize}
-  \item Rohan Chabukswar, Sean Weerakkody
-  \item Duo Han, Hanxiao Liu, Xinghua Liu, Liang Xu, Jiaqi Yan
-  \item Bruno Sinopoli, Lihua Xie, Karl H. Johansson
-  \item Danwei Wang, Jakub Tomasek, Qipeng Liu, Ehsan Mihankhah, Xiaoqiang Ren, Xiaoyu Mo 
+    \item Rohan Chabukswar, Sean Weerakkody
+    \item Duo Han, Hanxiao Liu, Xinghua Liu, Liang Xu, Jiaqi Yan
+    \item Bruno Sinopoli, Lihua Xie, Karl H. Johansson
+    \item Danwei Wang, Jakub Tomasek, Qipeng Liu, Ehsan Mihankhah, Xiaoqiang Ren, Xiaoyu Mo 
   \end{itemize}
 \end{frame}
 
