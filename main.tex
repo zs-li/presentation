@@ -18,9 +18,8 @@
 \pgfdeclarelayer{background}
 \pgfsetlayers{background,main}
 
-\usepackage[style=verbose,backend=biber]{biblatex}
-\addbibresource{reference.bib}
-
+\usepackage[citestyle=authortitle,backend=bibtex]{biblatex}
+\addbibresource{references.bib}
 \tikzset{decoration={name=none},}
 
 \newlength\figureheight
@@ -135,11 +134,10 @@
   The scope of incidents encompassed a vast range of threats and observed methods for attempting to gain access to both business and control systems infrastructure, including but not limited to the following:
   \begin{enumerate}
     \item  Unauthorized access and exploitation of Internet facing ICS/Supervisory Control and Data Acquisition (SCADA) devices,
-    \item 	 Exploitation of zero-day vulnerabilities in control system devices and software, 
-    \item  	 Malware infections within air-gapped control system networks,
+    \item  Exploitation of zero-day vulnerabilities in control system devices and software, 
+    \item  Malware infections within air-gapped control system networks,
     \item \dots
   \end{enumerate}
-
 \end{frame}
 
 \begin{frame}{Attack Through Compromised Supply Chain}
@@ -760,7 +758,7 @@
       &y = H \hat x + w + a,\,\|a\|_0\leq p.
     \end{align*}
   \item Difficult to verify $2c$ observable condition and difficult to solve
-  \item The secure estimation problem for general system is proved to be NP hard cite.
+\item The secure estimation problem for general system is proved to be NP hard\footcite{Hendrickx2014}\footcite{Mao2019}.
   \item Can we design a secure and computationally efficient estimators for {\bf some} system?
   \end{enumerate}
 \end{frame}
@@ -1064,8 +1062,6 @@
   If we interpret the function $|y_i-\hat x|$ as a potential function generate by sensor $i$, then we can see that sensor $i$ is dragging $\hat x$ towards $y_i$ with $1$ unit of force. The equilibrium point will be at the middle $y_i$.
 \end{frame}
 
-
-
 \begin{frame}{Another Example}
   Suppose the following sensory model:
   \begin{align*}
@@ -1123,11 +1119,12 @@
 \end{align*}	  
 \end{frame}
 
-\begin{frame}{Convex Optimization Based Estimator}
+\begin{frame}{In Summary\footcite{Han2019}}
+  \begin{itemize}
+    \item We design a convex optimization based estimator
   \begin{align*}
     \hat x = g(y) \triangleq \argmin_{\hat x} \sum_{i=1}^m f_i(y_i-H_i \hat x).
   \end{align*}
-  \begin{itemize}
     \item Difficult to verify the resiliency condition
       \begin{align*}
 	\sum_{i\in \mathcal I} C_i(u) < \sum_{i\in \mathcal I^c} C_i(u). 
@@ -1277,11 +1274,11 @@
 \end{frame}
 
 \begin{frame}{Fundamental Limit}
-If the system becomes undetectable after removing $2c$ sensors, then there exists an attack on $c$ sensors, such that NO estimator can have bounded estimation error. cite
+  If the system becomes undetectable after removing $2c$ sensors, then there exists an attack on $c$ sensors, such that NO estimator can have bounded estimation error \footcite{Nakahira2018}.
 \end{frame}
 
 \begin{frame}{Dynamic State Estimate: A Moving Horizon Approach}
-  In order to convert the dynamic estimation problem into a static one, we can use a moving horizon approach: cite
+In order to convert the dynamic estimation problem into a static one, we can use a moving horizon approach\footcite{Fawzi2014}\footcite{Shoukry2017}:
   \begin{center}
     \begin{tikzpicture}[x=2cm, y=0.75cm]
       \node at (-0.7,0) {State Est:};
@@ -1448,7 +1445,7 @@ If the system becomes undetectable after removing $2c$ sensors, then there exist
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Efficiency and Security}
+\begin{frame}{Efficiency and Security\footcite{Liu2017}}
   \begin{block}{Efficiency}
     \begin{itemize}
       \item In the absence of attack, we recover the Kalman estimate if the noise is "small".
@@ -1463,7 +1460,7 @@ If the system becomes undetectable after removing $2c$ sensors, then there exist
   \end{block}
 \end{frame}
 
-\begin{frame}{The Last Piece of the Puzzle}
+\begin{frame}{The Last Piece of the Puzzle\footcite{Mao2019}}
   \begin{itemize}
     \item Consider a $2$-dimensional system with $A = diag(1,2)$ 
     \item The observable space for a sensor can only be $\{x_1\},\,\{x_2\}$ or $\{x_1,\,x_2\}$
@@ -1558,6 +1555,9 @@ If the system becomes undetectable after removing $2c$ sensors, then there exist
 %  \item Bruno Sinopoli, Lihua Xie, Karl H. Johansson
 %  \end{itemize}
 %\end{frame}
+\begin{frame}[allowframebreaks]
+     \printbibliography
+\end{frame} 
 
 \begin{frame}[standout]
   感谢聆听！请各位老师批评指正
