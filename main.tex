@@ -1,12 +1,10 @@
-% !TEX TS-program = xelatex
-% !TEX ecoding = UTF-8
-
 \documentclass[10pt]{beamer}
 
 \usepackage{xeCJK}
 \setCJKmainfont{Noto Sans CJK SC}
 \xeCJKsetup{PunctStyle=kaiming,CJKspace=true,CheckSingle=true} 
 
+\DeclareGraphicsRule{*}{mps}{*}{}
 \usepackage{subfigure}
 \usepackage{amssymb, amsmath, amsfonts,verbatim}
 \usepackage{tikz}
@@ -55,10 +53,12 @@
 \DeclareMathOperator{\argmax}{arg\;max}
 \let\Tiny\tiny
 
-\title[Secure CPS]{Secure State Estimation in Cyber-Physical System}
+\DeclareMathOperator{\E}{\mathbb E}
+
+\title[Kalman Filter]{Kalman Filtering from 3 Different Perspectives}
 \author[Yilin Mo]{Yilin Mo}
 \institute[Tsinghua]{Department of Automation, Tsinghua University}
-\date[Nov 22, 2020]{Nov 22, 2020}
+\date[May 12, 2021]{May 12, 2021}
 
 \usetheme[subsectionpage=none,block=fill]{metropolis}
 \definecolor{thupurple}{RGB}{102,8,116}
@@ -69,1498 +69,539 @@
 
 \begin{document}
 
-\maketitle 
+\begin{frame}
+  \titlepage
+\end{frame}
 
 \section{Introduction}
-
-\begin{frame}{Cyber-Physical System}
+\begin{frame}{Motivation}
   \begin{itemize}
-    \item Cyber-Physical Systems (CPSs) refer to the embedding of computation, communication and control into physical spaces.
-      \begin{center}
-	\begin{tikzpicture}[scale=0.45,transform shape,level distance=0cm,
-	  level 1 concept/.append style={sibling angle=120,minimum size = 3cm},
-	  ]
-	  \path [draw=thupurple!50,fill=thupurple!20,thick,rounded corners] (-10,-4.5) rectangle (10,7);
-	  \node at (-9,6) [anchor=north west] {\Huge Physical Space};
-	  \path[mindmap,concept color=black,text=white]
-	    node[concept] {\Huge CPS}
-	    [clockwise from=330]
-	    child[concept color=green!50!black] { node[concept](communication) {\huge Comm.} }
-	    child[concept color=red] { node[concept](control) {\huge Ctrl.} }
-	    child[concept color=blue] { node[concept](computation) {\huge Comp.} };
-	\end{tikzpicture}
-      \end{center}
-    \item Applications: aerospace, chemical processes, civil infrastructure, energy, manufacturing and transportation. 
+    \item Sensor Networks are becoming ubiquitous, with lots of interesting applications.
+    \item Sensors usually have a limited power supply and limited communication channel bandwidth.
+    \item Communication is unreliable. Communication packet may be dropped, corrupted or delayed. How to characterize the impact of unreliable communication on the functionality of the system.
+    \item Communication costs too much energy. Reduce the number of communications to prolong the lifespan of sensors, while maintaining certain functionality. 
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Security Threats for the CPS}
+\section{Preliminary: Kalman Filtering}
+\frame{\tableofcontents}
+\begin{frame}{Minimum Mean Squared Error Estimator}
   \begin{itemize}
-    \item The next generation CPS: Smart Grids, Smart Buildings, Smart Home, Internet of Things, will make extensive use of widespread sensing and networking.
-    \item As the CPSs become ``smarter'', they are also more vulnerable to malicious attacks.
-  \end{itemize}
-  \begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.6\textwidth]{SmartHome.jpg}
-  \end{figure}
-\end{frame}
-
-\begin{frame}{Stuxnet}
-  \begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.8\textwidth]{stuxnet.jpg}
-  \end{figure}
-  Stuxnet is the first discovered malware that spies on and subverts industrial control systems. It was discovered in June 2010. 
-\end{frame}
-
-\begin{frame}{2015 Ukraine Power Outage}
-  \begin{figure}[<+htpb+>]
-    \begin{center}
-      \includegraphics[width=0.60\textwidth]{ukraine.jpg}
-      \caption{A successful attack on CPS can have devastating effects.}
-    \end{center}
-  \end{figure}
-\end{frame}
-
-\begin{frame}{Industrial Control Systems}
-  \begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.55\textwidth]{cert.jpg}
-  \end{figure}
-  In FY 2016, ICS-CERT (Industrial Control Systems Cyber Emergency Response Team) received and responded to 290 incidents as reported by asset owners and industry partners.
-\end{frame}
-
-\begin{frame}{Industrial Control Systems}
-  The scope of incidents encompassed a vast range of threats and observed methods for attempting to gain access to both business and control systems infrastructure, including but not limited to the following:
-  \begin{enumerate}
-    \item  Unauthorized access and exploitation of Internet facing ICS/Supervisory Control and Data Acquisition (SCADA) devices,
-    \item  Exploitation of zero-day vulnerabilities in control system devices and software, 
-    \item  Malware infections within air-gapped control system networks,
-    \item \dots
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}{Attack Through Compromised Supply Chain}
-  \begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.8\textwidth]{boeing.jpg}
-    \caption{Boeing 787 outsourced 70\% of its parts.}
-  \end{figure}
-\end{frame}
-
-\begin{frame}{Hacker Taking Control of a Chrysler Jeep}
-  \begin{figure}[<+htpb+>]
-    \begin{center}
-      \includegraphics[width=0.80\textwidth]{jeep.jpg}
-      \caption{Hacker take control of the steering and brake of a Jeep car in 2015}
-    \end{center}
-  \end{figure}
-\end{frame}
-
-\begin{frame}{What is New in CPS Security?}
-  \begin{itemize}
-    \item Physics
-    \item Inertia: The system cannot be stopped at will
-    \item Complicated interaction between cyber and physical world
-    \item High reliability requirement: $10^{-9}$ for air plane
-    \item Continuous operation, Graceful degradation.
+    \item Consider a Gaussian state $x\in \mathbb R^n$:
+      \begin{displaymath}
+	\E x = \bar x,\,\Cov(x) = \E xx^T = \Sigma.
+      \end{displaymath}
+    \item Let $y\in\mathbb R^m$ be our observation of $x$, which satisfies:
+      \begin{displaymath}
+	y = C x + v,
+      \end{displaymath}
+      where $v\sim \mathcal N(0,R)$ is a Gaussian measurement noise. 
+    \item Given the measurement $y$, the optimal state estimate $\hat x$ (with minimum mean squared error) is a linear estimator:
+      \begin{displaymath}
+	\hat x = \E (x|y) = \bar x + \Sigma C'(C\Sigma C'+R)^{-1}(y-C\bar x).
+      \end{displaymath}
+    \item The error $e = x - \hat x$ is zero mean Gaussian and
+      \begin{displaymath}
+	\Cov(e) = (\Sigma^{-1} +  C'  R^{-1}C)^{-1}.
+      \end{displaymath}
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Defense in Depth for CPS Security}
-  \begin{figure}[ht]
-    \centering
-    \begin{tikzpicture}
-      \node at (0,0) {\includegraphics[width=6cm]{defense.png}};
-      \node[anchor=south west] (1) at (4,1.8) {Prevention};
-      \node[anchor=south west] (2) at (4,.6) {Detection};
-      \node[anchor=south west] (3) at (4,-.6) {Resiliency};
-      \node[anchor=south west] (4) at (4,-1.8) {Recovery};
-      \draw[semithick] (2.2,0.5)--(4,1.8)--++(1.8,0);
-      \draw[semithick] (2,0.4)--(4,0.6)--++(1.8,0);
-      \draw[semithick] (1.2,0.6)--(4,-.6)--++(1.8,0);
-      \draw[semithick] (0.2,0.7)--(4,-1.8)--++(1.8,0);
-    \end{tikzpicture}
-    \caption{Protecting CPS with Multi-layer Defense}
-  \end{figure}
-\end{frame}
-
-\begin{frame}{What Control/System Theory Can Provide?}
-  \begin{itemize}
-    \item Robustness/Resiliency in off-line Design
-    \item Intrusion Detection \& Isolation
-    \item Secure Information Fusion/Control
-    \item Security Investment
-  \end{itemize}
-\end{frame}
-
-%\section{Active Intrusion Detection}
-%
-%\begin{frame}{Stuxnet}
-%  \begin{itemize}
-%    \item NY times:``The worm itself now appears to have included two major components. One was designed to send Iran's nuclear centrifuges spinning wildly out of control. Another seems right out of the movies: The computer program also \alert{secretly recorded what normal operations at the nuclear plant looked like, then played those readings back to plant operators}, like a pre-recorded security tape in a bank heist, so that it would appear that everything was operating normally while the centrifuges were actually tearing themselves apart.''
-%  \end{itemize}
-%\end{frame}
-
-%\begin{frame}{System Model}
-%  \begin{block}{System Description}
-%    \begin{displaymath}
-%      \begin{split}
-%	x(k+1) &= Ax(k)  + Bu(k)+w(k),\\
-%	y(k) &= C x(k) + v(k).
-%      \end{split}
-%    \end{displaymath}
-%  \end{block}
-%  \begin{itemize}
-%    \item $x(k) \in \mathbb R^n$ is the state vector.
-%    \item  $y(k) \in \mathbb R^m$ is the measurements from the sensors.
-%    \item  $u(k) \in \mathbb R^p$ is the control input.
-%    \item $w(k),v(k),x(0)$ are independent Gaussian random vectors, and $x(0) \sim \mathcal N(0,\;\Sigma)$, $w(k) \sim \mathcal N(0,\;Q)$ and $v(k) \sim \mathcal N(0,\;R)$ with $Q,R>0$.
-%    \item The system is assumed to be controllable and observable.
-%  \end{itemize}
-%\end{frame}
-%
-%\begin{frame}{LQG Controller and Kalman filter}
-%  \begin{itemize}
-%    \item We assume that the system operator wants to minimize the following cost function:
-%      \begin{displaymath}
-%	J = \lim_{T\rightarrow \infty}\min_{u(0),\ldots,u(T)}E\frac{1}{T}\left[\sum_{k=0}^{T-1} x(k)'Wx(k)+u(k)'Uu(k)\right],
-%      \end{displaymath}
-%      where $W, U$ are positive semidefinite matrices. 
-%    \item The optimal controller is a fixed gain controller, which takes the following form:
-%      \begin{displaymath}
-%	u(k) =  L^*\hat x(k),
-%      \end{displaymath}
-%    \item The optimal estimator (Kalman filter) follows the following update equations:
-%      \begin{align*}
-%	\hat x(k+1|k) &= A\hat x(k)+Bu(k),\\
-%	\hat x(k+1) &= \hat x(k+1|k) + K^*\left[y(k+1) - C\hat x(k+1|k)\right],
-%      \end{align*}
-%  \end{itemize}
-%\end{frame}
-%
-%\begin{frame}{$\chi^2$ Failure Detector}
-%  \begin{itemize}
-%    \item The residue $z(k)$ of the Kalman filter is defined as
-%      \begin{displaymath}
-%	z(k) \triangleq y(k) - C\hat x(k|k-1),
-%      \end{displaymath} 
-%      which is i.i.d. Gaussian distributed with zero mean. 
-%    \item $\chi^2$ detector triggers an alarm based on the following event:
-%      \begin{displaymath}
-%	g(k)=  z(k)^T\mathcal P^{-1}z(k)> threshold,
-%      \end{displaymath}
-%      where $\mathcal P$ is the covariance matrix of $z(j)$ and $\mathcal T$ is the window size.
-%    \item The alarm rate at time $k$ is 
-%      \begin{displaymath}
-%	\beta(k) = P(g(k) > threshold).
-%      \end{displaymath}
-%      If the system is operating normally, then the alarm rate is a constant, which we denote as the false alarm rate $\alpha$.
-%  \end{itemize}
-%\end{frame}
-%
-%\begin{frame}{System Diagram}
-%  \begin{figure}[htpb]
-%    \begin{center}
-%      \inputtikz{systemdiagram}
-%    \end{center}
-%  \end{figure}
-%  Assumptions: Linear System, Kalman Filter, LQG controller and $\chi^2$ detector.
-%\end{frame}
-%
-%\begin{frame}{Replay Attack Model}
-%  \begin{enumerate}
-%    \item The attacker can read and modify all the measurements $y(k)$ arbitrarily.
-%    \item It can inject an external control input $u^a(k)$ into the system. 
-%  \end{enumerate}
-%  The strategy of the attacker can be divided into two stages:
-%  \begin{enumerate}
-%    \item The attacker records a sufficient number of $y(k)$s without injecting any control input $u^a(k)$. 
-%    \item The attacker injects a sequence of desired control input $u^a(k)$ while replaying the previous recorded $y(k)$s starting from time $0$.
-%  \end{enumerate}
-%  When the system is under attack, the controller will be unable to perform closed-loop control. Hence the only way to counter this attack is to detect its presence. 
-%\end{frame}
-%
-%\begin{frame}{Replay Attack: First Stage}
-%  \begin{figure}[htpb]
-%    \begin{center}
-%      \inputtikz{replaydiagramone}
-%    \end{center}
-%  \end{figure}
-%\end{frame}
-%
-%\begin{frame}{Replay Attack: Second Stage}
-%  \begin{figure}[htpb]
-%    \begin{center}
-%      \inputtikz{replaydiagramtwo}
-%    \end{center}
-%  \end{figure}
-%\end{frame}
-%
-%\begin{frame}{Feasibility of Replay Attacks}
-%  \begin{figure}[htpb]
-%    \setlength\figureheight{4.5cm}
-%    \setlength\figurewidth{10cm}
-%    \begin{center}
-%      \inputtikz{replayunstableA2}
-%    \end{center}
-%  \end{figure}
-%  Replay attack is not always feasible!
-%\end{frame}
-%
-%\begin{frame}{Feasibility of Replay Attacks}
-%  \begin{figure}[htpb]
-%    \begin{center}
-%      \inputtikz{replaydiagramthree}
-%    \end{center}
-%  \end{figure}
-%\end{frame}
-%
-%\begin{frame}{Feasibility of Replay Attacks}
-%  The update equation of Kalman filter follows:
-%  \begin{align*}
-%    \hat{x}(k+1|k)&=A\hat{x}(k)+Bu(k)=\left(A+BL^*\right)\hat{x}(k)\\
-%		  &=\left(A+BL^*\right)\left(I-K^*C\right)\hat{x}(k|k-1)+\left(A+BL^*\right)K^*y(k).
-%  \end{align*}
-%
-%  \begin{theorem}
-%    If $\mathcal A = (A+BL^*)(I-K^*C)$ is stable, then the detection rate of $\chi^2$ detector $\beta^c(k)$ converges to the false alarm rate $\alpha$ during the attack, i.e.,
-%    \begin{displaymath}
-%      \lim_{k\rightarrow\infty}\beta^c(k) = \alpha.  
-%    \end{displaymath}
-%    On the other hand, if $\mathcal A$ is strictly unstable, then the detection rate $\beta^c(k)$ converges to $1$, i.e.,
-%    \begin{displaymath}
-%      \lim_{k\rightarrow\infty}\beta^c(k) = 1.  
-%    \end{displaymath}
-%  \end{theorem}
-%\end{frame}
-%
-%\begin{frame}{Countermeasures: Authentication via Watermarking}
-%  \begin{itemize}
-%    \item We could change the control law by adding a random watermarking signal:
-%      \begin{displaymath}
-%%	u(k) = \text{Optimal LQG Control}+ \zeta(k).
-%	u(k) = \text{Optimal Control}+ \zeta(k).
-%      \end{displaymath}
-%    \item The watermarking signal $\zeta(k)$ acts as a ``challenge'' and the sensor measurement is the ``response''. 
-%    \item During normal operation, the ``challenge'' and ``response'' are correlated through the system dynamics, while the correlation cease to exist when the replay begins.
-%%    \item The CPS will remain stable. However, we sacrifice LQG performance since the control is not optimal.
-%    \item Optimize detection and minimize disturbance
-%  \end{itemize}
-%\end{frame}
-%
-%\begin{frame}{System with Physical Watermarks}
-%  \begin{figure}[htpb]
-%    \begin{center}
-%      \inputtikz{replaywithphywatermark}
-%    \end{center}
-%  \end{figure}
-%\end{frame}
-
-%\begin{frame}{Active Detection of Replay Attack}
-%  \setlength{\figureheight}{6cm}
-%  \setlength{\figurewidth}{7cm}
-%  \begin{figure}[htpb]
-%    \begin{center}
-%      \inputtikz{replay1}
-%    \end{center}
-%  \end{figure}
-%\end{frame}
-%
-%\begin{frame}{Detection Performance v.s. Control Performance}
-%  \begin{itemize}
-%    \item Assuming the watermarking signal is i.i.d. zero mean Gaussian with covariance $U$.
-%    \item The optimal watermarking signal design problem can be written as
-%      \begin{align*}
-%      &\mathop{\textrm{maximize}}\limits_{U\geq 0}&
-%      & Detection\;Performance\\
-%      &\textrm{subject to}&
-%      & Additional\;LQG\;Cost \leq \delta.
-%      \end{align*}
-%    \item The above problem can be relaxed into an Semi-Definite Programming problem. The optimal solution can be derived analytically using generalized eigenvectors.
-%  \end{itemize}
-%\end{frame}
-
-%\begin{frame}{Stationary Watermarking}
-%  \begin{itemize}
-%    \item We can consider a zero mean stationary Gaussian signal, with autocovariance function:
-%      \begin{align*}
-%	\Gamma(d) = \mathbb E \zeta(k)\zeta(k+d)^T.
-%      \end{align*}
-%    \item All autocovariance functions form a convex cone.
-%    \item The optimal trade-off is attained at the boundary of the cone, consisting of signals of the following form: 
-%      \begin{align*}
-%        \zeta(k) = H \xi(k),
-%      \end{align*}
-%      where $\xi(k)\in \mathbb R^2$ is a hidden state satisfies:
-%      \begin{align*}
-%      \xi(k+1) = \begin{bmatrix}
-%	  \cos 2\pi\omega & -\sin 2\pi\omega \\
-%	  \sin 2\pi\omega & \cos 2\pi\omega \\
-%	\end{bmatrix} \xi(k).
-%      \end{align*}
-%  \end{itemize} 
-%\end{frame}
-
-%\section{An Online Approach to Replay Attack Detection}
-
-%\begin{frame}{Data-Driven Approach}
-%  \begin{figure}[htpb]
-%    \inputtikz{systemdiagram2}
-%  \end{figure}
-%\end{frame}
-%
-%\begin{frame}{Modified System Model}
-%  \begin{figure}
-%    \centering
-%    \begin{tikzpicture}
-%      \node (p1) at (0,0) {$\zeta(k)$};
-%      \node [draw=thupurple!50,fill=thupurple!20,thick,rounded corners] (p2) at (3,0) {Unknown System};
-%      \node [draw=thupurple!50,fill=thupurple!20,thick,rounded corners] (p3) at (7,0) {Failure Detector};
-%      \draw [semithick,-stealth] (p1)--(p2);
-%      \draw [semithick,-stealth] (p2)--node[above]{$y(k)$} (p3);
-%    \end{tikzpicture}
-%  \end{figure}
-%  \begin{enumerate}
-%    \item System Dynamics:
-%      \begin{align*}
-%	x(k+1) = A x(k) + B\zeta(k)+w(k), \;y(k)  &= C x(k) + v(k) . 
-%      \end{align*}
-%    \item LQG cost:
-%      \begin{align*}
-%	J = \lim_{T \to +\infty} \mathbb E\left [\frac{1}{T}\sum_{k=0}^{T-1} \begin{bmatrix}
-%	    y(k)\\
-%	    \zeta(k)
-%	    \end{bmatrix}^TX \begin{bmatrix}
-%	    y(k)\\
-%	    \zeta(k)
-%	\end{bmatrix} \right ],
-%      \end{align*}
-%  \end{enumerate}
-%\end{frame}
-%
-%\begin{frame}{Assumptions}
-%  \begin{itemize}
-%    \item The system is stable (or has been stabilized by some inner-loop controller), controllable and observable.
-%    \item $A$ is diagonalizable.
-%    \item We can observe $y(k)$, and we know the dimension of the $x(k)$.
-%    \item The LQG weight matrix $X$ is known.
-%    \item The noise are all zero mean i.i.d. Gaussian.
-%  \end{itemize}
-%  \textbf{No additional knowledge} on the $A,B,C$ matrices or the covariance of the noise is assumed.
-%\end{frame}
-%%
-%\begin{frame}{Impact on the Control Performance}
-%  The additional LQG cost incurred by the watermarking signal is a linear function of $U$.
-%  \begin{displaymath}
-%    \text{Additional LQG cost} = \tr(U\mathcal X).
-%  \end{displaymath}
-%  where $\mathcal X$ is given by:
-%  \begin{align*}
-%    \mathcal X &\triangleq \sum_{k=0}^\infty\textcolor{thupurple}{\left(CA^kB\right)^T} X_{yy}\textcolor{thupurple}{\left(CA^kB\right)}+ \textcolor{thupurple}{\left(CB\right)^T}X_{y\phi} + X_{\phi y}\textcolor{thupurple}{CB}+ X_{\phi \phi}\\
-%	       &= \sum_{k=0}^\infty \textcolor{thupurple}{H_k^T} X_{yy}\textcolor{thupurple}{H_k}+ \textcolor{thupurple}{H_0^T}X_{y\phi} + X_{\phi y}\textcolor{thupurple}{H_0}+ X_{\phi \phi}.
-%  \end{align*}
-%\end{frame}
-%%
-%%
-%\begin{frame}{Detecting Replay Attacks}
-%  \begin{itemize}
-%    \item In the absence of the attack:  
-%      \begin{align*} 
-%	y(k) &=\textcolor{red}{\boxed{\sum_{t=0}^{k-1} CA^{t}B  \zeta(k-1-t)}} + \textcolor{blue}{\boxed{\sum_{t=0}^{k-1}  CA^{t} w(k-1-t)+v(k) }}\\ 
-%	     &=\textcolor{red}{\gamma(k-1)} +\textcolor{blue} {\vartheta(k-1)},
-%      \end{align*}
-%    \item  In the presence of the attack:
-%      \begin{align*}
-%	y^c(k) = y(k-\Delta k) = \textcolor{red}{\gamma(k-1-\Delta k)} + \textcolor{blue}{\vartheta(k-1-\Delta k)}.
-%      \end{align*}
-%    \item The KL divergence between ``compromised'' measurement $y^c(k)$ and ``normal'' measurement $y(k)$ is a convex function $U$:
-%      \begin{displaymath}
-%	\tr\left( U \mathcal P  \right) - \frac{1}{2}\logdet\left( I+ U \mathcal P \right),
-%      \end{displaymath}
-%      where
-%      \begin{align*}
-%	\mathcal P \triangleq\sum_{k=0}^\infty \textcolor{thupurple}{H_k^T\mathcal W^{-1}H_k},\\
-%      \end{align*}
-%      where $\mathcal W$ is the covariance of $\vartheta_{k-1}$.
-%  \end{itemize}
-%\end{frame}
-%
-%\begin{frame}{Optimal Watermark}
-%  \begin{block}{Problem 1}
-%    \begin{align*}
-%      &\mathop{\textrm{maximize}}\limits_{U}&
-%      & \tr\left( U \mathcal P  \right) - \frac{1}{2}\logdet\left( I+ U \mathcal P \right), \\
-%      &\textrm{subject to}&
-%      & \tr (U\textcolor{thupurple}{\mathcal X}) \leq \delta \\
-%      &&& U \text{ is positive semidefinite.}
-%    \end{align*}
-%  \end{block}
-%  \centering
-%  \begin{tikzpicture}[domain=-2:2.5]
-%    \draw[semithick] plot (\x,{\x*\x/4});
-%    \draw[semithick,->] (-2.5,-0.5)--(3,-0.5);
-%    \draw[dashed] (-2,-0.5)--(-2,1);
-%    \draw[dashed] (2.5,-0.5)--(2.5,1.5625);
-%  \end{tikzpicture}
-%
-%  The solution lies on the boundary of the feasible set!
-%\end{frame}
-%
-%\begin{frame}{Optimal Watermark}
-%  \begin{enumerate}
-%    \item The boundary of the set of positive semi-definite matrices are rank $1$ matrix:
-%      \[U = \alpha vv^T.\] 
-%    \item $v$ is the generalized eigenvector s.t. $\mathcal Pv = \lambda\mathcal Xv$, where $\lambda$ is the largest generalized eigenvalue.
-%    \item $\alpha$ is chosen such that $\tr(U\mathcal X)=\delta$.
-%  \end{enumerate}
-%\end{frame}
-
-%\begin{frame}{Online-Watermark Design}
-%  \begin{figure}[t]
-%    \centering
-%    \begin{tikzpicture}[scale=0.9]
-%      \draw[thick,rounded corners,fill=thupurple!30,draw=thupurple!60] (0,1) rectangle (3,2);
-%      \node at (1.5,1.5) {$\zeta(k)$ Generation};
-%      \draw[thick,rounded corners,fill=red!30,draw=red!60] (4,1) rectangle (7,2);
-%      \node at (5.5,1.5) {Inference};
-%      \draw[thick,->] (1.5,2) to [bend left] (5.5,2);
-%      \draw[thick,->] (5.5,1) to [bend left] (1.5,1);
-%    \end{tikzpicture}
-%  \end{figure}
-%  \begin{itemize}
-%    \item Generate the ``optimal'' $U$ (based on our current knowledge):
-%      \begin{align*}
-%	\hat U_k=&\mathop{\textrm{argmax}}\limits_{U\geq 0}&
-%		 & \tr (U\textcolor{thupurple}{\hat  P_k})\\
-%		 &\textrm{subject to}&
-%		 & \tr (U\textcolor{thupurple}{\hat  X_k}) \leq \delta.
-%      \end{align*}
-%    \item Generate the watermark signal:
-%      \begin{align*}
-%	\zeta(k) = \left(\hat U_k+k^{-\beta}I\right)^{1/2}\phi(k),\,where\; \phi(k)\sim\mathcal N(0,I).
-%      \end{align*}
-%    \item Update the estimated system parameters using the cross correlation between $y$ and $u$.
-%  \end{itemize}
-%\end{frame}
-%
-%\begin{frame}{Online-Watermark Design: Inference}
-%  \begin{figure}[t]
-%    \centering
-%    \begin{tikzpicture}[scale=0.9]
-%      \draw[thick,rounded corners,fill=thupurple!30,draw=thupurple!60] (0,1) rectangle (3,2);
-%      \node at (1.5,1.5) {$\zeta(k)$ Generation};
-%      \draw[thick,rounded corners,fill=red!30,draw=red!60] (4,1) rectangle (7,2);
-%      \node at (5.5,1.5) {Inference};
-%      \draw[thick,->] (1.5,2) to [bend left] (5.5,2);
-%      \draw[thick,->] (5.5,1) to [bend left] (1.5,1);
-%    \end{tikzpicture}
-%  \end{figure}
-%  \begin{itemize}
-%  \item If we compute $y(k)\phi(k)^T$, we get
-%    \begin{align*}
-%      y(k+1)\phi(k)^T &= \textcolor{thupurple}{CBU_k^{1/2}\phi(k)\phi(k)^T}+ \sum_{t=1}^{k}H_t U_{k-t}^{1/2} \phi(k-t) \phi(k)^T \\
-%                      &+\sum_{t=0}^{k}  CA^{t} w(k-t)\phi(k)^T +v(k+1)\phi(k)^T.
-%    \end{align*}
-%  \item One tentative way to infer $H_0$: 
-%    \begin{align*}
-%      H_0 \approx \text{the average of }y(k+1)\phi(k)^TU_{k}^{-1/2} . 
-%    \end{align*}
-%  \item Similarly we can estimate all $H_t$, and further infer $\mathcal P$ and $\mathcal X$.
-%  \end{itemize} 
-%\end{frame}
-%
-%\begin{frame}{Key Problems with the Naive Approach}
-%  \begin{itemize}
-%  \item There are infinitely $H_t$s we need to infer
-%  \item The ``optimal'' $U_k$ is rank 1 and not invertible
-%  \end{itemize}
-%\end{frame}
-%\begin{frame}{Infer all $H_t$ using finitely many $H_t$s}
-%  \begin{itemize}
-%  \item We can only store \textbf{finitely many} $H_t=CA^tB$s, but we need \textbf{all} $H_t$ to compute $\mathcal P$ and $\mathcal X$.
-%  \item Solution: Cayley-Hamilton Theorem: 
-%    \begin{align*}
-%      p(A) = A^n + \alpha_{n-1}A^{n-1}+\ldots+\alpha_1 A + \alpha_0 I = 0     
-%    \end{align*}
-%    where $p(x)$ is the characteristic polynomial of $A$. 
-%  \item As a result, we know that
-%    \begin{align*}
-%      H_{n+i} &+ \alpha_{n-1}H_{n-1+i}+\ldots+\alpha_0 H_i\\
-%              &= CA^{i}A^nB + \alpha_{n-1}CA^{i}A^{n-1}B+\ldots+\alpha_0 CA^iB\\
-%      &=CA^i p(A)B = 0.
-%    \end{align*}
-%    \item All $H_\tau$ can be deduced from $H_0,\ldots, H_{n-1}$, if we know $p(A)$.
-%    \item Actually as long as we know some non-trivial polynomial $\tilde p(x)$, such that $\tilde p(A) = 0$, we can deduce all $H_\tau$ from finitely many $H_\tau$s.
-%  \end{itemize} 
-%\end{frame}
-%
-%\begin{frame}{Infer the Characteristic Polynomial $p(A)$}
-%  \begin{itemize}
-%  \item Suppose that we find some coefficients $\tilde \alpha_i$, such that
-%    \begin{align*}
-%      H_{n+i} &+ \tilde \alpha_{n-1}H_{n-1+i}+\ldots+\tilde \alpha_0 H_i = 0.
-%    \end{align*}
-%  \item Let $\tilde p(x) = x^n + \alpha_{n-1}x^{n-1}+\ldots+\alpha_1 x + \alpha_0 $.
-%  \item Question: Under what condition, will $\tilde p(x) = 0$?
-%  \item $CA^i\tilde p(A)B = 0$ for $i=0$ to $2n-2$, then
-%    \begin{align*}
-%      \begin{bmatrix}
-%        C\\
-%        CA\\
-%        \cdots\\
-%        CA^{n-1}
-%      \end{bmatrix}\tilde p(A)\begin{bmatrix}
-%        B&AB&\cdots&A^{n-1}B
-%      \end{bmatrix}=0.
-%    \end{align*}
-%  \item If the system is controllable and observable, then $\tilde p(A)=0$. 
-%    
-%  \end{itemize} 
-%\end{frame}
-
-%\begin{frame}{Exploration and Exploitation}
-%  \begin{figure}[ht]
-%    \centering
-%    \includegraphics[width=0.8\textwidth]{bandit.png}
-%    \caption{Multi-Armed Bandit}
-%  \end{figure}
-%\end{frame}
-%
-%\begin{frame}{Balance Exploration and Exploitation}
-%  \begin{itemize}
-%    \item The solution of the optimization problem is a rank one matrix: Pure \textcolor{red}{Exploitation}.
-%    \item We could also consider classical system identification techniques, which use $\hat U_k=I$: Pure \textcolor{blue}{Exploration}.
-%    \item To achieve a balance, choose
-%      \begin{align*}
-%	\hat U_k = \text{``optimal'' } U + k^{-\beta} I.
-%      \end{align*}
-%    \item More \textcolor{blue}{exploration} at the beginning and more \textcolor{red}{exploitation} towards the end.
-%  \end{itemize}
-%\end{frame}
-%
-%\begin{frame}{Convergence of the Watermarking Signal}
-%  \begin{theorem}
-%    If $0 \leq \beta < 1$, then $\hat U_k$ converges to the optimal $U$ a.s. Furthermore, for any $\epsilon > 0$, we have
-%    \begin{align*}
-%      \frac{\hat U_k - U}{k^{-1/2+\beta/2+\epsilon}} \rightarrow 0,\,a.s.
-%    \end{align*}
-%  \end{theorem}
-%\end{frame}
-%
-%\begin{frame}{Tennessee Eastman Process}
-%  The TEP is created to provide a realistic industrial process for developing studying and evaluating process control technology. 
-%  \begin{columns}
-%    \begin{column}{0.45\textwidth}
-%      \begin{figure}
-%	\includegraphics[width=0.9\textwidth]{simplifiedmodel.png}
-%	\caption{The simplified process}
-%      \end{figure}
-%    \end{column}
-%    \begin{column}{0.55\textwidth} 		
-%      \begin{itemize}
-%	\item The vessel: a combination of the reactor and separation system in the original TE Process;
-%	\item Feed 1: A, C and trace amounts of an inert B;
-%	\item Feed 2: pure A;
-%	\item Stream 3: purge rate;
-%	\item Stream 4: product rate;
-%	\item Vapor: A, B, C;\\
-%	  Liquid: D.
-%      \end{itemize}
-%    \end{column}
-%  \end{columns}
-%  4 inputs, 4 outputs and 7 internal states.
-%\end{frame}
-%
-%\begin{frame}
-%  \frametitle{The Watermark Signal Design}
-%  \begin{columns}
-%    \begin{column}{0.6\textwidth}
-%      \begin{figure}[h!]
-%	\inputtikz{errU1_te}
-%      \end{figure}
-%    \end{column}
-%    \begin{column}{0.4\textwidth}
-%      \begin{itemize}
-%	\item $U$: the optimal covariance of the watermark signal;
-%	\item $U_k$: the estimation of $U$.
-%      \end{itemize}
-%    \end{column}
-%  \end{columns}
-%  ~\\
-%  As time $k$ goes to infinity, $U_k$ converges to the optimal covariance of the watermark signal, $U$.
-%\end{frame}
-%
-%\begin{frame}{The detection performance}
-%  \begin{itemize}
-%    \item $g$: the output of the failure detector designed with know parameters
-%    \item $\hat g$: the output of the failure detector when the parameters of the system are inferred through the learning technique. 
-%  \end{itemize}
-%  \begin{figure}[h!]
-%    \centering
-%    \inputtikz{gng_te}
-%  \end{figure}
-%\end{frame}
-
-\section{Static State Estimation}
-
-\begin{frame}{Problem Formulation}
-  \begin{enumerate}
-    \item We assume the following sensor model:
-      \begin{align*}
-	\begin{bmatrix}z_1\\\vdots\\z_m\end{bmatrix} =  z = Hx + w.
-      \end{align*}
-    \item The optimal state estimator is of the form
-      \begin{align*}
-	\hat x = Kz, \text{ where }K = (H^TH)^{-1}H^T.
-      \end{align*}
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}{Least Square Estimator}
-  Suppose the following sensory model:
-  \begin{align*}
-    z = \begin{bmatrix}
-      1\\
-      1\\
-      1
-    \end{bmatrix}x + w.
-  \end{align*}
-  The optimal estimator is given by
-  \begin{align*}
-    \hat x = \frac{1}{3}\left(z_1+z_2+z_3\right).
-  \end{align*}
-  This estimator is not resilient to a single malicious sensor.
-\end{frame}
-
-\begin{frame}{Problem Formulation}
-  \begin{enumerate}
-    \item Assume that at most $c$ sensors are compromised.
-    \item The sensory model is given by
-      \begin{align*}
-	y = z + a = Hx + w +a,
-      \end{align*}
-      where $a$ is a $c$-sparse vector indicating the attacker's action.
-    \item We will call an estimator $\hat x = g(y)$ to be resilient if
-      \begin{align*}
-	\|g(y) - g(z)\|\text{ is bounded for all $c$-sparse $a$}.
-      \end{align*}
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}{Some Related Research}
-  \begin{enumerate}
-  \item The following estimator is resilient under $2c$ observable condition:
-    \begin{align*}
-      & \mathop{\textit{minimize}}\limits_{\hat x,a,w}&
-      & \|w\|^2 \\
-      &\text{subject to}&
-      &y = H \hat x + w + a,\,\|a\|_0\leq p.
-    \end{align*}
-  \item Difficult to verify $2c$ observable condition and difficult to solve
-\item The secure estimation problem for general system is proved to be NP hard\footcite{Hendrickx2014}\footcite{Mao2019}.
-  \item Can we design a secure and computationally efficient estimators for {\bf some} system?
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}{Example}
-  Suppose the following sensory model:
-  \begin{align*}
-    y = \begin{bmatrix}
-      1\\
-      1\\
-      1
-    \end{bmatrix}x + w+a,\,\|a\|_0\leq 1.
-  \end{align*}
-  \begin{itemize}
-   \item The mean is not resilient: 
-  \begin{align*}
-    g(y) = \argmin_{\hat x}  (y_1-\hat x)^2+(y_2-\hat x)^2+(y_3-\hat x)^2.
-  \end{align*}
-    \item The median is resilient to one malicious sensor.
-    \item Moreover, the median can be viewed as the solution for the following optimization problem. 
-  \begin{align*}
-    g(y) = \argmin_{\hat x}  |y_1-\hat x|+|y_2-\hat x|+|y_3-\hat x|.
-  \end{align*}
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Example}
-  \begin{figure}[ht]
-    \centering
-    \begin{tikzpicture}[yscale=0.4]
-      \draw[thick,->] (0,0)--(9,0);
-      \node [anchor=west] at (9,0) {$\hat x$};
-      \draw[thin,gray] (2,0)--(2,0.1);
-      \draw[thin,gray] (5,0)--(5,0.1);
-      \draw[thin,gray] (7,0)--(7,0.1);
-      \draw[thick](1,11)--(2,8)--(5,5)--(7,7)--(8,10);
-      \node [anchor=north] at (2,0) {\color{red}{$y_1$}};
-      \node [anchor=north] at (5,0) {\color{blue}{$y_2$}};
-      \node [anchor=north] at (7,0) {\color{brown}{$y_3$}};
-    \end{tikzpicture}
-  \end{figure}
-\end{frame}
-
-\begin{frame}{A General Convex Optimization Based Estimator}
-  We consider the following estimator
-  \begin{align*}
-    \hat x = g(y) \triangleq \argmin_{\hat x} \sum_{i=1}^m f_i(y_i-H_i \hat x),
-  \end{align*}
-  where the following properties of function $f_i:\mathbb R\mapsto \mathbb R$ are assumed:
-  \begin{enumerate}
-    \item $f_i$ is convex.
-    \item $f_i$ is symmetric, i.e., $f_i(u) = f_i(-u)$.
-    \item $f_i$ is non-negative and $f_i(0) = 0$.
-  \end{enumerate} 
-
-  Many estimators, such as least square estimator, L1 estimator and LASSO estimation can be included in this framework, by choosing a suitable $f_i$.
-
-  The estimator can be computed efficiently via convex optimization. 
-\end{frame}
-
-\begin{frame}{A General Convex Optimization Based Estimator}
-  Our proposed estimator is very general since we can choose the right $f_i$ to get the following estimator:
-  \begin{enumerate}
-  \item Least Square Estimator:
-    \begin{align*}
-      g(y) = \argmin_{\hat x} \|y-H\hat x\|_2^2= \argmin_{\hat x}  \sum_{i=1}^m (y_i-H_i\hat x)^2.
-    \end{align*}
-  \item $L_1$ Estimator:
-    \begin{align*}
-      g(y) = \argmin_{\hat x} \|y-H\hat x\|_1=\argmin_{\hat x} \sum_{i=1}^m |y_i-H_i\hat x|.
-    \end{align*}
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}{A General Convex Optimization Based Estimator}
-  \begin{enumerate}  \setcounter{enumi}{2}
-  \item LASSO:
-    \begin{align*}
-      g(y) = \argmin_{\hat x} \|w\|^2+\gamma \|a\|_1, \text{ s.t. }y=H\hat x+w+a.
-    \end{align*}
-    After some manipulations, we can rewrite the optimization problem as
-    \begin{align*}
-      g(y) = \argmin_{\hat x} \sum_{i=1}^m f(y_i-H_i\hat x)
-    \end{align*}
-    where $f$ is the Huber loss function:
-    \begin{align*}
-      f(r) = \min_{w} w^2 + \gamma |r-w| = \begin{cases}
-        r^2 & \text{if } r \leq \gamma/2\\
-        \gamma |r|-\gamma^2/4 & \text{if } r\geq \gamma/2\\
-      \end{cases}.
-    \end{align*}
+\begin{frame}{LTI System}
+  Consider the following LTI(Linear Time-Invariant) system:
+  \begin{block}{System Description}
+      \begin{displaymath}
+	x_{k+1} = Ax_k +  w_k,\; y_{k} = C x_k + v_k.
+      \end{displaymath}
+    \end{block}
     \begin{itemize}
-    \item Quadratic when the residue is small
-    \item Linear when the residue is large
-    \item The quadratic region is controlled by $\gamma$.
-    \item We will leverage it to design an estimator that is both secure and efficient.
+      \item $x_k \in \mathbb R^n$ is the state at time $k$.
+      \item  $y_k \in \mathbb R^m$ is the measurements from the sensors. 
+      \item $w_k,v_k,x_0$ are independent Gaussian random variables, and $x_0 \sim \mathcal N(\bar x,\;\Sigma)$, $w_k \sim \mathcal N(0,\;Q)$ and $v_k \sim \mathcal N(0,\;R)$. 
     \end{itemize}
-  \end{enumerate}
-\end{frame}
+  \end{frame}
 
-\begin{frame}{Huber Loss Function}
-  \begin{figure}[ht]
+  \begin{frame}{MMSE Estimator for LTI System}
+    \begin{itemize}
+      \item Suppose at time $k$, we want to estimate the current state $x_k$.
+      \item We have available the current and the past observations $y_k,y_{k-1},\dots,y_0$.
+      \item We could write down the relationship between $y_k,\dots,y_0$ and $x_k$ as follows:
+	\begin{displaymath}
+	  \begin{split}
+	    y_k& = C x_k + v_k \\
+	    y_{k-1} & = Cx_{k-1}+v_{k-1} = CA^{-1}x_k -C A^{-1}w_{k-1} + v_{k-1}\\
+	    &\vdots
+	  \end{split}
+	\end{displaymath}
+      \item Conceptually, one could use the MMSE estimator to derive $\hat x_k$.
+      \item Problem: the time and space complexity grow over time.
+    \end{itemize}
+  \end{frame}
+
+  \begin{frame}{Kalman Filter}
+    Define 
+    \begin{displaymath}
+      \begin{split}
+	\hat x_k &\triangleq \E (x_k|y_k,\dots,y_0),\,e_k\triangleq  x_k -\hat x_k, \,P_k \triangleq \Cov(e_k).\\
+	\hat x_k^- &\triangleq \E (x_k|y_{k-1},\dots,y_0),\,e_k^-\triangleq  x_k -\hat x_k^-, \,P_k^- \triangleq \Cov(e_k^-).
+      \end{split}
+    \end{displaymath}
+    Kalman filter takes the following form:
+    \begin{align*}
+      Prediction:&&\\
+      &\hat x _{k + 1}^-  = A \hat x_{k} + Bu_k  , \quad P_{k + 1}^-  = AP_{k} A'  + Q ,\\
+      Correction:&&\\
+      &\hat x_{k} = \hat x_{k}^-  + P_k^- C'(CP_k^- C'+R)^{-1} (y_k  - C \hat x _{k}^- ) , \\
+      &P_{k} = \left[(P_{k}^-)^{-1} + C' R^{-1} C \right]^{-1},
+    \end{align*}
+    with initial condition
+    \begin{displaymath}
+      \hat x_{0}^-  = \bar x_0 ,\quad P_{0}^-  = \Sigma.
+    \end{displaymath}
+  \end{frame}
+
+  \begin{frame}{Kalman Filter}
+    Define the following Lyapunov operator
+    \begin{displaymath}
+      h(X) \triangleq AXA'  + Q, 
+    \end{displaymath}
+    and Riccati operators
+    \begin{displaymath}
+      \tilde g(X) \triangleq (X^{-1} + C'R^{-1}C)^{-1},\,g \triangleq \tilde g\circ h.
+    \end{displaymath}
+    Hence,
+    \begin{displaymath}
+      P_{k+1}^- = h(P_k),\,P_{k+1} =\tilde g(P_{k+1}^-) =  g(P_k). 
+    \end{displaymath}
+  \end{frame}
+
+  \begin{frame}{Properties of Kalman Filter}
+    \begin{itemize}
+      \item For KF, we need to keep track on both the state estimate $\hat x_k$ and the ``accuracy'' of the estimate $P_k$.
+      \item $P_k$ is deterministic, which does not depends on $y_k$.
+      \item If $(A,C)$ is detectable, $\{P_k\}$ is always bounded. In other words, the estimator is stable.
+      \item If we further assume that $(A,Q^{1/2})$ is controllable, then $\{P_k\}$ converges to the unique solution of algebraic Riccati equation 
+	\begin{displaymath}
+	  X = g(X). 
+	\end{displaymath}
+    \end{itemize}
+  \end{frame}
+
+  \section{Event-Based Sensor Scheduling}
+
+  \frame{\tableofcontents[currentsection]}
+  \begin{frame}{Sensor Scheduling}
+    \begin{itemize}
+      \item Communication costs too much energy
+      \item Sensors could deliberately drop some packets ($\gamma_k = 0$) to save energy
+      \item Define the communication rate $r$ to be
+	\begin{displaymath}
+	  r = \limsup_{k\rightarrow\infty}\frac{1}{N}\sum_{i=0}^{N-1}\gamma_i 
+	\end{displaymath}
+      \item Trade-off between energy consumption and estimation quality.
+      \item When to send the information?
+    \end{itemize}
+  \end{frame}
+
+  \begin{frame}{Sensor Scheduling: Off-line Schedule}
+      The schedule is based on the statistics of the system, and hence can be determined off-line:
+    \begin{itemize}
+      \item Deterministic Schedule: send the temperature only at even time. 
+      \item Stochastic Schedule: send the temperature with 50\% probability at each time. 
+    \end{itemize}
+    The optimal filter is the same as KF with intermittent observation.
+
+    If no measurement arrives at time $k$, then the fusion center can only perform a prediction update.
+  \end{frame}
+
+  \begin{frame}{Sensor Scheduling: Event-Based Schedule}
+    \begin{itemize}
+      \item The schedule depends on both the statistics and the realization of the system. 
+      \item Fox example, if the temperature of the room is normal distributed around $72.5$, we could design the schedule to be: send the temperature if the temperature is outside $[70,75]$.
+      \item Even if no measurement arrives at time $k$, the fusion center can still perform a correction step, since it knows that the temperature is inside $[70,75]$.
+    \end{itemize}
+  \end{frame}
+
+  \begin{frame}{Optimal Filter for Event-Based Schedule}
+
+    \begin{itemize}
+      \item When $\gamma_k = 0$, $y_k$ is a truncated Gaussian.
+	\setlength\figureheight{2cm}
+	\setlength\figurewidth{3cm}
+	\begin{center}
+	  \inputtikz{gaussian}$\times$\inputtikz{det}$\Rightarrow$\inputtikz{det2}
+	\end{center}
+      \item The optimal filter is given by the forward algorithm of hidden Markov model.
+      \item Need to keep track of the pdf of $x_k$ given $y_k,\dots,y_0$.
+      \item Not linear in general, difficult to analyze the performance.
+    \end{itemize}
+  \end{frame}
+
+  \begin{frame}{A Stochastic Event-Trigger}
+	\setlength\figureheight{2cm}
+	\setlength\figurewidth{3cm}
+	\begin{center}
+	  \inputtikz{gaussian}$\times$\inputtikz{rand}$\Rightarrow$\inputtikz{rand2}
+	\end{center}
+      \begin{itemize}
+	\item At each time $k$, the sensor generates a random variable $\zeta_k\sim U[0,1]$ .
+	\item Decide whether to send or not based on the following rule:
+	  \begin{displaymath}
+	      \gamma_k= \begin{cases}
+		0&\zeta_k \leq \Phi(y_k)\\
+		1&\zeta_k > \Phi(y_k)
+	    \end{cases},
+	  \end{displaymath}
+	  where $\Phi$ is defined as
+	  \begin{displaymath}
+	    \Phi(y) = \exp\left( -\frac{1}{2}y'Yy \right). 
+	  \end{displaymath}
+      \end{itemize}
+  \end{frame}
+
+  \begin{frame}{Optimal Filter}
+    The optimal filter is similar to the KF:
+    \begin{align*}
+      Prediction:&&\\
+      &\hat x _{k + 1}^-  = A \hat x_{k} + Bu_k  , \quad P_{k + 1}^-  = h(P_k)\\
+      Correction:&&\\
+      &\hat x_{k} = \begin{cases}
+	\hat x_{k}^-  + P_k^- C'(CP_k^- C'+R)^{-1} (y_k  - C \hat x _{k}^- ) & \gamma_ k = 1\\ 
+	(I - P_k^-C'(CP_k^-C'+R+Y^{-1})^{-1}C)\hat x_{k}^-   & \gamma_ k = 0 
+      \end{cases}\\
+      &P_{k} =\begin{cases}
+	\left[\left(P_k^-\right)^{-1} + C'\alert{R}^{-1}C\right]^{-1} & \gamma_k = 1\\
+	\left[\left(P_k^-\right)^{-1} + C'\left( \alert{R+Y^{-1} }\right)^{-1}C\right]^{-1}  &\gamma_k = 0
+      \end{cases}
+    \end{align*}
+    with initial condition
+    \begin{displaymath}
+      \hat x_{0}^-  = \bar x_0 ,\quad P_{0}^-  = \Sigma.
+    \end{displaymath}
+  \end{frame}
+
+  \begin{frame}{Communication Rate}
+    \begin{theorem}
+      Let $\Pi_k = \Cov(y_k)$, then
+      \begin{displaymath}
+	P(\gamma_k = 1) = 1-1/\sqrt{\det(I+\Pi_kY)}.
+      \end{displaymath}
+      If the system is stable, then $\Pi_k\rightarrow \Pi$, which is given by
+      \begin{displaymath}
+	\Pi = CX C' + R,
+      \end{displaymath}
+      where $X = \lim_k \Cov(x_k)$ is the solution of the following Riccati equation
+      \begin{displaymath}
+	X = AXA' + Q. 
+      \end{displaymath}
+      The communication rate satisfies
+      \begin{displaymath}
+	r = 1-\frac{1}{\sqrt{\det(I+\Pi Y)}}.
+      \end{displaymath}
+    \end{theorem}
+  \end{frame}
+
+
+  \begin{frame}{Estimation Performance}
+    \begin{itemize}
+      \item When no packet arrives, it is equivalent to using a sensor with noise covariance $R + Y^{-1}$.
+      \item $P_k$ is always bounded even if no packet arrives. 
+      \item $P_k$ is oscillating between $\underline P$ and $\overline P$, which are the solution of the following Riccati equations:
+	\begin{displaymath}
+	  \begin{split}
+	    \overline P &= \left[\left(A\overline PA' + Q\right)^{-1} + C'\left( \alert{R+Y^{-1} }\right)^{-1}C\right]^{-1}\\
+	    \underline P &= \left[\left(A\underline PA' + Q\right)^{-1} + C'\alert{R}^{-1}C\right]^{-1}.
+	  \end{split}
+	\end{displaymath}
+      \item Using the concavity and monotonicity of Riccati equation, a lower bound of $\E P_k$ can be derived as the solution of the following Riccati equation:
+	\begin{displaymath}
+	    P= \left[\left(A PA' + Q\right)^{-1} + C' \alert{R_1}^{-1}C\right]^{-1},
+	\end{displaymath}
+	where
+	\begin{displaymath}
+	  R_1 = \left( rR^{-1} + (1-r)(R+Y^{-1})^{-1} \right)^{-1}.
+	\end{displaymath}<++>
+    \end{itemize}
+  \end{frame}
+
+  \begin{frame}{Event-Trigger Parameter Optimization}
+    We consider the following optimization problem:
+    \begin{align*}
+      &\mathop{\textrm{minimize}}\limits_{Y}&
+      & r\nonumber\\
+      &\textrm{subject to}&
+      & \overline P\leq \Delta.
+    \end{align*}
+    Using matrix inversion lemma, the constraint can be rewritten in SDP form as:
+    \begin{align*}
+      \left[ {\begin{array}{*{5}c}
+	Q^{-1}-M_1  &  Q^{-1}A\\
+	A^{\prime}Q^{-1} & A^{\prime}Q^{-1}A + S
+      \end{array}} \right] &\ge 0 \nonumber
+      \\
+      \left[ {\begin{array}{*{5}c}
+	R^{-1}-M_2  &  R^{-1}\\
+	R^{-1} & R^{-1}+Y
+      \end{array}} \right] &\ge 0 \nonumber
+      \\ M_1 - S + C^{\prime}M_2C &\ge 0 \nonumber \\
+      Y \ge 0, ~ S &\ge \Delta^{-1}
+    \end{align*}
+  \end{frame}
+
+  \begin{frame}{Event-Trigger Parameter Optimization}
+    The communication rate $r$ can be bounded by
+    \begin{displaymath}
+      1-\frac{1}{\sqrt{1+\tr(\Pi Y)}} \leq  r \leq 1-\exp\left(-\frac{1}{2}\tr(\Pi Y)\right).
+    \end{displaymath}
+    The optimization problem can be relaxed to
+    \begin{align*}
+      &\mathop{\textrm{minimize}}\limits_{Y}&
+      & \tr(\Pi Y)\nonumber\\
+      &\textrm{subject to}&
+      & \overline P\leq \Delta.
+    \end{align*}
+    If the optimal $Y$ of the relaxed problem is rank $1$, then it is also optimal for the original problem.
+  \end{frame}
+
+  \begin{frame}{Numerical Examples}
+    We consider the following system
+    \begin{displaymath}
+     A = 0.8,\,C = 1,\, Q = R = 1. 
+    \end{displaymath}
+	\setlength\figureheight{5cm}
+	\setlength\figurewidth{8cm}
     \begin{center}
-      \definecolor{color0}{rgb}{0.886274509803922,0.290196078431373,0.2}
-      \definecolor{color1}{rgb}{0.203921568627451,0.541176470588235,0.741176470588235}
-      \setlength{\figureheight}{6cm}
-      \setlength{\figurewidth}{10cm}
-      % 
-      \begin{tikzpicture}
-	\begin{axis}[
-	  width=\figurewidth,
-	  height=\figureheight,
-	  axis background/.style={fill=white!89.8039215686275!black},
-	  axis line style={white},
-	  tick align=outside,
-	  tick pos=left,
-	  x grid style={white},
-	  xlabel={residue $r$},
-	  ylabel={$f(r)$},
-	  xmajorgrids,
-	  xmin=-2.2, xmax=2.2,
-	  xtick style={color=white!33.3333333333333!black},
-	  y grid style={white},
-	  ymajorgrids,
-	  ymin=-0.15, ymax=3.15,
-	  ytick style={color=white!33.3333333333333!black}
-	  ]
-	  \addplot [ultra thick, color0]
-	    table[row sep=crcr]{%
-	      -1 1\\
-	      -0.98 0.9604\\
-	      -0.96 0.9216\\
-	      -0.94 0.8836\\
-	      -0.92 0.8464\\
-	      -0.9 0.81\\
-	      -0.88 0.7744\\
-	      -0.86 0.7396\\
-	      -0.84 0.7056\\
-	      -0.82 0.6724\\
-	      -0.8 0.64\\
-	      -0.78 0.6084\\
-	      -0.76 0.5776\\
-	      -0.74 0.5476\\
-	      -0.72 0.5184\\
-	      -0.7 0.49\\
-	      -0.68 0.4624\\
-	      -0.66 0.4356\\
-	      -0.64 0.4096\\
-	      -0.62 0.3844\\
-	      -0.6 0.36\\
-	      -0.58 0.3364\\
-	      -0.56 0.3136\\
-	      -0.54 0.2916\\
-	      -0.52 0.2704\\
-	      -0.5 0.25\\
-	      -0.48 0.2304\\
-	      -0.46 0.2116\\
-	      -0.44 0.1936\\
-	      -0.419999999999999 0.1764\\
-	      -0.399999999999999 0.16\\
-	      -0.379999999999999 0.1444\\
-	      -0.359999999999999 0.1296\\
-	      -0.339999999999999 0.1156\\
-	      -0.319999999999999 0.1024\\
-	      -0.299999999999999 0.0899999999999996\\
-	      -0.279999999999999 0.0783999999999996\\
-	      -0.259999999999999 0.0675999999999997\\
-	      -0.239999999999999 0.0575999999999997\\
-	      -0.219999999999999 0.0483999999999997\\
-	      -0.199999999999999 0.0399999999999997\\
-	      -0.179999999999999 0.0323999999999997\\
-	      -0.159999999999999 0.0255999999999998\\
-	      -0.139999999999999 0.0195999999999998\\
-	      -0.119999999999999 0.0143999999999998\\
-	      -0.0999999999999992 0.00999999999999984\\
-	      -0.0799999999999992 0.00639999999999987\\
-	      -0.0599999999999992 0.0035999999999999\\
-	      -0.0399999999999991 0.00159999999999993\\
-	      -0.0199999999999991 0.000399999999999965\\
-	      8.88178419700125e-16 7.88860905221012e-31\\
-	      0.0200000000000009 0.000400000000000036\\
-	      0.0400000000000009 0.00160000000000007\\
-	      0.0600000000000009 0.00360000000000011\\
-	      0.080000000000001 0.00640000000000015\\
-	      0.100000000000001 0.0100000000000002\\
-	      0.120000000000001 0.0144000000000002\\
-	      0.140000000000001 0.0196000000000003\\
-	      0.160000000000001 0.0256000000000003\\
-	      0.180000000000001 0.0324000000000004\\
-	      0.200000000000001 0.0400000000000004\\
-	      0.220000000000001 0.0484000000000005\\
-	      0.240000000000001 0.0576000000000005\\
-	      0.260000000000001 0.0676000000000006\\
-	      0.280000000000001 0.0784000000000006\\
-	      0.300000000000001 0.0900000000000007\\
-	      0.320000000000001 0.102400000000001\\
-	      0.340000000000001 0.115600000000001\\
-	      0.360000000000001 0.129600000000001\\
-	      0.380000000000001 0.144400000000001\\
-	      0.400000000000001 0.160000000000001\\
-	      0.420000000000001 0.176400000000001\\
-	      0.440000000000001 0.193600000000001\\
-	      0.460000000000001 0.211600000000001\\
-	      0.480000000000001 0.230400000000001\\
-	      0.500000000000001 0.250000000000001\\
-	      0.520000000000001 0.270400000000001\\
-	      0.540000000000001 0.291600000000001\\
-	      0.560000000000001 0.313600000000002\\
-	      0.580000000000001 0.336400000000002\\
-	      0.600000000000001 0.360000000000002\\
-	      0.620000000000001 0.384400000000002\\
-	      0.640000000000001 0.409600000000002\\
-	      0.660000000000001 0.435600000000002\\
-	      0.680000000000001 0.462400000000002\\
-	      0.700000000000002 0.490000000000002\\
-	      0.720000000000002 0.518400000000002\\
-	      0.740000000000002 0.547600000000002\\
-	      0.760000000000002 0.577600000000002\\
-	      0.780000000000002 0.608400000000002\\
-	      0.800000000000002 0.640000000000003\\
-	      0.820000000000002 0.672400000000003\\
-	      0.840000000000002 0.705600000000003\\
-	      0.860000000000002 0.739600000000003\\
-	      0.880000000000002 0.774400000000003\\
-	      0.900000000000002 0.810000000000003\\
-	      0.920000000000002 0.846400000000003\\
-	      0.940000000000002 0.883600000000003\\
-	      0.960000000000002 0.921600000000003\\
-	      0.980000000000002 0.960400000000003\\
-	      1 1\\
-	    };
-	    \addplot [ultra thick, color1]
-	    table[row sep=crcr] {%
-	      1 1\\
-	      1.5 2\\
-	      2 3\\
-	    };
-	    \addplot [ultra thick, color1]
-	    table[row sep=crcr] {%
-	      -1 1\\
-	      -1.5 2\\
-	      -2 3\\
-	    };
-	  \end{axis}
-	\end{tikzpicture}%
+      \inputtikz{eventbased}
+    \end{center}
+  \end{frame}
+
+
+
+  \section{Kalman Filtering with Intermittent Observations}
+  \frame{\tableofcontents[currentsection]}
+
+  \begin{frame}{Classical Kalman Filter in Unreliable Network}
+    Kalman filter assumes that all the observations $y_0,y_1,\ldots,y_k$ are available at time $k$.
+
+    However in an unreliable network, observation packets can be lost, corrupted or significantly delayed.
+    \begin{figure}[<h>]
+      \begin{center}
+	\includegraphics{slides.2}
       \end{center}
     \end{figure}
+    What is the form of optimal Filter? 
+  \end{frame}
 
-
-\end{frame}
-
-
-\begin{frame}{Example}
-  Going back to the previous example:
-  \begin{align*}
-    y = \begin{bmatrix}
-      1\\
-      1\\
-      1
-    \end{bmatrix}x + w+a,\,\|a\|_0\leq 1.
-  \end{align*}
-  The median is the solution of:
-  \begin{align*}
-    g(y) = \argmin_{\hat x}  |y_1-\hat x|+|y_2-\hat x|+|y_3-\hat x|.
-  \end{align*}
-
-  \begin{figure}[ht]
-    \centering
-    \begin{tikzpicture}[yscale=0.4]
-      \draw[thick,->] (0,2)--(9,2);
-      \node [anchor=west] at (9,2) {$\hat x$};
-      \draw[thin,gray] (2,0)--(2,0.1);
-      \draw[thin,gray] (5,0)--(5,0.1);
-      \draw[thin,gray] (7,0)--(7,0.1);
-      \draw[thick](1,11)--(2,8)--(5,5)--(7,7)--(8,10);
-      \node [anchor=north] at (2,2) {\color{red}{$y_1$}};
-      \node [anchor=north] at (5,2) {\color{blue}{$y_2$}};
-      \node [anchor=north] at (7,2) {\color{brown}{$y_3$}};
-    \end{tikzpicture}
-  \end{figure}
-\end{frame}
-
-\begin{frame}{Interpretation}
-  \begin{figure}[ht]
-    \centering
-    \begin{tikzpicture}[yscale=0.4]
-      \draw[thick,->] (0,0)--(9,0);
-      \node [anchor=west] at (9,0) {$\hat x$};
-      \draw[thin,gray] (2,0)--(2,0.1);
-      \draw[thin,gray] (5,0)--(5,0.1);
-      \draw[thin,gray] (7,0)--(7,0.1);
-      \draw[thick,white](1,11)--(2,8)--(5,5)--(7,7)--(8,10);
-      \node [anchor=north] at (2,0) {\color{red}{$y_1$}};
-      \draw[semithick,red](1,1)--(2,0)--(8,6);
-      \node [anchor=north] at (5,0) {\color{blue}{$y_2$}};
-      \draw[semithick,blue](1,4)--(5,0)--(8,3);
-      \node [anchor=north] at (7,0) {\color{brown}{$y_3$}};
-      \draw[semithick,brown](1,6)--(7,0)--(8,1);
-    \end{tikzpicture}
-  \end{figure}
-  If we interpret the function $|y_i-\hat x|$ as a potential function generate by sensor $i$, then we can see that sensor $i$ is dragging $\hat x$ towards $y_i$ with $1$ unit of force. The equilibrium point will be at the middle $y_i$.
-\end{frame}
-
-\begin{frame}{Another Example}
-  Suppose the following sensory model:
-  \begin{align*}
-    y = \begin{bmatrix}
-      1\\
-      1\\
-      3
-    \end{bmatrix}x + w+a ,\,\|a\|_0\leq 1.
-  \end{align*}
-  Then the following estimator is not resilient:
-  \begin{align*}
-    g(y) = \argmin_{\hat x}  |y_1-\hat x|+|y_2-\hat x|+|y_3-3\hat x|.
-  \end{align*}
-  In fact, we can rewrite it as
-  \begin{align*}
-    g(y) = \argmin_{\hat x}  |y_1-\hat x|+|y_2-\hat x|+3\left|\frac{y_3}{3}-\hat x\right| = \frac{y_3}{3}
-  \end{align*}
-  Sensor $3$ generates $3$ unit of force comparing to $1$ unit of force from sensor $1$ and $2$.
-\end{frame}
-
-\begin{frame}{Sufficient Condition For Resiliency}
-  \begin{theorem}
-    If the following conditions hold, then the estimation is resilient:
-    \begin{enumerate}
-      \item For all $i$, the following limit is well-defined:
-	\begin{align*}
-	  \lim_{t\rightarrow\infty}\frac{f_i(tH_iu)}{t} = C_i(u) < \infty.
-	\end{align*}
-      \item For any $u\neq 0$ and any index set $\mathcal I$ of cardinality $c$, the following inequality hold:
-	\begin{align*}
-	  \sum_{i\in \mathcal I} C_i(u) < \sum_{i\in \mathcal I^c} C_i(u). 
-	\end{align*}
-    \end{enumerate}
-  \end{theorem}
-  Roughly speaking $C_i(u)$ characterize how powerful a single sensor $i$ is along direction $u$. The condition can be interpreted as the no $c$ sensors combined can be more powerful than the remaining $m-c$ sensors.
-\end{frame}
-
-\begin{frame}{Necessary Condition For Resiliency}
-  \begin{theorem}
-    If the one of the following conditions is violated, then the estimation is not resilient:
-    \begin{enumerate}
-      \item There exists an $i$ and $u$, such that
-	\begin{align*}
- \lim_{t\rightarrow\infty}\frac{f_i(tH_iu)}{t} = \infty.
-	\end{align*}
-      \item There exists a $u\neq 0$ and an index set $\mathcal I$ of cardinality $c$, such that
-	\begin{align*}
-	  \sum_{i\in \mathcal I} C_i(u) > \sum_{i\in \mathcal I^c} C_i(u). 
-	\end{align*}
-    \end{enumerate}
-  \end{theorem}
-  Notice that we only have a trivial gap for the case:
-\begin{align*}
-  \sum_{i\in \mathcal I} C_i(u) = \sum_{i\in \mathcal I^c} C_i(u).
-\end{align*}	  
-\end{frame}
-
-\begin{frame}{In Summary\footcite{Han2019}}
-  \begin{itemize}
-    \item We design a convex optimization based estimator
-  \begin{align*}
-    \hat x = g(y) \triangleq \argmin_{\hat x} \sum_{i=1}^m f_i(y_i-H_i \hat x).
-  \end{align*}
-    \item Difficult to verify the resiliency condition
-      \begin{align*}
-	\sum_{i\in \mathcal I} C_i(u) < \sum_{i\in \mathcal I^c} C_i(u). 
-      \end{align*}
-    \item Easy to compute via convex optimization
-    \item If $f_i$ is the Huber loss function, then we could recover the least square estimate if:
-      \begin{itemize}
-	\item there is no attack
-	\item the noise is "small"
-      \end{itemize}
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Simulation IEEE 14-bus System}
-  \begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.60\textwidth]{ieee14.jpg}
-  \end{figure}
-  We assume $c=1$ and the flow sensor on the red line is being attacked.
-\end{frame}
-
-\begin{frame}{Simulation IEEE 14-bus System}
-  \begin{figure}[ht]
-    \begin{center}
-
-      \setlength{\figureheight}{6cm}
-      \setlength{\figurewidth}{10cm}
-      \definecolor{mycolor1}{rgb}{1.00000,0.00000,1.00000}%
-      % 
-      \begin{tikzpicture}
-
-	\begin{axis}[%
-	  width=\figurewidth,
-	  height=\figureheight,
-	  at={(1.527in,1.083in)},
-	  scale only axis,
-	  xmin=0.95,
-	  xmax=2.4,
-	  xlabel={Normalized MSE of the estimators without attack},
-	  xmajorgrids,
-	  ymin=0.95,
-	  ymax=2.5,
-	  ylabel={Normalized MSE when under attack},
-	  ymajorgrids,
-	  axis background/.style={fill=white},
-	  legend style={at={(0.597,0.528)},anchor=south west,legend cell align=left,align=left,draw=white!15!black}
-	  ]
-	  \addplot [color=blue,dashed,line width=1.5pt,mark=triangle,mark options={solid},forget plot]
-	    table[row sep=crcr]{%
-	      2.16434829886514	2.41673714136766\\
-	      1.49824142620916	1.6273922047888\\
-	      1.46836558726546	1.61304395019434\\
-	      1.42878218405531	1.58080265845186\\
-	      1.33509034059386	1.48317348510781\\
-	      1.24979953097586	1.4011442907391\\
-	      1.20190884155895	1.36475282176979\\
-	      1.14816845697376	1.32743887772808\\
-	      1.104692902235	1.30458587111275\\
-	      1.0727554366346	1.2930587844785\\
-	      1.04837293442887	1.29286647088633\\
-	      1.03276380632143	1.30464750437787\\
-	      1.02491383863213	1.32636243694814\\
-	      1.0209295289153	1.35606289076979\\
-	      1.01470702949196	1.40680155569416\\
-	      1.00686189169388	1.48274325705327\\
-	      1.00166658882151	1.69020329692052\\
-	      1.00012894457222	2.29806950301701\\
-	    };
-
-	  \addplot [color=mycolor1,dashed,forget plot]
-	    table[row sep=crcr]{%
-	      1	1\\
-	      2.2	1\\
-	    };
-	  \addplot [color=mycolor1,dashed,forget plot]
-	    table[row sep=crcr]{%
-	      1	1\\
-	      1	2.5\\
-	    };
-	  \node[right, align=left, text=blue]
-	  at (axis cs:2.164,2.417) {$\text{   }\leftarrow\text{ }\gamma\rightarrow 0$};
-	  \node[right, align=left, text=blue]
-	  at (axis cs:1.335,1.483) {$\text{   }\leftarrow\text{ }\gamma\text{=0.5}$};
-	  \node[right, align=left, text=blue]
-	  at (axis cs:1.202,1.365) {$\text{   }\leftarrow\text{ }\gamma\text{=1}$};
-	  \node[right, align=left, text=blue]
-	  at (axis cs:1.073,1.293) {$\text{   }\leftarrow\text{ }\gamma\text{=1.9}$};
-	  \node[right, align=left, text=blue]
-	  at (axis cs:1.02,1.356) {$\leftarrow\gamma\text{=3}$};
-	  \node[right, align=left, text=blue]
-	  at (axis cs:1,2.298) {$\text{   }\leftarrow\text{ }\gamma\text{=7}$};
-	  \node[right, align=left, text=mycolor1]
-	  at (axis cs:1,2.4) {$\text{   }\leftarrow\text{ LSE}$};
-	  \node[right, align=left, text=mycolor1]
-	  at (axis cs:1.9,1.14) {Oracle LSE};
-	  \node[right, align=left, text=mycolor1]
-	  at (axis cs:1.9,1.07) {$\text{     ~~~~~}\downarrow$};
-	\end{axis}
-      \end{tikzpicture}%
-    \end{center}
-  \end{figure}
-\end{frame}
-
-\section{Dynamic State Estimation}
-\begin{frame}{Dynamic State Estimation}
-  \begin{enumerate}
-    \item Consider the following dynamic system
-      \begin{align}
-	x(k+1) = A x(k) + w(k),\, y(k) = C x(k) + v(k) + a(k).
-      \end{align}
-    \item A linear fixed-gain estimator:
-      \begin{align}
-	\hat x(k+1) = A \hat x(k) + K(y(k+1)-CA\hat x(k)),
-      \end{align}
-      where $K$ is the estimation gain, and $A-KCA$ is stable.
-      \begin{center}
-	\begin{tikzpicture}[x=2cm, y=0.75cm]
-	  \node at (-0.7,0) {State Est:};
-	  \node [blue!70] at (-0.7,1) {Sensor 2:};
-	  \node [red!70] at (-0.7,-1) {Sensor 1:};
-
-	  \node            (x0)  at (0,0) {$\hat x(0)$};
-	  \node [blue!70] (y20)  at (0,1)    {$y_2(0)$};
-	  \node [red!70]  (y10)  at (0,-1)   {$y_1(0)$};
-	  \draw [->,semithick,blue!70] (y20) to (x0);
-	  \draw [->,semithick,red!70]  (y10) to (x0);
-
-	  \node            (x1)  at (1,0) {$\hat x(1)$};
-	  \node [blue!70] (y21)  at (1,1)    {$y_2(1)$};
-	  \node [red!70]  (y11)  at (1,-1)   {$y_1(1)$};
-	  \draw [->,semithick,blue!70] (y21) to (x1);
-	  \draw [->,semithick,red!70]  (y11) to (x1);
-
-	  \node            (x2)  at (2,0) {$\hat x(2)$};
-	  \node [blue!70] (y22)  at (2,1)    {$y_2(2)$};
-	  \node [red!70]  (y12)  at (2,-1)   {$y_1(2)$};
-	  \draw [->,semithick,blue!70] (y22) to (x2);
-	  \draw [->,semithick,red!70]  (y12) to (x2);
-
-	  \draw [->,semithick] (x0) to (x1);
-	  \draw [->,semithick] (x1) to (x2);
-	\end{tikzpicture}
-      \end{center}
-    \item Captures most of the estimators: steady-state Kalman filter, $H_2$/$H_\infty$ estimator
-    \item The error introduced by the attack may accumulate over time.
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}{Fundamental Limit}
-  If the system becomes undetectable after removing $2c$ sensors, then there exists an attack on $c$ sensors, such that NO estimator can have bounded estimation error \footcite{Nakahira2018}.
-\end{frame}
-
-\begin{frame}{Dynamic State Estimate: A Moving Horizon Approach}
-In order to convert the dynamic estimation problem into a static one, we can use a moving horizon approach\footcite{Fawzi2014}\footcite{Shoukry2017}:
-  \begin{center}
-    \begin{tikzpicture}[x=2cm, y=0.75cm]
-      \node at (-0.7,0) {State Est:};
-      \node [blue!70] at (-0.7,1) {Sensor 2:};
-      \node [red!70] at (-0.7,-1) {Sensor 1:};
-
-      \node            (x0)  at (0,0) {$\hat x(0)$};
-      \node [blue!70] (y20)  at (0,1)    {$y_2(0)$};
-      \node [red!70]  (y10)  at (0,-1)   {$y_1(0)$};
-      \draw [->,semithick,blue!70] (y20) to (x0);
-      \draw [->,semithick,red!70]  (y10) to (x0);
-
-      \node            (x1)  at (1,0) {$\hat x(1)$};
-      \node [blue!70] (y21)  at (1,1)    {$y_2(1)$};
-      \node [red!70]  (y11)  at (1,-1)   {$y_1(1)$};
-      \draw [->,semithick,blue!70] (y21) to (x1);
-      \draw [->,semithick,red!70]  (y11) to (x1);
-      \draw [->,semithick,blue!70] (y20) to (x1);
-      \draw [->,semithick,red!70]  (y10) to (x1);
-
-      \node            (x2)  at (2,0) {$\hat x(2)$};
-      \node [blue!70] (y22)  at (2,1)    {$y_2(2)$};
-      \node [red!70]  (y12)  at (2,-1)   {$y_1(2)$};
-      \draw [->,semithick,blue!70] (y22) to (x2);
-      \draw [->,semithick,red!70]  (y12) to (x2);
-      \draw [->,semithick,blue!70] (y21) to (x2);
-      \draw [->,semithick,red!70]  (y11) to (x2);
-    \end{tikzpicture}
-  \end{center}
-
-  However, the historical data are discarded and the estimation performance may be poor when the system is operating normally.
-\end{frame}
-
-\begin{frame}{Dynamic State Estimate: A Local Estimator Approach}
-  We propose to store historical data in the local estimations:
-  \begin{center}
-    \begin{tikzpicture}[x=2cm, y=0.75cm]
-      \node at (-0.7,0) {State Est:};
-      \node [blue!70] at (-0.7,2) {Sensor 2:};
-      \node [blue!70] at (-0.7,1) {Local Est 2:};
-      \node [red!70] at (-0.7,-2) {Sensor 1:};
-      \node [red!70] at (-0.7,-1) {Local Est 1:};
-
-      \node            (x0)  at (0,0)    {$\hat x(0)$};
-      \node [blue!70] (y20)  at (0,2)       {$y_2(0)$};
-      \node [blue!70] (x20)  at (0,1)  {$\hat \xi_2(0)$};
-      \node [red!70]  (y10)  at (0,-2)      {$y_1(0)$};
-      \node [red!70]  (x10)  at (0,-1) {$\hat \xi_1(0)$};
-      \draw [->,semithick,blue!70] (y20) to (x20);
-      \draw [->,semithick,red!70]  (y10) to (x10);
-      \draw [->,semithick,blue!70] (x20) to  (x0);
-      \draw [->,semithick,red!70]  (x10) to  (x0);
-
-      \node            (x1)  at (1,0)    {$\hat x(1)$};
-      \node [blue!70] (y21)  at (1,2)       {$y_2(1)$};
-      \node [blue!70] (x21)  at (1,1)  {$\hat \xi_2(1)$};
-      \node [red!70]  (y11)  at (1,-2)      {$y_1(1)$};
-      \node [red!70]  (x11)  at (1,-1) {$\hat \xi_1(1)$};
-      \draw [->,semithick,blue!70] (y21) to (x21);
-      \draw [->,semithick,red!70]  (y11) to (x11);
-      \draw [->,semithick,blue!70] (x21) to  (x1);
-      \draw [->,semithick,red!70]  (x11) to  (x1);
-
-      \node            (x2)  at (2,0)    {$\hat x(2)$};
-      \node [blue!70] (y22)  at (2,2)       {$y_2(2)$};
-      \node [blue!70] (x22)  at (2,1)  {$\hat \xi_2(2)$};
-      \node [red!70]  (y12)  at (2,-2)      {$y_1(2)$};
-      \node [red!70]  (x12)  at (2,-1) {$\hat \xi_1(2)$};
-      \draw [->,semithick,blue!70] (y22) to (x22);
-      \draw [->,semithick,red!70]  (y12) to (x12);
-      \draw [->,semithick,blue!70] (x22) to  (x2);
-      \draw [->,semithick,red!70]  (x12) to  (x2);
-
-      \draw [->,semithick,blue!70] (x20) to (x21);
-      \draw [->,semithick,blue!70] (x21) to (x22);
-      \draw [->,semithick,red!70] (x10) to (x11);
-      \draw [->,semithick,red!70] (x11) to (x12);
-    \end{tikzpicture}
-  \end{center}
-  \begin{enumerate}
-    \item Construct local estimators for each sensor (which uses only the local measurements)
-    \item Reconstruct the global estimator 
-  \end{enumerate}
-\end{frame}
-
-%\begin{frame}{Local Estimator Design}
-%  \begin{enumerate}
-%    \item  Choose $L_i$ such that $A-L_iCA$ shares the same eigenvalues as $A-KCA$ (requires observability)
-%      \begin{align*}
-%	\hat x_i(k) = A \hat x_i(k) + L_i (y_i(k)-CA\hat x_i(k)).
-%      \end{align*}  
-%    \item The global estimate can be recovered as
-%      \begin{align*}
-%	\hat x(k) = F_1\hat x_1(k)+\dots+F_m\hat x_m(k).
-%      \end{align*}
-%    \item More importantly, it can be written as the solution of a quadratic programming problem:
-%      \begin{align*}
-%      &\mathop{\textrm{minimize}}\limits_{\hat x(k),\hat e(k)}&
-%      & \frac{1}{2}\hat e(k)^T \tilde W^{-1} \hat e(k)\\
-%      &\textrm{subject to} &
-%      &\hat x_i(k)  =  \hat x(k) + \hat e_i(k),&
-%      \end{align*}
-%  \end{enumerate}
-%\end{frame}
-
-\begin{frame}{Local Estimator Design}
-  We make the following assumptions:
-  \begin{enumerate}
-    \item The system $(A,C)$ is observable. However the whole state space may not be observable for individual sensors.  
-    \item The eigenvalues of $A-KCA$ are distinct.   
-    \item $A-KCA$ do not share eigenvalues with $A$.
-  \end{enumerate}
-  As a result, we could design the estimator as:
-  \begin{align*}
-    \hat \xi_i(k) = \Lambda \hat \xi_i(k) + \mathbf 1 y_i(k+1), 
-  \end{align*}  
-  where
-  \begin{enumerate}
-    \item $\Lambda = diag (\lambda_1, \ldots, \lambda_n)$ is a diagonal matrix, such that $A-KCA = V\Lambda V^{-1}.$
-      \item $\mathbf 1$ is an all-one vector of dimension $n$.
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}{Properties of the Local Estimator in the Absence of Attack}
-  \begin{enumerate}
-    \item $\hat \xi_i$ is a stable estimate of $G_ix$, where
-      \begin{align*}
-	G_{i} \triangleq
-	\begin{bmatrix}
-	  C_{i} A\left(A-\lambda_{1} I\right)^{-1} \\
-	  \vdots \\
-	  C_{i} A\left(A-\lambda_{n} I\right)^{-1}
-	\end{bmatrix}.
-      \end{align*}
-    \item The null space of $G_i$ matrix is exactly the unobservable state space for sensor $i$.
-    \item  The estimation error $\epsilon_i(k)\triangleq G_i x(k)-\xi_i(k)$ follows:
-      \begin{align*}
-	\epsilon_{i}(k+1)= \Lambda \epsilon_{i}(k)+\left(G_{i}-\mathbf{1} C_{i}\right) w(k) -\mathbf{1} v_{i}(k+1).
-      \end{align*}
-    \item The Kalman estimate can be recovered as the solution of a least square problem:
-      \begin{align*}
-      &\mathop{\textrm{minimize}}\limits_{\hat x(k),\hat \epsilon(k)}&
-      & \frac{1}{2}\hat \epsilon(k)^T \tilde W^{-1} \hat \epsilon(k)\\
-      &\textrm{subject to} &
-      &\hat \xi_i(k)  =  G_i\hat x(k) + \hat \epsilon_i(k),&
-      \end{align*}
-      where the matrix $\tilde W$ is the asymptotic covariance of $[\epsilon_1^T,\ldots ,\epsilon_n^T]$.
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}{Securing the Global Estimate with LASSO}
-  \begin{itemize}
-    \item  In the presence of attack, the estimation error follows:
-      \begin{align*}
-	\epsilon_{i}(k+1)= \Lambda \epsilon_{i}(k)+\left(G_{i}-\mathbf{1} C_{i}\right) w(k) -\mathbf{1} v_{i}(k+1) - \mathbf{1} a_{i}(k+1) .
-      \end{align*}
-    \item We can secure the global estimator using LASSO:
-      \begin{align*}
-    &\mathop{\textrm{minimize}}\limits_{\hat x(k),\hat \epsilon(k), \hat \nu(k)}&
-    & \frac{1}{2}\hat \epsilon(k)^T \tilde W^{-1} \hat \epsilon(k) + \gamma \sum_{i=1}^m \|\hat \nu_i(k)\|_1\\
-    &\textrm{subject to} &
-    &\hat \xi_i(k)  =  G_i\hat x(k) + \hat \epsilon_i(k)+\hat \nu_i(k).&
-      \end{align*}
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Efficiency and Security\footcite{Liu2017}}
-  \begin{block}{Efficiency}
+  \begin{frame}{Channel Models}  
     \begin{itemize}
-      \item In the absence of attack, we recover the Kalman estimate if the noise is "small".
-      \item Given a probability $p<1$, we can tune $\gamma$ such that we recover KF with probability $p$.
+      \item Erasure channel: The estimator does not use corrupted or significantly delayed packets (treated as lost). 
+      \item Single sensor: All the measurements made at time $k$ are contained in a single packet and hence it is either received in full or lost completely.
+	\[
+	\widetilde y_k = \gamma_k y_k,\;\gamma_k=0,1
+	\]
+      \item Memoryless channel: $\gamma_i$s are i.i.d. distributed and $P(\gamma = 1) = p$.
     \end{itemize}
-  \end{block}
-  \begin{block}{Security}
-    In the presence of attack, the estimator is stable if for any $u\neq 0$ and any index set $\mathcal I$ of cardinality $c$, the following inequality hold:
+  \end{frame}
+
+  \begin{frame}{Kalman Filter with Intermittent Observation}
+    (Sinopoli, 04) This problem can still be solved recursively in a similar way as classical Kalman filter. 
     \begin{align*}
-      \sum_{i\in \mathcal I} \|G_iu\|_1 < \sum_{i\in \mathcal I^c} \|G_iu\|_1. 
+      Prediction:&&\\
+      &\hat x _{k + 1}^-  = A \hat x_{k} + Bu_k  , \quad P_{k + 1}^-  = h(P_k)\\
+      Correction:&&\\
+      &\hat x_{k} = \begin{cases}
+	\hat x_{k}^-  + P_k^- C'(CP_k^- C'+R)^{-1} (y_k  - C \hat x _{k}^- ) & \gamma_ k = 1\\ 
+	\hat x_{k}^-   & \gamma_ k = 0 
+      \end{cases}\\
+      &P_{k} =\begin{cases}
+	\tilde g(P_k^-) & \gamma_k = 1\\
+	P_k^-&\gamma_k = 0
+      \end{cases}
     \end{align*}
-  \end{block}
-\end{frame}
+    with initial condition
+    \begin{displaymath}
+      \hat x_{0}^-  = \bar x_0 ,\quad P_{0}^-  = \Sigma.
+    \end{displaymath}
+    What about performance?
 
-\begin{frame}{The Last Piece of the Puzzle\footcite{Mao2019}}
-  \begin{itemize}
-    \item Consider a $2$-dimensional system with $A = diag(1,2)$ 
-    \item The observable space for a sensor can only be $\{x_1\},\,\{x_2\}$ or $\{x_1,\,x_2\}$
-    \item It is not possible for the observable space to be $\{ax_1+bx_2\}$ with non-zero $a,b$!
-    \item As such, we could always transform $G_i$ into
-      \begin{align*}
-	G_i = \begin{bmatrix}
-	  1&0\\
-	  0&0
-	  \end{bmatrix} ,\,\begin{bmatrix}
-	  0&1\\
-	  0&0
-	  \end{bmatrix} ,\,or\,\begin{bmatrix}
-	  1&0\\
-	  0&1
-	\end{bmatrix} .
-      \end{align*}
-  \end{itemize}
-\end{frame}
+  \end{frame}
 
-\begin{frame}{In Summary}
-  Given a probability $p<1$, if all unstable eigenvalues of the system matrix $A$ has geometric multiplicity of $1$, then we can design an estimator, such that
-  \begin{enumerate}
-    \item Close to optimal {\bf efficiency}: In the absence of attack, the estimator coincides with the optimal Kalman estimator with probability $p$.
-    \item Optimal {\bf security}: The estimator is resilient against $c$ malicious sensors, assuming that every unstable state can be observed by at least $2c+1$ sensors.
-  \end{enumerate}
-  It is easy to certify the security of the estimator and compute the state estimate in real time. 
-\end{frame}
+  \begin{frame}{Kalman Filter with Intermittent Observation: Performance}
+    $P_k$ satisfies the following equation:
+    \begin{equation}
+      P_{k+1}= \gamma_k g(P_k) + (1-\gamma_k) h(P_k).
+      \label{eq:basicricattieqn}
+    \end{equation}
+    $P_k$ is now stochastic. 
+    \begin{itemize}
+      \item (Censi, 11; Kar, 12) Under mild assumptions, $P_k$ converges to a limit distribution.
+      \item However, very strong assumptions are needed to compute the exact distribution 
+	\begin{itemize}
+	  \item (Censi, 09) Non-overlapping condition: $h(X_1)\geq g(X_2)$, for all $X_1,X_2$.
+	  \item (Vakili, 09) $C$ is time-varying and random.
+	\end{itemize}
+      \item What about $\E P_k$?
+    \end{itemize}
+  \end{frame}
 
-\begin{frame}{Secure Control of Autonomous Vehicle}
-  \begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.8\textwidth]{singpilot.jpg}
-  \end{figure}
+  \begin{frame}{Existence of Critical Value}
+    \begin{displaymath}
+      \begin{split}
+	\E P_k &= \E\left[\gamma_k g(P_k) + (1-\gamma_k) h(P_k)\right]= p\alert{\E g(P_k)} + (1-p) h(\E P_k).
+      \end{split}
+    \end{displaymath}
+    It is impossible to get a recursive equation of $\E P_k$ due to the non-linear nature of Riccati Equation. 
 
-\end{frame}
+    An even simpler question: whether $\{\E P_k\}$ is uniformly bounded or not?
+    \begin{theorem}
+      (Sinopoli,04) Under i.i.d. packets loss, if $(A,Q^{\frac{1}{2}})$ is controllable, $(C,A)$ is detectable, and $A$ is unstable, then there exists a $p_c\in[0,1)$ such that
+      \begin{eqnarray}\label{eqn:lambdaCrit}
+	\lim_{k\rightarrow\infty}\E P_k=+\infty & \mbox{for } 0\leq
+	p \leq p_c \; \;
+	\mbox{and  \hspace{3mm}$\exists P_0 \geq 0$}&\\
+	\E P_k \leq M_{P_0} \;\; \forall k & \mbox{for } p_c <
+	p \leq 1 \; \; \mbox{and \hspace{3mm}$\forall P_0 \geq 0$}&
+      \end{eqnarray}
+      where $M_{P_0} > 0 $  depends on the initial condition $P_0 \geq 0$
+    \end{theorem}
+  \end{frame}
 
-\begin{frame}{Localization of Autonomous Vehicles via Secure Sensor Fusion}
-  \begin{columns}
-    \begin{column}{0.48\textwidth}
-      \begin{figure}
-	\includegraphics[width=\textwidth]{gnssdrift.jpg}
-	\caption{EKF}
-      \end{figure}
-    \end{column}
-    \begin{column}{0.48\textwidth} 		
-      \begin{figure}
-	\includegraphics[width=\textwidth]{gnssdriftsafe.jpg}
-	\caption{Secure EKF}
-      \end{figure}
-    \end{column}
-  \end{columns}
-\end{frame}
+  \begin{frame}{Lower-Bound for the Critical Value}
+    \begin{theorem}
+      (Sinopoli,04) The lower bound of $p_c$ is given by
+      \begin{displaymath}
+	p_c \geq 1-\frac{1}{\rho^2}, 
+      \end{displaymath}
+      where $\rho$ is the spectral radius of $A$. Furthermore, if $C$ is full column rank, then the equality holds.
+    \end{theorem}
+    We call a system to be one-step observable if $C$ is full column rank.
 
+    The one-step observability condition can be relaxed to
+    \begin{itemize}
+      \item (Sinopoli,04) $A$ only has one unstable eigenvalue;
+      \item (Plarre,09) $C$ invertible on the observable subspace.
+    \end{itemize}
+    Roughly speaking, all these conditions imply that $g$ is bounded.
+  \end{frame}
 
-\section{Conclusion}
+  \begin{frame}{A Counter Example where the Lower Bound is not Tight}
 
-\begin{frame}{Towards a Science of CPS Security}
-  \begin{itemize}
-    \item We consider both the static and dynamic state estimation problem in adversarial environment 
-    \item For static estimation, we propose a convex optimization based estimator and derive necessary and sufficient condition for its stability
-    \item For dynamic estimation, we propose a local filter + global fusion design:
-      \begin{enumerate}
-	\item In the absence of the attack, we recover the optimal Kalman filter with certain probabiliy
-	\item In the presence of the attack, we provide a sufficient condition for stability
-	\item For $A$ matrix whose unstable eigenvalues have geometric multiplicity of 1, the filter also achieves optimal security 
-      \end{enumerate}
-    \item Future directions: How to combine information security with system theory to provide defense in depth?
-  \end{itemize}
-\end{frame}
+    Consider the following LTI system:
+    \begin{displaymath}
+      \begin{split}
+       \left[ {\begin{array}{*{20}c}
+	 x_{k+1,1}  \\
+	 x_{k+1,2}
+      \end{array}} \right] &=
+\left[ {\begin{array}{*{20}c}
+	0 & 2  \\
+	2 & 0 
+      \end{array}} \right]  \left[ {\begin{array}{*{20}c}
+	 x_{k,1}  \\
+	 x_{k,2}
+      \end{array}} \right] + w_k,\\
+      y_k &= \left[ {\begin{array}{*{20}c}
+	1 & 0 
+      \end{array}} \right] x_k + v_k.
+      \end{split}
+    \end{displaymath}
+    \begin{center}
+      \includegraphics{pic.1}
+    \end{center}
+  \end{frame}
 
-\begin{frame}{Acknowledgement}
-  \begin{itemize}
-    \item Duo Han, Xinghua Liu, Zishuo Li
-    \item Lihua Xie, Emanuele Garone 
-    \item NTU Autonomous Driving Group: Danwei Wang, Jakub Tomasek, Qipeng Liu, Ehsan Mihankhah, Xiaoqiang Ren, Xiaoyu Mo 
-  \end{itemize}
-\end{frame}
+  \begin{frame}{A Counter Example}
+    \begin{itemize} 
+      \item $(A,C)$ is observable:
+	\begin{displaymath}
+	 C = [1\;\;0],\,CA = [0\;\;2]; 
+	\end{displaymath}
+      \item However, $A^2 =4I$ and $(A^2,C)$ is not observable:
+	\begin{displaymath}
+	 C = [1\;\;0],\,CA^2 = [4\;\;0]; 
+	\end{displaymath}
+      \item Half of the observations contains only contain ``redundant'' information.
+      \item For a second-order system, let the eigenvalues of $A$ to be $\lambda_1$ and $\lambda_2$. If $|\lambda_1| = |\lambda_2|$ and the angle between $\lambda_1$ and $\lambda_2$ is $2\pi r/q$, then $A^q = const\times I$. Hence $(A^q,C)$ is not observable if $rank(C) = 1$.
+      \item $1/q$ of the observations contains only contain ``redundant'' information.
+    \end{itemize}
+  \end{frame}
 
+  \begin{frame}{A Counter Example}
+    \begin{theorem}
+      Consider the following unstable observable system:
+      \begin{itemize}
+	\item  $A$ is diagonalizable, $\rho = |\lambda_1| = |\lambda_2| $;
+	\item  $rank(C) = 1$;
+      \end{itemize}
+      Let
+      \begin{displaymath}
+	\alpha = \frac{|\arg(\lambda_1)-\arg(\lambda_2)|}{2\pi}.	
+      \end{displaymath}
+      If $\alpha$ is irrational, then the critical value of the system is given by
+      \begin{displaymath}
+	p_c = 1-\frac{1}{\rho^2}.
+      \end{displaymath}
+      If $\alpha = r/q$ is rational, then the critical value is given by
+      \begin{displaymath}
+	p_c = 1-\frac{1}{\rho^{\frac{2}{1-1/q}}}.
+      \end{displaymath}
+    \end{theorem}
+  \end{frame}
 
-%\begin{frame}{Towards a Science of CPS Security}
-%  \begin{itemize}
-%  \item We consider intrusion detection problem in adversarial environment and propose an active detection scheme.
-%  \item How to systematically design secure algorithms?
-%  \item How to combine information security with system theory to provide defense in depth?
-%  \end{itemize}
-%\end{frame}
-%
-%\begin{frame}{Acknowledgement}
-%  \begin{itemize}
-%  \item Rohan Chabukswar, Sean Weerakkody, Hanxiao Liu, Jiaqi Yan
-%  \item Bruno Sinopoli, Lihua Xie, Karl H. Johansson
-%  \end{itemize}
-%\end{frame}
-\begin{frame}[allowframebreaks]
-     \printbibliography
-\end{frame} 
+  \begin{frame}{Non-Degeneracy}
+    \begin{itemize}
+      \item One-step observability: reconstruct the state from $1$ measurements. Too strong. 
+      \item Observability: reconstruct the state from $n$ sequential measurements. Too weak.
+      \item Let $A = diag(\lambda_1,\ldots,\lambda_n)$, $C = [C_1,\ldots, C_n]$.
+      \item Consider index set $\mathcal I = \{i_1,\ldots,i_l\}\subseteq \{1,\ldots,n\}$.
+      \item Define $A_{\mathcal I} = diag(\lambda_{i_1},\ldots,\lambda_{i_l})$, $C_{\mathcal I} = [C_{i_1},\ldots,C_{i_l}]$.
+      \item We call the subsystem $(A_{\mathcal I}, C_{\mathcal I})$ an equiblock if $\lambda_{i_1}=\ldots=\lambda_{i_l}$. 
+      \item We call the subsystem $(A_{\mathcal I}, C_{\mathcal I})$ a quasi-equiblock if $|\lambda_{i_1}|=\ldots=|\lambda_{i_l}|$. 
+	\begin{definition}
+	  A system is non-degenerate if $A$ is diagonalizable and every quasi-equiblock $(A_{\mathcal I},C_{\mathcal I})$ is one-step observable.
+	\end{definition}
+    \end{itemize}
+  \end{frame}
+
+  \begin{frame}{Non-Degeneracy}
+    \begin{itemize}
+      \item Consider the following system: 
+	\begin{displaymath}
+	  \begin{split}
+	    A = diag(2,2,3,-3), C = \left[ {\begin{array}{*{20}c}
+	      C_1,C_2,C_3,C_4
+	    \end{array}} \right].
+	  \end{split}
+	\end{displaymath}
+      \item A system is observable if every equiblock is one-step observable: $C_1$, $C_2$ are linear independent.
+      \item A system is non-degenerate if every quasi-equiblock is one-step observable: $C_1$, $C_2$ are linear independent and $C_3$, $C_4$ are linear independent.
+      \item One-step observability implies that $C_1$, $C_2$, $C_3$, $C_4$ are linear independent.
+      \item Non-degeneracy is stronger than observability, but weaker than one-step observability. 
+    \end{itemize}
+    \begin{theorem}
+      If the system is non-degenerate, then $(A^k,C)$ is observable for any $k\in \mathbb N$. 
+    \end{theorem}
+  \end{frame}
+
+  \begin{frame}{Critical Value and Tail Distribution for Non-Degenerate System}
+    \begin{theorem}
+      For a system whose unstable part is non-degenerate, the critical value is given by
+      \begin{displaymath}
+	p_c = 1-\frac{1}{\rho^2}.
+      \end{displaymath}
+      Furthermore, $P_k$ converges to a heavy-tailed distribution, i.e.,
+      \begin{displaymath}
+	\lim_k P(\tr(P_k)\geq M) \sim M^\varphi,
+      \end{displaymath}
+      where 
+      \begin{displaymath}
+	\varphi = \frac{\log(1-p)}{2\log \rho}.	
+      \end{displaymath}
+    \end{theorem}
+  \end{frame}
 
 \begin{frame}[standout]
-  感谢聆听！请各位老师批评指正
+ Thank you for your time! 
 \end{frame}
 
 \end{document}
