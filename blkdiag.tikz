@@ -1,0 +1,35 @@
+\begin{tikzpicture}[auto, node distance=1.8cm,>=latex']
+
+\node at (0,3.5) {$y_i(k)$};
+\node at (4,3.5) {$y_j(k)$};
+
+\draw [->] (0,3.3) -- (0,2.7);
+\draw [->] (4,3.3) -- (4,2.7);
+
+\node [sensor,align=center] (est1) {Linear system\\$\eta_{i}(k)$};
+\node [sensor, right of=est1,node distance=4cm,align=center] (est2) {Linear system\\$\eta_{j}(k)$};
+\node [est,above of=est1,align=center,node distance=2.2cm] (sensor1) {Local filter\\$\hat{\xi}_i(k)$};
+\node [est,above of=est2,align=center,node distance=2.2cm] (sensor2) {Local filter\\$\hat{\xi}_j(k)$};
+
+
+\draw [->] (0,1.7) --  (0,0.45);
+\draw [->] (4,1.7) -- (4,0.45);
+%\\$y_i(k)$\\\quad\\\quad\\$\hat{\xi}_i(k)$
+
+\node at (0.5,1.4) {$z_i(k)$};
+\node at (4.5,1.4) {$z_j(k)$};
+
+\draw [->] (est1) -- node {$\Delta_i(k)$} (est2);
+\draw [->] (est2) -- node {$\Delta_j(k)$} (est1);
+
+\draw [dashed,rounded corners](-1.5,1.15) rectangle (5.5,-0.9);
+
+\node at (2,0.9) {Synchronization};
+
+\draw [->] (est1) --  (0,-1.4);
+\draw [->] (est2) -- (4,-1.4);
+
+
+\node at (0,-1.6) {$\breve{x}_i(k)$};
+\node at (4,-1.6) {$\breve{x}_j(k)$};
+\end{tikzpicture}

@@ -1,0 +1,1154 @@
+\documentclass[journal]{IEEEtran}
+
+
+\usepackage{cite}
+\usepackage{url}
+\usepackage{graphics} % for pdf, bitmapped graphics files
+\usepackage{epsfig} % for postscript graphics files
+\usepackage{mathptmx} % assumes new font selection scheme installed
+\usepackage{mathrsfs}
+\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n}
+\usepackage{cuted}
+
+%\usepackage{times} % assumes new font selection scheme installed
+\usepackage{setspace}
+\usepackage{amssymb,amsmath,amsfonts}
+%\usepackage{mathrsfs}
+%\usepackage{amsthm}
+\usepackage{ntheorem}
+\usepackage{booktabs}
+\usepackage{makecell}
+
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{algorithm,algorithmic}  
+%\pgfplotsset{compat=1.6}
+\usepackage{multirow}
+
+\renewcommand{\labelenumi}{(\arabic{enumi})} % change enumerate env to (1)(2)(3)
+
+
+\newcommand{\Pb}{{\mathbb{P}}}
+\newcommand{\Eb}{{\mathbb{E}}}
+\newcommand{\Rb}{{\mathbb{R}}}
+\newcommand{\Cb}{{\mathbb{C}}}
+\newcommand{\Ib}{{\mathbb{I}}}
+\newcommand{\Zb}{{\mathbb{Z}}}
+
+\newcommand{\Fs}{{\mathscr{F}}} % filiteration
+\newcommand{\Bs}{{\mathscr{B}}} % Borel set
+\newcommand{\Es}{{\mathscr{E}}}
+
+
+\newcommand{\Ec}{{\mathcal{E}}} %graph vertex edge
+\newcommand{\Gc}{{\mathcal{G}}}
+\newcommand{\Vc}{{\mathcal{V}}}
+
+
+\newcommand{\Fc}{{\mathcal{F}}}
+\newcommand{\Pc}{{\mathcal{P}}}
+
+\newcommand{\Qc}{{\mathcal{Q}}} 
+\newcommand{\Ac}{{\mathcal{A}}}
+\newcommand{\Cc}{{\mathcal{C}}}
+\newcommand{\Ic}{{\mathcal{I}}}
+\newcommand{\Rc}{{\mathcal{R}}}
+\newcommand{\Uc}{{\mathcal{U}}}
+\newcommand{\Tc}{{\mathcal{T}}}
+\newcommand{\Sc}{{\mathcal{S}}}
+\newcommand{\Oc}{{\mathcal{O}}}
+\newcommand{\Mc}{{\mathcal{M}}}
+\newcommand{\Nc}{{\mathcal{N}}}
+\newcommand{\Wc}{{\mathcal{W}}}
+\newcommand{\Lc}{{\mathcal{L}}}
+\newcommand{\Hc}{{\mathcal{H}}}
+\newcommand{\Xc}{{\mathcal{X}}}
+
+\newcommand{\Ss}{{\mathscr{S}}}
+
+\newcommand{\Oi}{{\tilde{O}_i}}
+\newcommand{\Gi}{{\tilde{G}_i}}
+\newcommand{\Si}{{\tilde{S}_i}}
+
+\newcommand{\ra}{{\rightarrow}}
+\newcommand{\ift}{{\infty}}
+\newcommand{\rs}{\text{rowspan}}
+\newcommand{\rank}{\text{rank}}
+\newcommand{\sgn}{\text{sgn}}
+\newcommand{\re}{\text{real}}
+
+
+\theorembodyfont{\normalfont}
+\newtheorem{proposition}{\textbf{Proposition}}
+\newtheorem{lemma}{\textbf{Lemma}}
+\newtheorem{theorem}{\textbf{Theorem}}
+\newtheorem{remark}{\textbf{Remark}}
+\newtheorem{assumption}{\textbf{Assumption}}
+\newtheorem{corollary}{\textbf{Corollary}}
+\newtheorem{conjecture}{\textbf{Conjecture}}
+\newtheorem{definition}{\textbf{Definition}}
+\newtheorem{problem}{\textbf{Problem}}
+%\newtheorem{proposition}{Proposition}
+\newtheorem*{proof}{\textbf{Proof}}
+
+
+
+
+
+
+
+% *** GRAPHICS RELATED PACKAGES ***
+%
+\ifCLASSINFOpdf
+%   \usepackage[pdftex]{graphicx}
+
+
+
+\begin{document}
+	%
+	% paper title
+	% Titles are generally capitalized except for words such as a, an, and, as,
+	% at, but, by, for, in, nor, of, on, or, the, to and up, which are usually
+	% not capitalized unless they are the first or last word of the title.
+	% Linebreaks \\ can be used within to get better formatting as desired.
+	% Do not put math or special symbols in the title.
+	\title{Secure Dynamic State Estimation with Partial Observability}
+	%
+	%
+	% author names and IEEE memberships
+	% note positions of commas and nonbreaking spaces ( ~ ) LaTeX will not break
+	% a structure at a ~ so this keeps an author's name from being broken across
+	% two lines.
+	% use \thanks{} to gain access to the first footnote area
+	% a separate \thanks must be used for each paragraph as LaTeX2e's \thanks
+	% was not built to handle multiple paragraphs
+	%
+	
+	\author{Zishuo~Li,~\IEEEmembership{Student~Member,~IEEE,}
+		and Yilin~Mo,~\IEEEmembership{~Member,~IEEE}
+		% <-this % stops a space
+		\thanks{Zishuo Li and Yilin Mo are with the Department
+			of Automation, Tsinghua University, Beijing, China, e-mail: \texttt{lizs19@mails.tsinghua.edu.cn, ylmo@mail.tsinghua.edu.cn}. } }% <-this % stops a space
+	%\thanks{J. Doe and J. Doe are with Anonymous University.}% <-this % stops a space
+	
+	
+	% note the % following the last \IEEEmembership and also \thanks - 
+	% these prevent an unwanted space from occurring between the last author name
+	% and the end of the author line. i.e., if you had this:
+	% 
+	% \author{....lastname \thanks{...} \thanks{...} }
+	%                     ^------------^------------^----Do not want these spaces!
+	%
+	% a space would be appended to the last name and could cause every name on that
+	% line to be shifted left slightly. This is one of those "LaTeX things". For
+	% instance, "\textbf{A} \textbf{B}" will typeset as "A B" not "AB". To get
+	% "AB" then you have to do: "\textbf{A}\textbf{B}"
+	% \thanks is no different in this regard, so shield the last } of each \thanks
+	% that ends a line with a % and do not let a space in before the next \thanks.
+	% Spaces after \IEEEmembership other than the last one are OK (and needed) as
+	% you are supposed to have spaces between the names. For what it is worth,
+	% this is a minor point as most people would not even notice if the said evil
+	% space somehow managed to creep in.
+	
+	
+	
+	% The paper headers
+	%\markboth{Journal of \LaTeX\ Class Files,~Vol.~14, No.~8, August~2015}%
+	%{Shell \MakeLowercase{\textit{et al.}}: Bare Demo of IEEEtran.cls for IEEE Journals}
+	% The only time the second header will appear is for the odd numbered pages
+	% after the title page when using the twoside option.
+	% 
+	% *** Note that you probably will NOT want to include the author's ***
+	% *** name in the headers of peer review papers.                   ***
+	% You can use \ifCLASSOPTIONpeerreview for conditional compilation here if
+	% you desire.
+	
+	
+	
+	
+	% If you want to put a publisher's ID mark on the page you can do it like
+	% this:
+	%\IEEEpubid{0000--0000/00\$00.00~\copyright~2015 IEEE}
+	% Remember, if you use this you must call \IEEEpubidadjcol in the second
+	% column for its text to clear the IEEEpubid mark.
+	
+	
+	% use for special paper notices
+	%\IEEEspecialpapernotice{(Invited Paper)}
+	
+	
+	
+	
+	% make the title area
+	\maketitle
+	
+	% As a general rule, do not put math, special symbols or citations
+	% in the abstract or keywords.
+	\begin{abstract}
+		...
+	\end{abstract}
+	
+	% Note that keywords are not normally used for peerreview papers.
+	\begin{IEEEkeywords}
+		Dynamic state estimation, secure estimation, observability, Kalman Filter
+	\end{IEEEkeywords}
+	
+	
+	
+	
+	
+	
+	% For peer review papers, you can put extra information on the cover
+	% page as needed:
+	% \ifCLASSOPTIONpeerreview
+	% 
+	%\begin{center} \bfseries EDICS Category: 3-BBND \end{center}
+	% \fi
+	%
+	% For peerreview papers, this IEEEtran command inserts a page break and
+	% creates the second title. It will be ignored for other modes.
+%	\IEEEpeerreviewmaketitle
+	
+	
+	
+	\section{Introduction}
+	
+	\textit{Notations:}
+	Cardinality of a set $\Sc$ is denoted as $|\Sc|$. Modulus of complex number $z$ is denoted as $|z|$. Denote the span of row vectors of matrix $A$ as $\rs(A)$. $\det(A)$ is the determinant of $A$. $\mathbf{0}_{m\times n}, \mathbf{1}_{m\times n}$ denote all-zero or all-one matrix with size $m\times n$. $\mathbf{1}_{m\times1}$ is written as $\mathbf{1}_{m}$ for conciseness.
+	
+	Suppose $\Ic$ is an index set, define $A(\Ic,:)$ as the matrix composed of the rows of matrix $A$ with indices in $\Ic$. Similarly, $A(:,\Ic)$ is the matrix composed of columns of matrix $A$ with indices in $\Ic$. 
+	%If \Ic={i,i+1,⋯,j}, they are also denoted as A(i:j, :) and A(:, i:j). 
+	
+	\section{PROBLEM FORMULATION}
+	\label{sec:problem}	
+	\subsection{Dynamic State Estimation}\label{sec:basic_measure}
+	We propose the secure state estimation problem. Consider the linear time-invariant system:
+	$$
+	x(k+1)=A x(k)+w(k)
+	$$
+	where $x(k) \in \mathbb{R}^{n}$ is the state, $w(k) \sim {N}(0, Q)$ is i.i.d. Gaussian process noise with zero mean and covariance matrix $Q\succ 0 .$ The initial state $x(0) \sim {N}(0, \Sigma)$ is assumed to be zero mean Gaussian and is independent from the noise process $\{w(k)\}$.
+	
+	
+	
+	Assume that $m$ sensors are measuring the system and the measurement from the $i$ th sensor is:
+	\begin{equation}\label{eq:y_i_def}
+		y_{i}(k)=C_{i} x(k)+v_{i}(k)+a_{i}(k)=z_{i}(k)+a_{i}(k), 
+	\end{equation}
+	where $y_{i}(k) \in \mathbb{R}, C_{i} \in \mathbb{R}^{1 \times n}$ and $v_{i}(k) \in \mathbb{R}$ is Gaussian
+	measurement noise. The scalar $a_{i}(k)$ denotes the bias injected by an adversary. $z_{i}(k)=C_{i} x(k)+v_{i}(k)$ can be regarded as the true measurement without the bias.
+	Equation (\ref{eq:y_i_def}) can be written in a compact form :
+	\begin{equation}\label{eq:y_def}
+		y(k)=C x(k)+v(k)+a(k)=z(k)+a(k)
+	\end{equation}
+	with
+	\begin{align}
+		&y(k) \triangleq\begin{bmatrix}
+			y_{1}(k) \\
+			\vdots \\
+			y_{m}(k)
+		\end{bmatrix}  ,
+		z(k) \triangleq\begin{bmatrix}
+			z_{1}(k) \\
+			\vdots \\
+			z_{m}(k)
+		\end{bmatrix}  ,
+		C \triangleq\begin{bmatrix}
+			C_{1} \\
+			\vdots \\
+			C_{m}
+		\end{bmatrix} , \\
+		&a(k)  \triangleq\begin{bmatrix}
+			a_{1}(k) \\
+			\vdots \\
+			a_{m}(k)
+		\end{bmatrix}  ,
+		v(k) \triangleq\begin{bmatrix}
+			v_{1}(k) \\
+			\vdots \\
+			v_{m}(k)
+		\end{bmatrix}.
+	\end{align}
+	We assume that $v(k) \sim {N}(0, R)$ with $R\succ 0$ is i.i.d and independent of the noise process $\{w(k)\}$ and the initial condition $x(0)$.
+	
+	\subsection{Sparse attack and resilient estimation}
+	
+	Denote the index set of all sensors as $\Rc \triangleq\{1,2, \ldots, m\}$. 
+	For any index set $\Ic \subseteq \Rc,$ define the complement set to be $\Ic^{c} \triangleq$ $\Rc \backslash \Ic$. 
+	In our attack model, we assume that the attacker can only compromise to at most $p$ sensors but can arbitrarily choose $a_{i}$. Formally, a $(p, m)$ -sparse attack can be defined as follows. 
+	\begin{definition}[$(p, m)$-sparse attack]
+		A vector $a$ is called a $(p, m)$-sparse attack if there exists an index set $\Ic \subset \mathcal{R},$ such that the following conditions hold:
+		\begin{enumerate}
+			\item $a_{i}=0, \forall i \in \Ic^{c} ;$
+			\item $|\Ic| \leq p$. 
+		\end{enumerate}
+		
+	\end{definition}
+	Define the collection of all possible index sets of malicious sensors as follows:
+	$$
+	\Cc \triangleq\{\Ic: \Ic \subset \Rc,|\Ic|=p\}.
+	$$
+	The set of all possible $(p, m)$-sparse attacks is denoted as follows:
+	$$
+	\mathcal{A} \triangleq \bigcup_{\Ic \in \Cc}\left\{a:\left\|a_{i}\right\|=0, i \in \Ic^{c}\right\}
+	$$
+	The main task of this paper is to investigate the sufficient and necessary conditions for a generic convex optimization based estimator to be resilient to $(p, m)$ -sparse attacks. To this end, we first formally define the resilience of an estimator.
+	
+	The resilience of an estimator against attacks is defined as follows.
+	\begin{definition}[Resilience]
+		An estimator $g: \mathbb{R}^{m} \mapsto \mathbb{R}^{n}$ that maps the measurements $y$ to a state estimate $\hat{x}$ is said to be resilient to the $(p, m)$ -sparse attack if it satisfies the following condition:
+		$$
+		\|g(z)-g(z+a)\| \leq q(z), \quad \forall a \in \mathcal{A}
+		$$
+	\end{definition}
+	where $q(z)$ is a real-valued mapping on $z$.
+	
+	The main task of this paper is to propose a secure sensor information fusion scheme that is optimal both in the absence and presence of attack.
+	In the absence of attack, the estimation is the same as Kalman Filter. In the presence of attack, the estimation is resilient as long as for every unstable state, there are more honest sensors than corrupted sensors observing it. It is optimal in the sense that if this condition is violated, there exists an attack that can drive the estimation $g(z+a)$ to be arbitrarily large~\cite{yorie}.
+	
+	
+	\section{Preliminary Results}\label{sec:preli}
+	Considering the completeness of this paper, we introduce some preliminary results which are fundamental to our work. The results come from \cite{liuxinghua-IFAC}.
+	\subsection{Decomposition of Kalman filter}
+	If all sensors are benign, i.e., $a(k)=0$ for all $k,$ the optimal state estimator is the classical Kalman filter:
+	\begin{align*}
+		\hat{x}(k)&=\hat{x}(k\mid k-1)+K(k)[y(k)-C \hat{x}(k \mid k-1)] ,\\
+		P(k)&=P(k \mid k-1)-K(k) C P(k \mid k-1),
+	\end{align*}
+	where
+	\begin{align*}
+		&\hat{x}(k+1 \mid k)=A \hat{x}(k), P(k+1 \mid k)=A P(k) A^{\top}+Q ,\\	
+		&K(k)=P(k \mid k-1) C^{\top}\left(C P(k \mid k-1) C^{\top}+R\right)^{-1},
+	\end{align*}
+	with initial condition
+	\begin{align*}
+		\hat{x}(0 \mid-1)=0,\ P(0 \mid-1)=\Sigma .
+	\end{align*}
+	It is well-known that for observable system, the estimation error covariance matrices $P(k)$ and the gain $K(k)$ will converge to
+	\begin{align*}
+		&P \triangleq \lim _{k \rightarrow \infty} P(k),\ P_{+}=A P A^{\top}+Q ,\\
+		&K \triangleq P_{+} C^{\top}\left(C P_{+} C^{\top}+R\right)^{-1}.
+	\end{align*}
+	
+	Since typically the control system will be running for an extended period of time, we can assume that the Kalman filter is in steady state and thus the Kalman filter reduces to the following fixed-gain linear estimator:
+	\begin{equation}\label{eq:fix_gain_kalman}
+		\hat{x}(k+1)=(A-K C A) \hat{x}(k)+K y(k+1) .
+	\end{equation}
+	
+	We introduce the following assumption:
+	\begin{assumption}\label{as:distinct_eigvalue}
+		$A-K C A$ has $n$ distinct eigenvalues. Moreover, $A-K C A$ and $A$ do not share any eigenvalue.
+	\end{assumption}
+	Since $A-K C A$ has distinct eigenvalues, it can be diagonalized as:
+	\begin{equation}\label{eq:VLambda}
+		A-K C A=V \Pi V^{-1}.
+	\end{equation}
+	Define the eigenvalues of $A-KCA$ as $\pi_{1},\cdots,\pi_{n}$. (Notice they are distinct from eigenvalues of $A$.)
+	
+	Now consider the following recursive equation:
+	$$
+	\zeta_{i}(k+1)=\Pi \zeta_{i}(k)+\mathbf{1}_{n} y_{i}(k+1) .
+	$$
+	
+	%Define Fi as
+	%$$
+	%F_{i}=V \operatorname{diag}\left(V^{-1} K_{i}\right)
+	%$$
+	%where V is defined in (???) and diag(V−1Ki) is an n×n diagonal matrix with the j th diagonal entry equals to the j th entry of the vector V−1Ki. 
+	%
+	%We have the following proposition from \cite{liuxinghua-IFAC}.
+	%\begin{proposition}
+	%	The Kalman filter can be decomposed as linear composition of ζi(k):
+	%	\begin{equation}\label{eq:kalman_decomp}
+	%		\hat{x}(k)=\sum_{i=1}^{m} F_{i} \zeta_{i}(k).
+	%	\end{equation}
+	%\end{proposition}
+	%
+	%Moreover, the relationship between ζi(k) and x(k) is shown in the following proposition (\cite{liuxinghua-IFAC} Theorem 1).
+	
+	Define 
+	\begin{equation}\label{eq:def_Gi}
+		G_{i} \triangleq\left[\begin{array}{c}
+			C_{i} A\left(A-\pi_{1} I\right)^{-1} \\
+			\vdots \\
+			C_{i} A\left(A-\pi_{n} I\right)^{-1}
+		\end{array}\right].
+	\end{equation}
+	
+	%\begin{proposition}
+	%	Let ϵi(k)≜Gix(k)−ζi(k), then 
+	%	\begin{align*}
+	%		\epsilon_{i}(k+1)=& \Pi \epsilon_{i}(k)+\left(G_{i}-\mathbf{1}_{n} C_{i}\right) w(k) \\
+	%		&-\mathbf{1}_{n} v_{i}(k+1)-\mathbf{1}_{n} a_{i}(k+1) .
+	%	\end{align*}
+	%\end{proposition}
+	%
+	%\subsection{Least square interpretation}
+	The problem of dynamic estimation can be formulated as an optimization problem. 
+	Define $\tilde{\Pi},\tilde{Q} \in \mathbb{R}^{m n \times m n}$ as
+	$$
+	\tilde{\Pi} \triangleq\left[\begin{array}{ccc}
+		\Pi & & \\
+		& \ddots & \\
+		& & \Pi
+	\end{array}\right],
+	$$
+	\begin{align}
+		\tilde{Q} \triangleq
+		\begin{bmatrix}
+			G_1-\mathbf{1}_{n} C_1 \\
+			\vdots \\
+			G_m-\mathbf{1}_{n} C_m
+		\end{bmatrix}
+		Q\begin{bmatrix}
+			G_1-\mathbf{1}_{n} C_1 \\
+			\vdots \\
+			G_m-\mathbf{1}_{n} C_m
+		\end{bmatrix}^\top
+		+ R\otimes \mathbf{1}_{n\times n},
+	\end{align}
+	where $\otimes$ is the Kronecker product.
+	Next, let us define $\tilde{W}$ as the solution of the following Lyapunov equation:
+	$$
+	\tilde{W}=\tilde{\Pi} \tilde{W} \tilde{\Pi}^{\top}+\tilde{Q}.
+	$$
+	Now we propose the following least-square problem:
+	\begin{subequations}\label{pb:LS_problem}
+		\begin{align}
+			&\underset{\check{x}(k)\in \Rb^n, e(k)\in\Cb^{mn}}{\operatorname{minimize}}\quad \frac{1}{2} e(k)^\top \tilde{W}^{-1} e(k)  \\
+			&\text { subject to }
+			\begin{bmatrix}
+				{\zeta}_{1}(k) \\
+				\vdots \\
+				{\zeta}_{m}(k)
+			\end{bmatrix}=
+			\begin{bmatrix}
+				G_{1} \\
+				\vdots \\
+				G_{m}
+			\end{bmatrix} \check{x}(k)+e(k). 
+		\end{align}
+	\end{subequations}
+	The solution $\check{x}(k)$ to problem (\ref{pb:LS_problem}) is equivalent to the Kalman estimation $\hat{x}(k)$, according to the following proposition (~\cite{liuxinghua-IFAC} Theorem 2~).
+	\begin{proposition}
+		The solution to least-square problem (\ref{pb:LS_problem}) is equivalent to the estimation of fixed gain Kalman filter defined in (\ref{eq:fix_gain_kalman}):
+		\begin{equation}\label{eq:LSP_result=decomp}
+			\check{x}(k)=\hat{x}(k).  % \sum_{i=1}^{m} F_{i} \zeta_{i}(k)
+		\end{equation}
+	\end{proposition}
+	%where e(k)∈Rmn is defined as
+	%\begin{align*}
+	%	\tilde{\mu}(k) \triangleq\left[\begin{array}{c}
+	%		\mu_{1}(k) \\
+	%		\vdots \\
+	%		\mu_{m}(k)
+	%	\end{array}\right]
+	%\end{align*}
+	
+	\section{Secure Information Fusion for general A}\label{sec:secure_info_fuse}
+	In this section, we propose a secure dynamic state estimation scheme which is resilient with mild assumption on the system dynamic matrix $A$.
+	The resiliency performance is attained by leveraging the structure of $G_i$.
+	We will prove the sufficient and necessary condition of estimation resiliency in this section.
+	Compared to previous work \cite{liuxinghua-IFAC}, the sufficient condition will not depend on the structure of stable eigen-values. Moreover, we will show this condition is also necessary by referring to \cite{yorie}
+	
+	
+	\subsection{States decomposition}\label{subsec:transform}
+	
+	As we can always do invertible linear transformation on the states $x$ such that $A$ can be Jordan diagonalized, we assume in the following that $A$ has already been Jordan diagonalized. 
+	In order to analyze stable and unstable states separately with simple notation, we denote the index set of unstable entries\footnote{Unstable entries of state $x$ are the entries $x_i$ corresponding to eigenvalue $|\lambda_i| \geq1$.} of state $x$ as $\Uc$ and index set of stable entries as $\Sc$. 
+	Furthermore, without loss of generality, we assume the unstable entries take the position of first $|\Uc|$ entries, i.e. $\Uc=\{1,2,\cdots,|\Uc|\}$ and $\Sc=\{|\Uc|+1,\cdots,n\}$.
+	Define 
+	\begin{equation}\label{eq:def_x_u}
+		x_u\triangleq [x_1,\cdots,x_{|\Uc|}]^\top, \ x_s\triangleq [x_{|\Uc|+1},\cdots,x_{n}]^\top.
+	\end{equation}
+	
+	In order to prevent degenerating problems, we assume the geometric multiplicity of unstable eigenvalues of $A$ are all $1$. It is stated formally in the following.
+	\begin{assumption}
+		A is full rank and the sub-matrix corresponding to unstable states is in the Jordan canonical form where geometric multiplicity of eigenvalues are all $1$, i.e.,
+		\begin{align*}
+			&A=
+			\begin{pmatrix}
+				\begin{array}{cc}
+					A_\Uc & \mathbf{0} \\
+					\mathbf{0} & A_{\Sc}			
+				\end{array}
+			\end{pmatrix}, \
+			A_\Uc=\begin{pmatrix}
+				J_{1} & \mathbf{0} & \cdots & \mathbf{0} \\
+				\mathbf{0} & J_{2} & \cdots & \mathbf{0} \\
+				\vdots & \vdots & \ddots & \vdots \\
+				\mathbf{0} & \mathbf{0} & \cdots & J_{l} 
+			\end{pmatrix},
+			\text{ where }\\
+			&
+			J_k=
+			\begin{pmatrix}
+				\lambda_{k} & 1 & 0 & \cdots & {0} \\
+				{0} & \lambda_{k} & 1 &  \cdots & {0} \\
+				\vdots & \vdots &  \vdots & \ddots & \vdots \\
+				{0} & {0} & {0} & \cdots & \lambda_{k} 
+			\end{pmatrix}
+			\in \Cb^{n_k \times n_k} , \sum_{k=1}^{l}n_k =|\Uc| .
+		\end{align*}
+		and $\lambda_i\neq \lambda_j$ when $i\neq j$, $\lambda_j\neq 0$ for all $j$.
+	\end{assumption}
+	
+	
+	Define the observable matrix of system $(A,C_i)$ as 
+	$$
+	O_{i} \triangleq\left[\begin{array}{c}
+		C_{i} \\
+		C_{i} A \\
+		\vdots \\
+		C_{i} A^{n-1}
+	\end{array}\right].
+	$$
+	Notice that $(A,C_i)$ is not necessarily observable.
+	We need the following lemma showing that the structure of $G_i$ and $O_i$ is essentially the same which is helpful for transforming $G_i$ to a standard form. The proof of Lemma \ref{lm:span} is presented in the appendix.
+	\begin{lemma}\label{lm:span}
+		There exists an invertible matrix $\Tc$ such that $G_i=\Tc O_i$ for all sensor index $i\in\{1,2,\cdots,m\}$. At a result, the span of row vectors of $G_i$ is equivalent to the observable space of $(A,C_i)$, i.e.,
+		$\rs(G_i)=\rs(O_i).$
+	\end{lemma}
+	
+	In the following, we further show that the dimension of the observable space is equivalent to the number of non-zero columns, i.e., the non-zero columns of $O_i$ are linear-independent. 
+	
+	Before we continue, we need the notation of non-zero column index vector. Define $\theta(X)$ of some matrix $X\in\Cb^{ n_{\text{row}}\times n_{\text{col}} }$ as a 0-1 row vector with $j$-th entry defined as:
+	$$\left[\theta(X)\right]_j\triangleq \Ib\{X(:,j)\neq\mathbf{0} \},\ j\in\{1,2,\cdots,n_{\text{col}}\}. $$
+	According to Lemma \ref{lm:span}, 
+	\begin{equation}\label{eq:thetaGO}
+		\theta(G_i)=\theta(O_i).
+	\end{equation}
+	
+	We consider the columns corresponding to unstable states.
+	Denote the first $|\Uc|$ columns of $O_i$ and $G_i$ as $$\Oi\triangleq O_i(:,\Uc),\ \Gi\triangleq G_i(:,\Uc) .$$
+	Define $r_i=\rank(\Oi).$ According to Lemma \ref{lm:span}, 
+	\begin{equation}\label{eq:rankOiGi}
+		\rank(\Gi)=\rank(\Oi)=r_i .
+	\end{equation}
+	Since the geometric multiplicity of first $|\Uc|$ eigenvalues of $A$ are all 1, one can prove that non-zero columns of $\Oi$ are linear independent, i.e. $r_i$ equals to the number of nonzero columns:
+	\begin{equation*}
+		r_i=\sum_{j=1}^{|\Uc|} \left[\theta(O_i)\right]_j =\sum_{j=1}^{|\Uc|} \left[\theta(G_i)\right]_j .
+	\end{equation*}
+	Therefore, we can define the elementary column operation matrix that move the nonzero columns in first $|\Uc|$ columns of $G_i$ to first $r_i$ columns as $E_i\in\{0,1\}^{n\times n}$, i.e. 
+	\begin{equation}
+		\theta(G_i E_i)= [\overbrace{1,\cdots,1}^{r_i \text{ ones}},
+		\overbrace{0,\cdots,0}^{|\Uc|-r_i\text{ zeros}},
+		\overbrace{\theta_{|\Uc|+1},\cdots,\theta_{|\Uc|+|\Sc|}}^{\text{the other }|\Sc|\text{ entries}} ].
+	\end{equation}
+	where $\theta_{|\Uc|+1},\cdots,\theta_{|\Uc|+|\Sc|}$ denotes 0 or 1 at the last $|\Sc|$ entries.
+	
+	In the following, we intend to transform the first $|\Uc|$ columns of $G_i$ to a standard form. 
+	For abtrary $i\in\{1,2,\cdots,m\}$, $G_i E_i$ can be written in the following form:
+	\begin{equation}\label{eq:structure_Gi}
+		G_i E_i =
+		\left[
+		\begin{array}{c}
+			{} \\ {}
+		\end{array}
+		\right.
+		\overbrace{
+			\begin{array}{c}
+				T_{1,i} \\
+				T_{2,i}
+			\end{array}
+		}^{r_i}
+		\overbrace{
+			\begin{array}{c}
+				\mathbf{0} \\
+				\mathbf{0}
+			\end{array}
+		}^{|\Uc|-r_i}
+		\overbrace{
+			\begin{array}{c}
+				N_{1,i} \\
+				N_{2,i}
+			\end{array}
+		}^{|\Sc|}
+		\left.
+		\begin{array}{c}
+			{} \\ {}
+		\end{array}
+		\right]
+		\begin{array}{l}
+			\left. \right\} r_i \\
+			\left. \right\} n-r_i
+		\end{array} .
+	\end{equation}
+	Moreover, since the geometric multiplicity of first $|\Uc|$ eigenvalues of $A$ are all 1, based on Lemma \ref{lm:span}, one can verify that $\rs(T_{1,i})=\rs(\Oi)=r$ and thus $r\times r$ matrix $T_{1,i}$ is invertible.
+	Define 
+	\begin{equation*}
+		N_{3,i}\triangleq [\mathbf{0}_{r_i \times (|\Uc|-r_i)}\ N_{1,i}], \
+		N_{4,i}\triangleq [\mathbf{0}_{(n-r_i) \times (|\Uc|-r_i)}\ N_{2,i}] .
+	\end{equation*}
+	Choose transformation matrix
+	\begin{equation}\label{eq:defP}
+		P_i\triangleq 
+		\begin{bmatrix}
+			T^{-1}_{1,i} & \mathbf{0}_{r_i \times (n-r_i)} \\
+			-T_{2,i}T^{-1}_{1,i} & I_{(n-r_i) \times (n-r_i)}
+		\end{bmatrix}.
+	\end{equation}
+	Then 
+	\begin{align*}
+		P_i G_i E_i = &
+		\begin{bmatrix}
+			I_{r_i \times r_i} & T^{-1}_{1,i} N_{3,i} \\
+			\mathbf{0}_{(n-r_i) \times r_i} & N_{4,i}-T_{2,i} T^{-1}_{1,i} N_{3,i}
+		\end{bmatrix}\\
+		=&
+		\begin{bmatrix}
+			I_{r_i \times r_i} & \mathbf{0}_{r_i \times (|\Uc|-r_i)}  & T^{-1}_{1,i} N_{1,i} \\
+			\mathbf{0}_{(n-r_i) \times r_i} & \mathbf{0}_{(n-r_i) \times (|\Uc|-r_i)} & N_{2,i}-T_{2,i} T^{-1}_{1,i} N_{2,i}
+		\end{bmatrix}.
+	\end{align*}
+	Therefore, by row operation matrix $P_i$, the first $|\Uc|$ columns of $G_i$ is transformed to a standard form. Summarizing the results leads to the following theorem.
+	
+	\begin{theorem}\label{th:Si_form}
+		For every $G_i$ there exists a invertible matrix $P_i$ such that $H_i=P_i G_i$ where $H_i$ is in the following form:
+		\begin{equation}
+			H_i=\begin{bmatrix}
+				H_{uu,i}	& 	H_{us,i} \\
+				\mathbf{0}_{|\Sc|\times|\Uc|} & H_{ss,i}
+			\end{bmatrix} ,
+		\end{equation}
+		where 
+		\begin{align*}
+			H_{uu,i} & \triangleq 	
+			\begin{bmatrix}
+				I_{r_i\times r_i} & \mathbf{0} \\
+				\mathbf{0} & \mathbf{0} 
+			\end{bmatrix}
+			E_i^{-1}(\Uc,\Uc),\\
+			H_{us,i}& \triangleq T^{-1}_{1,i} N_{1,i},
+			\\
+			H_{ss,i}& \triangleq N_{2,i}-T_{2,i} T^{-1}_{1,i} N_{2,i}.
+		\end{align*}
+		and $T_{1,i},T_{2,i},N_{1,i},N_{2,i}$ are defined in (\ref{eq:structure_Gi}).
+	\end{theorem}
+	
+	\begin{remark}
+		After transformation $P_i$, the non-zero columns of $G_i$ are transformed to canonical basis column vectors in $H_i$. 
+		$H_i$ is the canonical form of $G_i$ after elementary row operation $P_i$. 
+	\end{remark}
+	\begin{remark}
+		Notice the first $|\Uc|$ columns of $H_i$ only depends on $r_i$ and $E_i$, i.e. the number of non-zero columns in $\Oi$ and their column index.
+		In the following section we present a sufficient condition of resilient estimation based on the structure of $H_i$. 
+		According to Theorem \ref{th:Si_form}, one can verify the condition without actually implementing the transfomation $P_i$ since first $|\Uc|$ columns of $H_i$ is known as long as we know $\Oi$. 
+	\end{remark}
+	
+	By the transformation $P_1,\cdots,P_m$, we have the following optimization problem equivalent to (\ref{pb:LS_problem}).
+	\begin{subequations}\label{pb:compact_least_square}
+		\begin{align}
+			\underset{{x}(k)\in \Rb^n, \mu(k)\in\Cb^{mn}}{\text{minimize}}&\quad \frac{1}{2} \mu(k)^{\top} \tilde{M}^{-1} \mu(k)   \\
+			\text { subject to }\quad&
+			\Upsilon (k)=
+			H x(k)+\mu(k) .  
+		\end{align}
+	\end{subequations}
+	where 
+	\begin{equation}
+		\tilde{M}\triangleq\tilde{P}\tilde{W}\tilde{P}^\top,\
+		\tilde{P} \triangleq\left[\begin{array}{ccc}
+			P_1 & & \\
+			& \ddots & \\
+			& & P_m
+		\end{array}\right],\
+		\eta_i(k)\triangleq P_i\zeta_{i}(k).
+	\end{equation}
+	and
+	\begin{align}
+		\Upsilon (k)\triangleq
+		\begin{bmatrix}
+			\eta_{1}(k) \\
+			\vdots \\
+			\eta_{m}(k)
+		\end{bmatrix}, \
+		H\triangleq\begin{bmatrix}
+			H_{1} \\
+			\vdots \\
+			H_{m}
+		\end{bmatrix} .	
+	\end{align}
+	
+	
+	\subsection{Secure Information Fusion}
+	
+	In previous subsection, $G_i$ has been transformed to $H_i$. 
+	However, we only operate the sub-matrix corresponding to unstable states, i.e., $H_{uu,i}$ is transformed to canonical form while $H_{ss,i}$ is not.
+	The reason is that the stable states will converge to zero and we can leverage this property to guarantee the resilience of the estimation of stables states without any knowledge about the attack.
+	
+	In order to achieve this, we need some transformation on problem (\ref{pb:compact_least_square}). The result is that the sufficient condition of resilience only relies on $H_{ss,i}$.
+	Define 
+	\begin{align*}
+		&\Nc\triangleq
+		I_{m\times m} \otimes 
+		\begin{bmatrix}
+			\mathbf{0}_{|\Sc|\times|\Uc|} & I_{|\Sc|\times|\Sc|}
+		\end{bmatrix}
+		\in \Rb^{m|\Sc|\times mn },
+		\\
+		&\Mc\triangleq
+		\begin{bmatrix}
+			I_{mn\times mn} & \mathbf{0}_{mn\times m|\Sc|} \\ 
+			\Nc		
+			& I_{m|\Sc|\times m|\Sc|} 
+		\end{bmatrix}
+		\in \Rb^{m(n+|\Sc|)\times m(n+|\Sc|) },
+		\\
+		&\Upsilon_s(k) \triangleq\Nc\Upsilon (k), \\
+		&\Xi_s(k) \triangleq\Nc H x(k).
+	\end{align*}
+	
+	Consider the objective function of the least square problem (\ref{pb:compact_least_square}) added by a constant term\footnote{For legibility, the time index $(k)$ is omitted.}:
+	\begin{align}
+		&\frac{1}{2} (\Upsilon - Hx )^{\top} \tilde{M}^{-1} (\Upsilon - Hx ) +\frac{1}{2}  \Upsilon_s^{\top} \Upsilon_s \notag \\
+		=&\frac{1}{2}\begin{bmatrix}
+			\Upsilon - Hx \\ \Upsilon_s
+		\end{bmatrix}^{\top}
+		\begin{bmatrix}
+			\tilde{M}^{-1} & \mathbf{0} \\
+			\mathbf{0} &  I
+		\end{bmatrix}
+		\begin{bmatrix}
+			\Upsilon - Hx \\ \Upsilon_s
+		\end{bmatrix}. \label{eq:expand_mn_to_mn+ms}
+	\end{align}
+	Notice that 
+	\begin{equation*}
+		H_i x =\begin{bmatrix}
+			H_{uu,i} x_u + H_{us,i} x_s \\
+			H_{ss,i} x_s
+		\end{bmatrix},
+	\end{equation*}
+	then 
+	\begin{equation*}
+		\begin{bmatrix}
+			\Upsilon - Hx \\
+			\Upsilon_s
+		\end{bmatrix}=\Mc
+		\begin{bmatrix}
+			\Upsilon - Hx \\
+			\Xi_s
+		\end{bmatrix}.
+	\end{equation*}
+	Therefore, (\ref{eq:expand_mn_to_mn+ms}) can be wriiten as 
+	\begin{align}
+		&\frac{1}{2}
+		\left(\Mc
+		\begin{bmatrix}
+			\Upsilon - Hx \\
+			\Xi_s
+		\end{bmatrix}
+		\right)^{\top}
+		\begin{bmatrix}
+			\tilde{M}^{-1} & \mathbf{0} \\
+			\mathbf{0} &  I
+		\end{bmatrix}
+		\left(\Mc
+		\begin{bmatrix}
+			\Upsilon - Hx \\
+			\Xi_s
+		\end{bmatrix}
+		\right) \notag
+		\\
+		=&\frac{1}{2}
+		\begin{bmatrix}
+			\Upsilon - Hx \\
+			\Xi_s
+		\end{bmatrix}^{\top}
+		\Wc
+		\begin{bmatrix}
+			\Upsilon - Hx \\
+			\Xi_s
+		\end{bmatrix} \label{eq:obj_function}
+	\end{align}
+	where 
+	\begin{align}\label{eq:def_W}
+		\Wc\triangleq \begin{bmatrix}
+			\tilde{M}^{-1}+ \Nc^{\top}\Nc & \Nc^{\top} \\
+			\Nc &  I
+		\end{bmatrix}\succ 0.
+	\end{align}
+	
+	
+	%\begin{align*}
+	%	-\frac{\alpha}{2}\Xi_s^{\top} \Xi_s = -\frac{\alpha}{2}x_s^{\top} \left(\sum_{i=1}^{m}H^{\top}_{ss,i}H_{ss,i}\right) x_s.
+	%\end{align*}
+	%According to lemma ??? and the assumption that C is full-rank, we have
+	%\begin{equation*}
+	%	\bigcup_{i=1}^{m} \rs (H_{ss,i}) \supseteq \Rb^{|\Sc|}.
+	%\end{equation*}
+	%Therefore, ∑mi=1H⊤ss,iHss,i is positive definite.
+	
+	In the following we propose a secure information fusion scheme based on objective function defined in (\ref{eq:obj_function}) and prove its sufficient condition of resiliency.
+	
+	\begin{subequations}\label{pb:resilient_LASSO}
+		\begin{align}
+			\underset{{\tilde{x}}(k)\in \Rb^n,\ \mu(k),\nu(k)\in\Cb^{mn}}{\text{minimize}}&\quad \frac{1}{2} 
+			\begin{bmatrix}
+				\mu(k) \\
+				\Nc H \tilde{x}(k)
+			\end{bmatrix}^\top \Wc
+			\begin{bmatrix}
+				\mu(k) \\
+				\Nc H \tilde{x}(k)
+			\end{bmatrix} + \gamma\left\|\nu(k)\right\|_1  \\
+			\text { subject to }\quad&
+			\Upsilon (k)= H \tilde{x}(k)+\mu(k)+\nu(k) .  
+		\end{align}
+	\end{subequations}
+	where $\gamma$ is a non-negative constant chosen by the system operator.
+	
+	\begin{theorem}
+		\leavevmode
+		\begin{enumerate}
+			\item In absence of attack, i.e. $a(k)=0$, solution to problem (\ref{pb:resilient_LASSO}) is equivalent to the solution to (\ref{pb:LS_problem}) and thus equivalent to estimation of Kalman Filter, i.e.
+			\begin{equation*}
+				\tilde{x}(k)=\check{x}(k)=\hat{x}(k).
+			\end{equation*}
+			%		\item In absence of attack, the estimation of the stable state is resilient. Moreover,
+			%		$\|\tilde{x}_s\|_\infty<\frac{\gamma}{2}
+			%		\left\|\Hc\right\|_\infty,where\Hc$ is defined in (\ref{eq:def_H}).
+			
+			\item In presence of arbitrary admissible attack, if the following condition holds for all state $j=1,2,\cdots,|\Uc|$,
+			\begin{equation}\label{cond:suff}
+				\sum_{i\in\Ic} H_{i} e_j < \sum_{i\in\Ic^c} H_{i} e_j
+				%		\sum_{i \in \Ic}\left\|	H_{uu,i} x_u\right\|_{1}<
+				%		\sum_{i \in \Ic^{c}}\left\|H_{uu,i} x_u\right\|_{1},
+				%		\ \forall \Ic\in\Cc ,
+			\end{equation}
+			then the estimate $\tilde{x}(k)$ solved from (\ref{pb:resilient_LASSO}) is resilient,
+			where $e_j$ is the canonical basis vector where the $j$-th entry is $1$ and others are $0$.
+			%	Moreover,  ∥x~∥≤const.
+		\end{enumerate}
+	\end{theorem}
+	
+	\begin{remark}
+		Condition (\ref{cond:suff}) reduces the sufficient condition in \cite{liuxinghua-IFAC}\cite{handuo_tac} in two ways.
+		On the one hand, by normalizing $G_i$ to $H_i$, condition (\ref{cond:suff}) is easily verified by checking the number of $1$ in first $|\Uc|$ columns of $H_i$. However in previous works, the complexity of verifying the condition is significantly high.
+		On the other hand, the part of $H_i$ that corresponding to stable states do not affect the estimator resilience because the transofrmation (\ref{eq:expand_mn_to_mn+ms})(\ref{eq:obj_function}) extract the stable states $\tilde{x}_s$ to appear explicitly in the objective function (\ref{pb:resilient_LASSO}) and thus is bounded due to the nature of LASSO~\cite{LASSOTibshirani}.
+		
+	\end{remark}
+	
+	\begin{proof}
+		Consider the KKT condition of problem (\ref{pb:resilient_LASSO}) and denote the dual variables for equation constraints as $\lambda=[\lambda_1^{\top},\cdots,\lambda_m^{\top}]^{\top}\in \Cb^{mn\times 1}$. 	
+		\begin{align}
+			2(\tilde{M}^{-1}+\Nc^{\top}\Nc)\mu+2(\Nc^{\top} \Nc H)\tilde{x} - \lambda &= \mathbf{0} \label{eq:KKT1}\\
+			2(H^{\top} \Nc^{\top}\Nc)\mu+2(H^{\top} \Nc^{\top} \Nc H)\tilde{x} -  H^{\top}\lambda &= \mathbf{0} \label{eq:KKT2} \\
+			\gamma \cdot  \sgn(\nu) - \lambda &= \mathbf{0} \label{eq:KKT3} \\
+			\Upsilon - H \tilde{x} - \mu - \nu &= \mathbf{0}  \label{eq:KKT4}
+		\end{align}
+		
+		And $\sgn(\cdot)$ is the subgradient of $\|\cdot\|_1$, i.e., for the $i$-th entry:
+		\begin{align*}
+			[\sgn(\nu)]_i=\partial |[\nu]_i|=
+			\left\{
+			\begin{array}{cc}
+				-1 ,& \ [\nu]_i<0 \\
+				1 , &\ [\nu]_i>0  \\
+				\left[-1,1\right],& \ [\nu]_i=0 
+			\end{array}
+			\right. .
+		\end{align*}
+		
+		Combining (\ref{eq:KKT1}) and (\ref{eq:KKT2}) leads to:
+		\begin{equation}\label{eq:KKT12}
+			\begin{bmatrix}
+				\tilde{M}^{-1}+\Nc^{\top}\Nc & \Nc^{\top} \Nc H\\
+				H^{\top} \Nc^{\top} \Nc  & H^{\top} \Nc^{\top} \Nc H
+			\end{bmatrix}
+			\begin{bmatrix}
+				\mu \\ \tilde{x}
+			\end{bmatrix}=\frac{1}{2}
+			\begin{bmatrix}
+				\lambda \\ H^{\top} \lambda 
+			\end{bmatrix}.
+		\end{equation}
+		According to the definition of $\Nc$, the first $|\Uc|$ rows of $H^{\top} \Nc^{\top} \Nc$ are zeros. Therefore, we extract the non-zeros part of equation (\ref{eq:KKT12}) in the following:
+		\begin{equation}\label{eq:KKT12_nonzero}
+			\begin{bmatrix}
+				\tilde{M}^{-1}+\Nc^{\top}\Nc & \Nc^{\top} \Nc H \Lc^{\top}\\
+				\Lc H^{\top} \Nc^{\top} \Nc  &  \Lc H^{\top} \Nc^{\top} \Nc H \Lc^{\top}
+			\end{bmatrix}
+			\begin{bmatrix}
+				\mu \\ \tilde{x}_s
+			\end{bmatrix}=\frac{1}{2}
+			\begin{bmatrix}
+				\lambda \\ \Lc H^{\top} \lambda 
+			\end{bmatrix}.
+		\end{equation}
+		where 
+		$$\Lc\triangleq 
+		\begin{bmatrix}
+			\mathbf{0}_{|\Sc|\times|\Uc|} & I_{|\Sc|\times|\Sc|}
+		\end{bmatrix}
+		\in \Rb^{|\Sc|\times n },
+		$$
+		and $\tilde{x}_s=\Lc \tilde{x}$.
+		
+		%Notice that
+		%\begin{align}
+		%&\Lc H^{\top} \Nc^{\top} \Nc H \Lc^{\top} 
+		%- \Lc H^{\top} \Nc^{\top} \Nc(\tilde{M}^{-1}+\Nc^{\top}\Nc)^{-1} \Nc^{\top} \Nc H \Lc^{\top} \notag \\
+		%= &\Lc H^{\top} \Nc^{\top}  \left(I -\Nc(\tilde{M}^{-1}+\Nc^{\top}\Nc)^{-1}\Nc^{\top} \right)  \Nc H \Lc^{\top} . \label{eq:schur_comp}
+		%\end{align}
+		%Since I−\Nc(M~−1+\Nc⊤\Nc)−1\Nc⊤ is invertible and \LcH⊤\Nc⊤ is row full-rank (???) is also invertible due to the Frobenius rank inequality.
+		%Therefore, according to the result of Schur complement, matrix on the left of (???) is invertible.
+		
+		Rewrite (\ref{eq:KKT12_nonzero}) as:
+		\begin{align}\label{eq:KKT12_matrix}
+			\left(
+			\begin{bmatrix}
+				I & \mathbf{0} \\
+				\mathbf{0}  &  \Lc H^{\top} \Nc^{\top}
+			\end{bmatrix}
+			\Wc
+			\begin{bmatrix}
+				I & \mathbf{0} \\
+				\mathbf{0}  &  \Nc H \Lc^{\top}
+			\end{bmatrix}
+			\right)
+			\begin{bmatrix}
+				\mu \\ \tilde{x}_s
+			\end{bmatrix}=\frac{1}{2}
+			\begin{bmatrix}
+				I & \mathbf{0} \\
+				\mathbf{0}  &  \Lc H^{\top}
+			\end{bmatrix}
+			\lambda .
+		\end{align}
+		Notice that $\Wc$ is positive definite and $\begin{bmatrix}
+			I & \mathbf{0} \\
+			\mathbf{0}  &  \Lc H^{\top} \Nc^{\top}
+		\end{bmatrix}$
+		is full row-rank\footnote{
+			$\Lc H^{\top} \Nc^{\top}=
+			\begin{bmatrix}
+				H^{\top}_{ss,1} & H^{\top}_{ss,2} & \cdots & H^{\top}_{ss,m}
+			\end{bmatrix}
+			$ is row full-rank due to the fact that for every state, there is at least one sensor who is able to observe the state.
+		}, 
+		due to the Frobenius rank inequality, the matrix on the left of (\ref{eq:KKT12_matrix}) is also invertible.
+		
+		Define
+		\begin{align}\label{eq:def_H}
+			\Xc	\triangleq
+			\left(
+			\begin{bmatrix}
+				I & \mathbf{0} \\
+				\mathbf{0}  &  \Lc H^{\top} \Nc^{\top}
+			\end{bmatrix}
+			\Wc
+			\begin{bmatrix}
+				I & \mathbf{0} \\
+				\mathbf{0}  &  \Nc H \Lc^{\top}
+			\end{bmatrix}
+			\right)^{-1}
+			\begin{bmatrix}
+				I & \mathbf{0} \\ \mathbf{0} &\Lc H^{\top}
+			\end{bmatrix}.
+		\end{align}
+		
+		%Sufficient condition of (???) is:
+		%\begin{align}\label{eq:KKT2_2}
+		%	\Nc \mu + \Nc H \tilde{x} - \frac{1}{2}(\Nc^\dag)^{\top} \lambda = \mathbf{0} 
+		%\end{align}
+		%where \Nc\dag is the pseudo-inverse of \Nc.
+		%Combining (???) and (???) leads to:
+		%\begin{equation}\label{eq:KKT12}
+		%	\begin{bmatrix}
+		%		\tilde{M}^{-1}+\Nc^{\top}\Nc & \Nc^{\top} \\
+		%		\Nc & I
+		%	\end{bmatrix}
+		%	\begin{bmatrix}
+		%		\mu \\ \Nc H \tilde{x}
+		%	\end{bmatrix}=\frac{1}{2}
+		%	\begin{bmatrix}
+		%		\lambda \\ (\Nc^\dag)^{\top} \lambda 
+		%	\end{bmatrix}.
+		%\end{equation}
+		
+		According to (\ref{eq:KKT3}), $\|\lambda\|_\infty \leq \gamma$. 
+		Therefore we have the following from (\ref{eq:KKT12_matrix})
+		\begin{equation}\label{eq:mu_xs_bounded}
+			\left\|\begin{bmatrix}
+				\mu \\ \tilde{x}_s 
+			\end{bmatrix}\right\|_\infty
+			\leq \frac{\gamma}{2}
+			\left\|\Xc\right\|_\infty.
+		\end{equation}
+		
+		Now we continue to prove that the estimation of unstable states $\tilde{x}_u$ are resilient under condition (\ref{cond:suff}).
+		%Denote μ∗,x∗s as the optimal solution of problem (???). 
+		Consider the 1-norm term:
+		\begin{align*}
+			&\left\| \Upsilon-\mu-H x \right\|_1 \\
+			=&\sum_{i\in\Rc} 
+			\left\|\eta_{i,u}-\mu_{i,u}-(H_{uu,i} x_u + H_{us,i} x_s) \right\|_1 \notag \\
+			&\quad + \sum_{i\in\Rc} \left\|\eta_{i,s}-\mu_{i,s}- H_{ss,i} x_s \right\|_1 
+		\end{align*}
+		where $\eta_{i,u}, \mu_{i,u}$ is the vector composed of first $|\Uc|$ element of $\eta_{i}, \mu_{i}$ and 
+		$\eta_{i,s}, \mu_{i,s}$ is the vector composed of last $|\Sc|$ element of $\eta_{i}, \mu_{i}$.
+		Notice that we are optimizing the following problem (\ref{pb:LASSO_free}) and suppose $\mu$ and $x_s$ have taken the value of optimal solution $\mu^*, x_s^*$.
+		\begin{align}\label{pb:LASSO_free}
+			\min _{\mu,x} \frac{1}{2} \mu^{\top} \tilde{M}^{-1} \mu+\gamma\left\|\Upsilon-\mu-H x\right\|_1 ,
+		\end{align}
+		It is sufficient to minimize the following :
+		\begin{align}\label{pb:1-norm_min}
+			\min_{x_u} \sum_{i\in\Rc} \left\|\eta_{i,u}-\mu^*_{i,u}- H_{us,i} x^*_s - H_{uu,i} x_u \right\|_1  .
+		\end{align}
+		Define $\xi_i\triangleq \eta_{i,u}-\mu^*_{i,u}- H_{us,i} x^*_s $ and recall $[\cdot]_j$ is the $j$-th entry of a vector. The objective function in (\ref{pb:1-norm_min}) can be written as 
+		\begin{align}
+			&\sum_{i\in\Rc}\sum_{j=1}^{|\Uc|} \left| [\xi_i]_j -[H_{uu,i} x_u]_j \right| 
+			=\sum_{j=1}^{|\Uc|}\sum_{i\in\Oc_j} \left| [\xi_i]_j -[x_u]_j \right| . \label{eq:solve_for_median}
+		\end{align}
+		where $\Oc_j$ is the index set of sensors that can observe state $j$, i.e.
+		\begin{equation*}
+			\Oc_j\triangleq \{i\in\Rc, [\theta(O_i)]_j = 1\}=\{i\in\Rc, [\theta(H_{uu,i})]_j = 1\}.
+		\end{equation*}
+		For each unstable state $j$, the minimizer $[\tilde{x}_u]_j$ of objective (\ref{eq:solve_for_median}) could be explicitly written as the median of all $[\xi_i]_j$ among $i\in\Oc_j$.
+		
+		Before proving that $[\tilde{x}_u]_j$ is bounded, let us define the following operator: $f_{i}: R \times R \times \cdots \times R \rightarrow R,$ such that $f_{i}\left(\alpha_{1}, \ldots, \alpha_{m}\right)$ equals to the $i$-th smallest element in the set $\left\{\alpha_{1}, \ldots, \alpha_{m}\right\} .$ For even number $m$, we further define 
+		$$f_{\frac{m+1}{2}} = \left(f_{\frac{m}{2}} + f_{\frac{m}{2}+1}\right)/2.$$ 
+		Thus, $f_{(m+1)/2}\left(\alpha_{1}, \ldots, \alpha_{m}\right)$ is the median number of set $\left\{\alpha_{1}, \ldots, \alpha_{m}\right\}$ and 
+		\begin{align*}
+			[\tilde{x}_u]_j = f_{(m+1)/2}\left([\xi_i]_j, i\in\Oc_j\right).
+		\end{align*}
+		Define the number of honest sensors and compromised sensors that can observe unstable state $j\in\Uc$ as:
+		\begin{align*}
+			h_j\triangleq &\sum_{i\in\Ic^c} [\theta(H_{uu,i})]_j = \sum_{i\in\Ic^c} H_{uu,i}e_j =\sum_{i\in\Ic^c} H_{i}e_j, \\
+			c_j\triangleq &\sum_{i\in\Ic} [\theta(H_{uu,i})]_j = \sum_{i\in\Ic} H_{uu,i}e_j =\sum_{i\in\Ic} H_{i}e_j.
+		\end{align*}
+		Notice that for sensor $i\in\Ic$, the data $\eta_{i}$ may have been rewritten by the malicious attacker. Define the uncorrupted data corresponding to sensor $i$ as $\eta^{\re}_{i}$. Define $\xi^{\re}_{i}$ correspondingly as $\xi^\re_i\triangleq \eta^\re_{i,u}-\mu^*_{i,u}- H_{us,i} x^*_s $.
+		Since $\mu^*_u$ and $x^*_s$ has been proved to be bounded in (\ref{eq:mu_xs_bounded}), $\xi^\re_i$ is also bounded for each $i$.
+		Based on the definition of $h_j,c_j$, we have
+		\begin{align}	
+			f_{(h_j-c_j)}\left([\xi^\re_i]_j, i\in\Oc_j\right) &\leq
+			f_{(m+1)/2}\left([\xi_i]_j, i\in\Oc_j\right), \label{eq:x_u_leftbound}\\
+			f_{(m+1)/2}\left([\xi_i]_j, i\in\Oc_j\right)&\leq 
+			f_{2c_j}\left([\xi^\re_i]_j, i\in\Oc_j\right) .  \label{eq:x_u_rightbound}
+		\end{align}
+		According to condition (\ref{cond:suff}), among the sensors who can observe state $j$, honest ones are more than compromised ones. Otherwise suppose $j^*$ satisfy $ c_{j^*}\geq h_{j^*}$, then
+		$$\sum_{i\in\Ic} H_i e_{j^*}  =c_{j^*} \geq h_{j^*} =\sum_{i\in\Ic^c} H_{i} e_{j^*} $$
+		%
+		%there exists a x such that
+		%$$[x]_j=\left\{
+		%\begin{array}{l}
+		%	1 ,\ j=j^* \\
+		%	0,\ \text{otherwise}
+		%\end{array}\right. .
+		%$$
+		%This leads to
+		%$$	\sum_{i \in \Ic}\left\|	H_{uu,i} x_u\right\|_{1} =c_j \geq h_j =
+		%	\sum_{i \in \Ic^{c}}\left\|H_{uu,i} x_u\right\|_{1},
+		%$$ 
+		which contradicts condition (\ref{cond:suff}).
+		Therefore, $h_j-c_j>0$ and $2c_j<h_j+c_j=|\Oc_j|$.
+		As a result, according to (\ref{eq:x_u_leftbound})(\ref{eq:x_u_rightbound}),
+		$$\min \left\{ [\xi^\re_i]_j, i\in\Oc_j \right\}\leq [\tilde{x}_u]_j\leq \max \left\{ [\xi^\re_i]_j, i\in\Oc_j \right\}.$$
+		Therefore, 
+		$$\|\tilde{x}_u\|_\infty \leq\|\Upsilon^{\rm real} \|_\infty + \|\mu\|_\infty+ \max_i  \|H_{us,i}\tilde{x}_s\|_\infty .$$
+		Combining with (\ref{eq:mu_xs_bounded}), $\|\tilde{x}\|_\infty$ is bounded and the proof is completed.
+	\end{proof}
+	
+	
+	\section{Illustrative Example}
+	
+	
+	
+	\section{Conclusion}\label{sec:conclusion}
+	
+	%\addtolength{\textheight}{-12cm}   % This command serves to balance the column lengths
+	% on the last page of the document manually. It shortens
+	% the textheight of the last page by a suitable amount.
+	% This command does not take effect until the next page
+	% so it should come on the page before the last. Make
+	% sure that you do not shorten the textheight too much.
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	\section{Appendix}
+	\subsection{Proof of Lemma \ref{lm:span}}
+	\begin{proof}
+		We first prove $\rs(O_i)=\rs(O_i A)$. Define $p(\pi)=a_n \pi^n +\cdots+a_1 \pi +a_0$ is the characteristic polynomial of $A$ where $\{a_n,\cdots,a_0\}$ are the coefficients. 
+		According to Cayley-Hamilton Theorem, $A^n=-a_{n-1}A^{n-1}+\cdots-a_0 I$. Therefore, 
+		$$
+		O_i A=
+		\begin{pmatrix}
+			0 & 1 & 0 &  \cdots & 0 \\
+			0 & 0 & 1 &  \cdots & 0 \\
+			\vdots & \vdots & \vdots & \ddots & \vdots \\
+			0 & 0 & 0 &  \cdots & 1 \\
+			-a_0 & -a_1 & -a_2 & \cdots &  -a_{n-1}
+		\end{pmatrix}
+		O_i
+		$$
+		Recall that $a_0=(-1)^n\det(A)\neq 0$. Thus, $\rs(O_i)=\rs(O_i A)$ is proved.
+		
+		Define $q_\pi(A)=\sum_{k=0}^{n-1} \sum_{i=0}^{n-k-1} a_{i+k+1} \pi^i A^k$. According to Cayley-Hamilton Theorem, when $\pi$ is not the eigenvalue of $A$,
+		\begin{align}\label{A-lambdaI}
+			(A-\pi I)^{-1}=-\frac{1}{p(\pi)} q_\pi(A)
+		\end{align}
+		In order to simplify notations, we define 
+		\begin{equation}\label{eq:bjk}
+			b_{j,k}\triangleq-\frac{1}{p(\pi_j)}\sum_{i=0}^{n-k-1} a_{i+k+1} \pi_j^i.
+		\end{equation}
+		According to (\ref{A-lambdaI}), the $j$-th row of matrix $G_i$ is
+		$$C_{i} A\left(A-\pi_{j} I\right)^{-1}=
+		\begin{bmatrix}
+			b_{j,0} & b_{j,1} & \cdots  & b_{j,n-1} 
+		\end{bmatrix} O_i A.$$
+		
+		Then $G_i$ can be interpreted as (\ref{eq:GandOA}).
+		\begin{align}
+			G_i = \begin{pmatrix}
+				b_{1,0} & b_{1,1} & \cdots  & b_{1,n-1} \\
+				b_{2,0} & b_{2,1} & \cdots  & b_{2,n-1} \\
+				\vdots & \vdots & \ddots  & \vdots \\
+				b_{n,0} & b_{n,1} & \cdots  & b_{n,n-1} 
+			\end{pmatrix}
+			O_i A 
+			= & \mathcal{D}\mathcal{V}\mathcal{T}O_i A \label{eq:GandOA}		
+		\end{align}
+		where 
+		\begin{align*}
+			&\mathcal{D}\triangleq\begin{pmatrix}
+				-\frac{1}{p(\pi_1)} & 0 & \cdots  & 0 \\
+				0 & -\frac{1}{p(\pi_2)} & \cdots  & 0 \\
+				\vdots & \vdots & \ddots  & \vdots \\
+				0 & 0 & \cdots  & -\frac{1}{p(\pi_n)}
+			\end{pmatrix}, \\
+			&\mathcal{V}\triangleq
+			\begin{pmatrix}
+				\pi_1^{n-1} & \pi_1^{n-2} & \cdots  & 1 \\
+				\pi_2^{n-1} & \pi_2^{n-2} & \cdots  & 1 \\
+				\vdots & \vdots & \cdots  & \vdots \\
+				\pi_n^{n-1} & \pi_n^{n-2} & \cdots  & 1
+			\end{pmatrix}, \\
+			&\mathcal{T}\triangleq
+			\begin{pmatrix}
+				a_n & 0 & \cdots &   0 \\
+				a_{n-1} & a_n & \cdots &   0 \\
+				\vdots & \vdots & \ddots  & \vdots \\
+				a_1 & a_2 & \cdots  & a_n 
+			\end{pmatrix}.
+		\end{align*}
+		According to Assumption \ref{as:distinct_eigvalue}, all $\pi_j$ are distinct eigenvalues and they are not the eigenvalues of $A$, i.e. the diagonal matrix $\mathcal{D}$ and the Vandermonde matrix $\mathcal{V}$ are invertible. Moreover, $a_n=1$. Therefore, the lower triangular Toeplitz matrix $\mathcal{T}$ is invertible and thus $\rs(G_i)=\rs(O_i A)=\rs(O_i)$. 		
+	\end{proof}
+	
+	\subsection{Proof of Theorem }
+	\begin{proof}[Proof of Theorem ]
+		
+		
+	\end{proof}
+	%	\section*{ACKNOWLEDGMENT}
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	%	\end{thebibliography}
+	\bibliographystyle{IEEEtran}
+	%	\bibliographystyle{plain}
+	\bibliography{ref_zishuo}
+	
+	
+\end{document}

@@ -1,0 +1,139 @@
+\begin{tikzpicture}
+%\begin{axis}
+%[	width=2.6in,
+%	height=1.5in,
+%	at={(0in,0in)},
+%	scale only axis,
+%	xmin=-0.01,
+%	xmax=0.2,
+%	ymin=-0.02,
+%	ymax=0.5,
+%	title={MSE with varying $\gamma$},
+%	xlabel={\footnotesize MSE without attack},
+%	ylabel={\footnotesize MSE under attack},
+%%	x label style={at={(axis description cs:0.5,-0.08)},anchor=north},
+%%	y label style={at={(axis description cs:-0.11,.5)},anchor=south},
+%	xticklabel style = {font=\footnotesize},
+%	yticklabel style = {font=\footnotesize},
+%	axis background/.style={fill=white},
+%	xmajorgrids,
+%	ymajorgrids,
+%	legend style={at={(0.98,0.98)}, anchor=north east, legend cell align=left, align=left, draw=white!15!black, font=\scriptsize}]
+%	
+%	 \addplot [color={blue}, line width=1pt, mark=*, mark size=1pt]
+%	table[row sep={\\}]
+%	{
+%%		2.73294  2.18893 \\ % gamma=0.1
+%%		2.7611  2.2588  \\  % gamma=0.2
+%%		2.73456  2.14272 \\ % gamma=0.5
+%%		2.70273  2.23093 \\ % gamma=1
+%%		2.5806  2.13751 \\  % gamma=2
+%%		 1.3291898141799852 \\ % gamma=4
+%		0.49171288806410334  0.23058873634922077 \\ % gamma=5
+%		0.15031158033658748 0.023028041755303673 \\% gamma=6
+%		0.022956004079827286  0.023069623748774245 \\ % gamma=7
+%		0.022892999120518853  0.02302036422425081 \\ % gamma=8
+%		0.022738740120155414  0.023028041755303673 \\ % gamma=10
+%		0.02031379510833805 0.023522751164769238 \\ % gamma=20
+%		0.018767389239823917 0.025297232039458894   \\ % gamma=30
+%		0.018239965010654734 0.03540481351322025 \\ % gamma=40
+%		0.017382121611668622 0.053386825865487555\\ % gamma=50
+%		0.015534591302800367 0.06477553708429706\\ % gamma=100
+%		0.015363288434118163 0.16504007534811177\\ % gamma=200
+%		0.015363288434118163 0.27504007534811177\\ % gamma=500
+%		0.012899244187193867 0.382451394009979\\ % gamma=1000
+%	} 
+%	;\addlegendentry{Our proposed estimator}
+%	
+%	
+%	
+%	 \addplot [dashed, color={red}, line width=1pt]
+%	table[row sep={\\}]
+%	{
+%	 3  0.0016205180878490848  \\
+%	 0.0016205180878490848  0.0016205180878490848 \\
+%	 0.0016205180878490848  30\\
+%	}
+%	;\addlegendentry{Oracle Kalman estimator}
+%	
+%	 \addplot [color={red}, line width=1pt]
+%	table[row sep={\\}]
+%	{
+%		0.002  0.3483651642262539\\
+%		3  0.3483651642262539\\
+%	}
+%	;%\addlegendentry{Kalman estimator}
+%	
+%	\draw[latex-] (0.017, 0.07)--(0.05,0.18) node[right]{\footnotesize  $\gamma=100$};
+%	\draw[latex-] (0.023, 0.023)--(0.05,0.12) node[right]{\footnotesize $\gamma=7$};
+%	\draw[latex-] (0.1, 2.5)--(2.3,5) node[right]{\footnotesize $\gamma=5$};
+%	\draw[-] (0.1, 0.348)--(0.12,0.3) node[below]{\footnotesize MSE of Kalman under attack};
+%	
+%   
+%\end{axis}
+
+\begin{axis}
+	[width=2.6in,
+	height=1.5in,
+	at={(3.5in,0in)},
+	scale only axis,
+	xmin=0,
+	xmax=2.0,
+	ymin=-0.1,
+	ymax=1.5,
+	title={MSE with varying attack magnitude},
+	xlabel={\footnotesize attack magnitude $||a||_\ift$},
+	ylabel={\footnotesize MSE under attack},
+	%	x label style={at={(axis description cs:0.5,-0.08)},anchor=north},
+	y label style={at={(axis description cs:-0.11,.5)},anchor=south},
+	xticklabel style = {font=\footnotesize},
+	yticklabel style = {font=\footnotesize},
+	axis background/.style={fill=white},
+	xmajorgrids,
+	ymajorgrids,
+	legend style={at={(0.02,0.98)}, anchor=north west, legend cell align=left, align=left, draw=white!15!black, font=\scriptsize}]
+	
+	
+	
+		\addplot [color={blue}, line width=1pt, mark=*, mark size=1pt]
+		table[row sep={\\}]
+		{   0 0.022738740120155414\\
+			0.1 0.02273998743284275\\
+			0.2 0.02309437925527503\\
+			0.5 0.022727416340979578\\
+			1 0.023028041755303673\\
+			1.5 0.04150262265679778\\
+			2  0.06361155341192473\\
+		}
+		;\addlegendentry{Our proposed estimator}
+		
+		\addplot [color={red}, line width=1pt, mark=*, mark size=1pt]
+		table[row sep={\\}]
+		{   0 0.0016205180878490848\\
+			0.1 0.005836883178707939\\
+			0.2 0.016944741009078466 \\
+			0.5 0.09868982450677061 \\
+			1   0.3483651642262539\\
+			1.5 0.7777564157424298\\
+			2 1.394430537838036 \\
+		}
+		;\addlegendentry{Kalman estimator}
+	
+	
+	
+	
+	\draw[latex-] (0.2,24)--(0.4,31) node[right]{\footnotesize $\gamma=100$};
+	\draw[latex-] (0.42,13.4)--(1,13) node[right]{\footnotesize $\gamma=30$};
+	\draw[latex-] (2,8)--(2.4,10) node[right]{\footnotesize $\gamma=5$};
+	\draw[-] (1.4, 17.6)--(1.6,21) node[above]{\footnotesize MSE of Kalman under attack};
+	
+\end{axis}
+
+
+
+
+\end{tikzpicture}
+
+
+
+

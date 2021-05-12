@@ -1,0 +1,95 @@
+\documentclass{beamer}
+\usetheme{default}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+\usepackage{esvect}
+\usetikzlibrary{circuits}
+
+\usetikzlibrary{intersections} 
+
+\usetikzlibrary{scopes, arrows, fadings, patterns}
+
+\usetikzlibrary{%
+	decorations.pathreplacing,%
+	decorations.pathmorphing%
+}
+\usetikzlibrary{positioning}
+\usepackage{tikz}
+
+
+\title{Beamer Template}
+\author{}
+\begin{document}
+\begin{frame}{Inverted pendulum}
+   \centering
+   \begin{columns}
+   	\begin{column}{0.5\textwidth}
+   		\scalebox{0.7}{\input{inv_pen.tex}}
+   	\end{column}
+   \begin{column}{0.5\textwidth}
+   	$x_1$: cart position
+   	
+   	$x_2$: cart velocity
+   	
+   	$x_3$: pendulum angle
+   	
+   	$x_4$: pendulum angle velocity
+   	
+   	Linearize at $x_3=x_4=0$, 
+   	
+   	Sample with interval $T_s=0.02$.
+   \end{column}
+   \end{columns}
+   
+   \vspace{-1pt}
+   {\footnotesize
+   \begin{align*}
+   x(k+1)=\begin{bmatrix}
+   1  \hspace{-2pt}&\hspace{-2pt}   2.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-2}  \hspace{-2pt}&\hspace{-2pt}  -2.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-4}  \hspace{-2pt}&\hspace{-2pt}  1.9\hspace{-2pt}\cdot\hspace{-2pt} 10^{-5}\\
+   0  \hspace{-2pt}&\hspace{-2pt}   1.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{0}   \hspace{-2pt}&\hspace{-2pt} -2.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-2}  \hspace{-2pt}&\hspace{-2pt}   1.8\hspace{-2pt}\cdot\hspace{-2pt} 10^{-3}\\
+   0  \hspace{-2pt}&\hspace{-2pt}   1.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-5} \hspace{-2pt}&\hspace{-2pt}   1.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{0} \hspace{-2pt}&\hspace{-2pt}   2.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-2}\\
+   0  \hspace{-2pt}&\hspace{-2pt}   1.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-3}\hspace{-2pt}&\hspace{-2pt}  2.1\hspace{-2pt}\cdot\hspace{-2pt} 10^{-1}  \hspace{-2pt}&\hspace{-2pt}  9.8\hspace{-2pt}\cdot\hspace{-2pt} 10^{-1}
+   \end{bmatrix}x(k)+\begin{bmatrix}
+   2.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-4}\\
+   2.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-2}\\
+   -2.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-4}\\
+   -2.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-2}
+   \end{bmatrix}
+   u(k)+w(k).
+   \end{align*}
+   \begin{align*}
+   y(k)=
+   \begin{bmatrix}
+   1\hspace{-2pt}&\hspace{-2pt} 0 \hspace{-2pt}&\hspace{-2pt}0 \hspace{-2pt}&\hspace{-2pt}0\\
+   1\hspace{-2pt}&\hspace{-2pt} 0 \hspace{-2pt}&\hspace{-2pt}0 \hspace{-2pt}&\hspace{-2pt}0\\
+   1\hspace{-2pt}&\hspace{-2pt} 0 \hspace{-2pt}&\hspace{-2pt}0 \hspace{-2pt}&\hspace{-2pt}0\\
+   0\hspace{-2pt}&\hspace{-2pt} 0 \hspace{-2pt}&\hspace{-2pt}1 \hspace{-2pt}&\hspace{-2pt}0
+   \end{bmatrix}x(k)+v(k)+a(k).
+   \end{align*} }
+\end{frame}
+\begin{frame}{Performance without attack}
+	\begin{figure}[htpb!]
+		\centering
+		\scalebox{0.65}{\input{cl_no.tex}}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Performance under attack}
+	\vspace{-30pt}
+	\begin{figure}[ht]
+		\centering
+		\scalebox{0.65}{\input{at.tex}}
+	\end{figure}
+\vspace{-10pt}
+	\small Attack signal and measurements of sensor 3. The attack signal is uniformly distributed in interval $(-1,1)$
+	\vspace{-10pt}
+	\begin{figure}[ht]
+		\centering
+		\scalebox{0.65}{\input{cl_at.tex}}
+	\end{figure}
+\vspace{-10pt}
+	Estimation of states under attack on sensor 3.
+\end{frame}
+
+\end{document}

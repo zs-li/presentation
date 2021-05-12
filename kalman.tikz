@@ -1,0 +1,17 @@
+\begin{tikzpicture}[auto, node distance=1.8cm,>=latex']
+
+\node at (0,3.5) {$y_1(k)$};
+\node at (1.5,3.5) {$y_2(k)$};
+\node at (2.7,3.5) {$\cdots$};
+\node at (4,3.5) {$y_m(k)$};
+
+\draw [->] (0,3.2) -- (0,2.5);
+\draw [->] (1.5,3.2) -- (1.5,2.5);
+\draw [->] (4,3.2) -- (4,2.5);
+
+\draw [rounded corners, fill=blue!20](-1,2.5) rectangle (5,1.7);
+\node at (2,2.1) {Kalman filter};
+
+\draw [->] (2,1.7) -- (2,1);
+\node at (2,0.7) {$\hat{x}(k)$};
+\end{tikzpicture}

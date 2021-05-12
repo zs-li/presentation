@@ -1,0 +1,1865 @@
+
+\documentclass[12pt]{article}
+
+\addtolength{\oddsidemargin}{-0.75in}
+\addtolength{\evensidemargin}{-0.75in}
+\addtolength{\textwidth}{1.5in}
+
+\addtolength{\topmargin}{-.875in}
+\addtolength{\textheight}{1.75in}
+
+\usepackage{cite}
+\usepackage{url}
+\usepackage{graphics} % for pdf, bitmapped graphics files
+\usepackage{epsfig} % for postscript graphics files
+\usepackage{mathptmx} % assumes new font selection scheme installed
+\usepackage{mathrsfs}
+\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n}
+\usepackage{cuted}
+
+%\usepackage{times} % assumes new font selection scheme installed
+\usepackage{setspace}
+\usepackage{amssymb,amsmath,amsfonts}
+%\usepackage{mathrsfs}
+%\usepackage{amsthm}
+\usepackage{ntheorem}
+\usepackage{booktabs}
+\usepackage{makecell}
+
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{algorithm,algorithmic}  
+%\pgfplotsset{compat=1.6}
+\usepackage{multirow}
+
+\renewcommand{\labelenumi}{(\arabic{enumi})} % change enumerate env to (1)(2)(3)
+
+
+\newcommand{\Pb}{{\mathbb{P}}}
+\newcommand{\Eb}{{\mathbb{E}}}
+\newcommand{\Rb}{{\mathbb{R}}}
+\newcommand{\Cb}{{\mathbb{C}}}
+\newcommand{\Ib}{{\mathbb{I}}}
+\newcommand{\Zb}{{\mathbb{Z}}}
+
+\newcommand{\Fs}{{\mathscr{F}}} % filiteration
+\newcommand{\Bs}{{\mathscr{B}}} % Borel set
+\newcommand{\Es}{{\mathscr{E}}}
+\newcommand{\Os}{{\mathscr{O}}}
+
+
+\newcommand{\Ec}{{\mathcal{E}}} %graph vertex edge
+\newcommand{\Gc}{{\mathcal{G}}}
+\newcommand{\Vc}{{\mathcal{V}}}
+
+
+\newcommand{\Fc}{{\mathcal{F}}}
+\newcommand{\Pc}{{\mathcal{P}}}
+
+\newcommand{\Qc}{{\mathcal{Q}}} 
+\newcommand{\Ac}{{\mathcal{A}}}
+\newcommand{\Cc}{{\mathcal{C}}}
+\newcommand{\I}{{\mathcal{I}}}
+\newcommand{\Rc}{{\mathcal{R}}}
+\newcommand{\Uc}{{\mathcal{U}}}
+\newcommand{\Tc}{{\mathcal{T}}}
+\newcommand{\Sc}{{\mathcal{S}}}
+\newcommand{\Oc}{{\mathcal{O}}}
+\newcommand{\Mc}{{\mathcal{M}}}
+\newcommand{\Nc}{{\mathcal{N}}}
+\newcommand{\Wc}{{\mathcal{W}}}
+\newcommand{\Lc}{{\mathcal{L}}}
+\newcommand{\Hc}{{\mathcal{H}}}
+
+\newcommand{\Ss}{{\mathscr{S}}}
+
+\newcommand{\Oi}{{\tilde{O}_i}}
+\newcommand{\Gi}{{\tilde{G}_i}}
+\newcommand{\Si}{{\tilde{S}_i}}
+
+\newcommand{\ra}{{\rightarrow}}
+\newcommand{\ift}{{\infty}}
+\newcommand{\rs}{\text{rowspan}}
+\newcommand{\rank}{\text{rank}}
+\newcommand{\sgn}{\text{sgn}}
+\newcommand{\re}{\text{real}}
+\newcommand{\tgm}{\tilde{\Gamma}}
+\newcommand{\gm}{{\Gamma}}
+\newcommand{\rd}{{\mathrm{d}}}
+\newcommand{\diag}{{\mathrm{diag}}}
+\newcommand{\todo}{\textcolor{blue}{ TODO: }\textcolor{blue}}
+
+\DeclareMathOperator{\cov}{Cov}
+\DeclareMathOperator{\imag}{Im}
+\DeclareMathOperator{\real}{Re}
+\DeclareMathOperator{\spe}{sp}
+
+\theorembodyfont{\normalfont}
+\newtheorem{proposition}{\textbf{Proposition}}
+\newtheorem{lemma}{\textbf{Lemma}}
+\newtheorem{theorem}{\textbf{Theorem}}
+\newtheorem{remark}{\textbf{Remark}}
+\newtheorem{assumption}{\textbf{Assumption}}
+\newtheorem{corollary}{\textbf{Corollary}}
+\newtheorem{conjecture}{\textbf{Conjecture}}
+\newtheorem{definition}{\textbf{Definition}}
+\newtheorem{problem}{\textbf{Problem}}
+%\newtheorem{proposition}{Proposition}
+\newtheorem*{proof}{\textbf{Proof}}
+
+
+
+
+
+
+
+% *** GRAPHICS RELATED PACKAGES ***
+%
+%\ifCLASSINFOpdf
+%   \usepackage[pdftex]{graphicx}
+
+
+
+\begin{document}
+%
+% paper title
+% Titles are generally capitalized except for words such as a, an, and, as,
+% at, but, by, for, in, nor, of, on, or, the, to and up, which are usually
+% not capitalized unless they are the first or last word of the title.
+% Linebreaks \\ can be used within to get better formatting as desired.
+% Do not put math or special symbols in the title.
+\title{Secure State Estimation with Non-uniform Sampled Measurements against Sparse Integrity Attack}
+%
+%
+% author names and IEEE memberships
+% note positions of commas and nonbreaking spaces ( ~ ) LaTeX will not break
+% a structure at a ~ so this keeps an author's name from being broken across
+% two lines.
+% use \thanks{} to gain access to the first footnote area
+% a separate \thanks must be used for each paragraph as LaTeX2e's \thanks
+% was not built to handle multiple paragraphs
+%
+
+\author{Zishuo~Li and Yilin~Mo
+        % <-this % stops a space
+\thanks{Zishuo Li and Yilin Mo are with the Department
+of Automation, Tsinghua University, Beijing, China, e-mail: \texttt{lizs19@mails.tsinghua.edu.cn, ylmo@mail.tsinghua.edu.cn}. } }% <-this % stops a space
+%\thanks{J. Doe and J. Doe are with Anonymous University.}% <-this % stops a space
+
+
+% note the % following the last \IEEEmembership and also \thanks - 
+% these prevent an unwanted space from occurring between the last author name
+% and the end of the author line. i.e., if you had this:
+% 
+% \author{....lastname \thanks{...} \thanks{...} }
+%                     ^------------^------------^----Do not want these spaces!
+%
+% a space would be appended to the last name and could cause every name on that
+% line to be shifted left slightly. This is one of those "LaTeX things". For
+% instance, "\textbf{A} \textbf{B}" will typeset as "A B" not "AB". To get
+% "AB" then you have to do: "\textbf{A}\textbf{B}"
+% \thanks is no different in this regard, so shield the last } of each \thanks
+% that ends a line with a % and do not let a space in before the next \thanks.
+% Spaces after \IEEEmembership other than the last one are OK (and needed) as
+% you are supposed to have spaces between the names. For what it is worth,
+% this is a minor point as most people would not even notice if the said evil
+% space somehow managed to creep in.
+
+
+
+% The paper headers
+%\markboth{Journal of \LaTeX\ Class Files,~Vol.~14, No.~8, August~2015}%
+%{Shell \MakeLowercase{\textit{et al.}}: Bare Demo of IEEEtran.cls for IEEE Journals}
+% The only time the second header will appear is for the odd numbered pages
+% after the title page when using the twoside option.
+% 
+% *** Note that you probably will NOT want to include the author's ***
+% *** name in the headers of peer review papers.                   ***
+% You can use \ifCLASSOPTIONpeerreview for conditional compilation here if
+% you desire.
+
+
+
+
+% If you want to put a publisher's ID mark on the page you can do it like
+% this:
+%\IEEEpubid{0000--0000/00\$00.00~\copyright~2015 IEEE}
+% Remember, if you use this you must call \IEEEpubidadjcol in the second
+% column for its text to clear the IEEEpubid mark.
+
+
+% use for special paper notices
+%\IEEEspecialpapernotice{(Invited Paper)}
+
+
+
+
+% make the title area
+\maketitle
+
+% As a general rule, do not put math, special symbols or citations
+% in the abstract or keywords.
+\begin{abstract}
+...
+\end{abstract}
+
+% Note that keywords are not normally used for peerreview papers.
+\textbf{Keywords:}
+Dynamic state estimation, secure estimation, observability, Kalman Filter
+
+
+
+
+
+
+
+% For peer review papers, you can put extra information on the cover
+% page as needed:
+% \ifCLASSOPTIONpeerreview
+% \begin{center} \bfseries EDICS Category: 3-BBND \end{center}
+% \fi
+%
+% For peerreview papers, this IEEEtran command inserts a page break and
+% creates the second title. It will be ignored for other modes.
+%\IEEEpeerreviewmaketitle
+
+
+
+\section{Introduction}
+
+\textit{Notations:}
+Strictly positive intergers are denoted as $\Zb^+$. The set of $m\times n$ complex matrices is denoted as $\Cb^{m\times n}$.
+Cardinality of a set $\Sc$ is denoted as $|\Sc|$.  Denote the span of row vectors of matrix $A$ as $\rs(A)$. $\det(A)$ is the determinant of $A$. $\mathbf{0}_{m\times n}, \mathbf{1}_{m\times n}$ denote all-zero or all-one matrix with size $m\times n$.
+$A{'}$ means the transpose of $A$ if $A$ is a real matrix. It means the conjugate transpose of $A$ if $A$ is a complex matrix.
+In order to distinguish the corresponding process in continuous time and discrete time, we denoted the continuous time index in a pair of parenthesis $(\cdot)$ and discrete time index in a pair of brackets $[\cdot]$.
+%Suppose $\I$ is an index set, define $A(\I,:)$ as the matrix composed of the rows of matrix $A$ with indices in $\I$. Similarly, $A(:,\I)$ is the matrix composed columns of matrix $A$ with indices in $\I$. 
+%If $\I=\{i,i+1,\cdots,j\}$, they are also denoted as $A(i:j,\ :)$ and $A(:,\ i:j)$. 
+%Modulus of complex number $z$ is denoted as $|z|$.
+
+\section{Problem Formulation and Preliminaries}
+\label{sec:problem}	
+\subsection{State Estimation with Asynchronous Measurements}\label{sec:basic_measure}
+In this paper we consider a continuous linear system:
+\begin{align}\label{eq:system}
+\dot{x}(t)=A x(t)+w(t)
+\end{align}
+where $x(t) \in \mathbb{R}^{n}$ is the state, $w(t) \sim {N}({0}, Q(t))$ is time-varying Gaussian process noise with zero mean and covariance matrix $Q(t)\succeq 0 .$ The initial state $x(0) \sim {N}(0, \Sigma)$ is assumed to be zero mean Gaussian and is independent from the noise process $\{w(t)\}$.
+
+Assume that $m$ sensors are measuring the system state and denote the sensor index as $\Ss \triangleq\{1,2, \ldots, m\}$. 
+%The sensor measurements are sampled ly since tbecause of different  rates
+Consider the case where the measurements are sampled at non-uniform rates, i.e., the measurements from sensors are:
+\begin{equation}\label{eq:y_i_def}
+y(t_k)=C x(t_k)+v(t_k), %+a_{i}(k)=z_{i}(k)+a_{i}(k), 
+\end{equation}
+where $t_k$ is the sampling time and satisfy
+\begin{equation*}
+	0=t_0<t_1<t_2 <\cdots < t_k < \cdots .
+\end{equation*} 
+Define the set of sampling time as 
+\begin{equation*}
+\Gamma \triangleq \{t_0,t_1,t_2,\cdots\} .
+\end{equation*}
+%and the measurement $z(t_k)\in \Rb^m$ is, 
+%\begin{equation}\label{eq:def_zi}
+%	z(t_k)=C x(t_k)+v(t_k)
+%\end{equation}
+And the measurements are vectors defined in the following:
+\begin{align}
+	y(t_k) \triangleq\begin{bmatrix}
+		y_{1}(t_k) \\
+		\vdots \\
+		y_{m}(t_k)
+	\end{bmatrix}  ,\
+	C \triangleq\begin{bmatrix}
+		C_{1} \\
+		\vdots \\
+		C_{m}
+	\end{bmatrix} , \
+	v(t_k) \triangleq\begin{bmatrix}
+		v_{1}(t_k) \\
+		\vdots \\
+		v_{m}(t_k)
+	\end{bmatrix},
+\end{align}
+where $y_i(t_k) \in \mathbb{R}$ is the measurement from sensor $i$ and $v(t_k) \in \mathbb{R}$ is Gaussian measurement noise which satisfies $v(t_k)\sim N({0},R(t_k))$ and $R(t_k)\succeq 0$. The measurement noise is independent of the noise process $\{w(t)\}$ and the initial condition $x(0)$. 
+
+In the following we introduce the Hybrid Kalman filter which is optimal in the sense of least mean square error. 
+
+%In many practical situations the measurements from different sensors may usually be asynchronous due to inherent delay, communication delay or the difference of sampling period, etc. We model it by introducing the measurement availability sequence. For every sensor, define $\phi_i[k]\in\{0,1\}$ as the measurement availability indicator at time $k$, i.e., the system operator have access to measurement $y_i(t_k)$ if $\phi_i[k]=1$ and cannot obtain $y_i(t_k)$ if $\phi_i[k]=0$.
+%Define 
+%\begin{equation}\label{eq:def_Phi}
+%	\Phi[k]\triangleq \left[\phi_1{'}[k],\phi_2{'}[k],\cdots,\phi_m{'}[k] \right]{'}.
+%\end{equation}
+
+
+
+%By this formulation, the model covers a general class of non-uniform, asynchronous sampling problem.
+
+%For notation simplicity, we denote $z_i(t^i_k)$ as $z_i[k]$ and similar for $C, x(t_k), v(t_k)$. This notation will be used throughout this paper without further notice.
+
+
+\subsection{Hybrid Kalman filter with asynchronous measurements}\label{sec:hybrid_kalman}
+It is well-known that for continuous-time systems with discrete-time measurements, the Hybrid Kalman filter have prediction steps defined in the following
+\begin{align}
+\hat{x}^-(t_{k})&=\int_{t_{k-1}}^{t_{k}} A x(\tau) \rd \tau + \hat{x}(t_{k-1}),\label{eq:def_x-}\\
+P^-(t_{k})&=\int_{t_{k-1}}^{t_{k}} \left( A P(\tau)+ P(\tau)A{'} +Q(\tau) \right)\rd \tau + P(t_{k-1}) \label{eq:def_P-} .
+\end{align}
+And the update steps are
+\begin{align}
+& K(t_k)=P^-(t_{k}) C{'} \left(C P^-(t_{k}) C{'}+R(t_k) \right)^{-1}, \label{eq:def_Kk} \\	
+& P(t_{k}) = P^-(t_k)-K(t_k) C P^-(t_k), \label{eq:def_Pt} \\
+& \hat{x}(t_{k})=\hat{x}^-(t_k) + K(t_k)  \left(y(t_{k})-C\hat{x}^-(t_{k}) \right) , \label{eq:def_xt}
+\end{align}
+with initial condition $\hat{x}(0)=0, P(0)=\Sigma .$
+
+
+
+%It is well-known that for observable system, the estimation error covariance matrices $P(k)$ and the gain $K(k)$ will converge to
+%\begin{align*}
+%	&P \triangleq \lim _{k \rightarrow \infty} P(k), P_{+}=A P A{'}+Q ,\\
+%	&K \triangleq P_{+} C{'}\left(C P_{+} C{'}+R\right)^{-1}.
+%\end{align*}
+%
+%Since typically the control system will be running for an extended period of time, we can assume that the Kalman filter is in steady state and thus the Kalman filter reduces to the following fixed-gain linear estimator:
+%\begin{equation}\label{eq:fix_gain_kalman}
+%\hat{x}(k+1)=(A-K C A) \hat{x}(k)+K y(k+1) .
+%\end{equation}
+
+%For uniform observable system, the estimation error covariance matrices $P(k)$ and the gain $K(k)$ will converge to a constant matrix. Define $K\triangleq\lim_{k\ra\ift}K(k)$. Since typically the control system will be running for an extended period of time, we can assume that the Kalman filter is in steady state, and thus the Kalman filter reduces to the following fixed-gain linear estimator.
+%When $t_{k-1}<t<t_k$,
+%\begin{align}\label{eq:fixgain_xt}
+%	\hat{x}(t)=\hat{x}^-(t)=\exp\left( A (t-t_{k-1}) \right) \hat{x}(t_{k-1}) , 
+%\end{align}
+%When $t=t_k$, 
+%\begin{align}
+%\hat{x}(t_{k})&=\hat{x}^-(t_k)+ K\left( y(t_k)- C \hat{x}^-(t_k)\right) \notag \\
+% &=\left(e^{A\Delta_{k-1}}-KC e^{A\Delta_{k-1}}\right) \hat{x}(t_{k-1}) + K y(t_k) \label{eq:fixgain_xtk}
+%\end{align}
+
+%\begin{align*}
+%\hat{x}(t)=
+%\left\{
+%\begin{array}{l}
+%  \\
+%
+%\end{array}
+%\right.
+%% &  \\
+%% & \hat{x}(t_k)=\hat{x}^-(t_k) + K  \left(y(t_k)-C\hat{x}^-(t_k) \right) , \label{eq:def_xt}
+%\end{align*}
+At sampling time $t_k\in\Gamma$, the Kalman estimation is given by \eqref{eq:def_xt}.
+At the time $t$ between two neighboring sampling times, e.g., $t_k<t<t_{k+1}$, the estimation is given by 
+\begin{equation*}
+\hat{x}(t)=\int_{t_{k}}^{t} A x(\tau) \rd \tau + \hat{x}(t_{k}).
+\end{equation*}
+
+In the following we focus on the estimation at sampling time and reduce it to a discrete-time estimator for the sake of legibility and further analysis. Recall that discrete time indices are denoted in brackets.
+Define system dynamic matrix $A[k]$ and noise covariance $Q[k],R[k]$ as  % and time interval $\Delta_k$ 
+\begin{align*}
+A[k]=\exp(A \cdot(t_{k+1}-t_{k}) ), \
+Q[k]=\int_{t_k}^{t_{k+1}} Q(\tau)d\tau ,\
+R[k]=R(t_k) .
+\end{align*}
+%where $\diag(\Phi[k])$ denotes the diagonal matrix with $i$-th diagonal element equals to $\phi_i[k]$.
+%Recall that measurement $y_i(k)$ is available when $\phi_i(k)=1$. Define the number of measurements available at time $k$ as $m(k)\triangleq \sum_{i=1}^{m}\phi(k)$. Before introducing the asynchronous Hybrid Kalman filter, we need the following matrix notations. 
+%Supposing that the set of available measurements at time $k$ is $\{i_1,i_2,\cdots,i_{m(k)}\}$ with an increasing order, we define $\psi(k)\in\Rb^{m\times m(k)}$ as
+%\begin{equation}
+%\psi(k)=\left[
+%\begin{array}{c|c|c|c}
+%e_{i_1} & e_{i_2} & \cdots & e_{i_{m(k)}}
+%\end{array}\right],
+%\end{equation}
+%where $e_i$ is the canonical basis vector with 1 on the $i$-th entry.
+The Hybrid Kalman estimation with non-uniform measurements is given in the following. 
+\begin{subequations}\label{eq:asy_kalman}
+	\begin{align}
+	\text{Prediction steps: } \hspace{5pt}
+	&\hat{x}^-[k]=A[k-1]\hat{x}[k-1] ,\\
+	&P^-[k]=A[k-1]P[k-1]A{'}[k-1] + Q[k-1], \\
+	\text{Update steps: } \hspace{5pt}
+	&K[k]=P^-[k] C{'} \left(C P^-[k] C{'}+R[k] \right)^{-1}  , \label{eq:def_Kk_asy} 	\\
+	& P[k] = (I-K[k]C) P^-[k], \label{eq:def_Pt_asy} \\
+	& \hat{x}[k]=\hat{x}^-[k] + K[k]  \left(y[k]-C\hat{x}^-[k] \right) , \label{eq:def_xt_asy}
+	\end{align}
+\end{subequations}
+where $y[k]\triangleq y(t_k)$.
+% and $\left(C[k] P^-[k] C{'}[k]+R[k] \right)^\dag$ is defined as
+%\begin{align}
+%\psi[k]\left(\psi{'}[k] \left( C P^-[k] C{'}+R[k] \right) \psi[k]\right)^{-1}\psi{'}[k].
+%\end{align}
+%Noticing that $K[k]C[k]=K[k]C$ for all time index $k$, it will be written as $K[k]C$ for notation simplicity.
+At time $t_{k+1}$, the asynchronous Hybrid Kalman estimation defined by \eqref{eq:asy_kalman} can be rewrite as:
+\begin{align}\label{eq:def_xhat}
+\hat{x}[k+1] =\left( A[k]-K[k+1]C A[k] \right) \hat{x}[k] + K[k+1] y({k+1}) .
+\end{align}
+In order to prevent observability degeneration because of pathological sampling time, we introduce the following notations and assumptions.
+Denote the sampling time interval set as 
+\begin{equation*}
+\Tc\triangleq \left\{t_{j}-t_{l}\ | \ t_j<t_l,\ t_j,t_l\in\Gamma \right\} .
+\end{equation*}
+Define the system pathological sampling interval set as 
+\begin{equation*}
+\Tc^*\triangleq \left\{ T>0 | \exp(\lambda_i T)=\exp(\lambda_j T),  \lambda_i\neq\lambda_j,\ \lambda_i,\lambda_j\in \spe(A) \right\} .
+\end{equation*}
+where $\spe(A)$ is the spectrum of $A$.  %eigenvalues of 
+We have the following assumptions on the sampling time.
+\begin{assumption}\label{as:sample_time} %[Measurement time interval]
+	The time interval between two measurements satisfy the following 
+	
+	(1) Set $\Tc$ is lower bounded and upper bounded, i.e.,
+	\begin{align*}
+	\inf \Tc > 0,\ \sup \Tc <\ift
+	\end{align*}
+	
+	(2) The sampling time is non-pathological, i.e.,
+	\begin{align}
+	\Tc_i\cap \Tc^*=\varnothing .
+	\end{align}
+\end{assumption} 
+Based on Assumption \ref{as:sample_time}, we have the following lemma characterizing the observability of the discrete-time system associated with non-uniform sampling time. 
+\begin{lemma}
+	If Assumption \ref{as:sample_time} is satisfied, the following discrete time-varying system is observable:
+	\begin{align*}
+	x[k+1]&=A[k]x[k]+w[k],\\
+	 y[k]&=Cx[k]+v[k]
+	\end{align*}
+	where $w[k]\sim N(0,Q[k]), v[k]=v(t_k)$. Thus Kalman estimation \eqref{eq:def_xhat} is a stable estimate of system state $x(t_k)$.
+\end{lemma}
+The proof is provided in the appendix.
+In the following section we will decompose this Kalman filter \eqref{eq:def_xhat} and recover it with a least square problem.
+\begin{proof}
+	\end{proof}
+
+
+\section{Decomposition of Hybrid Kalman filter}
+We will decompose the aforementioned asynchronous Hybrid Kalman filter into linear combination of local estimators and then design a least square problem based on the local estimations, which will later be used to construct secure fusion schemes.
+In order to prevent degeneration problems, we introduce the following assumptions.
+\begin{assumption}\label{as:A_inv}
+	The continuous-time system matrix $A$ is invertible. Moreover, $I-K(k)C(k)$ is invertible for all $k\in\Zb^+$.
+\end{assumption}
+\begin{remark}
+	Since $A[k]$ is obtained by discretizing a time-invariant continuous system, Assumption \ref{as:A_inv} implies that $A[k]-K[k+1]CA[k]$ is also invertible. 
+\end{remark}
+\subsection{Hybrid Kalman filter and its linear decomposition}
+
+
+In the following we decompose the aforementioned asynchronous Hybrid Kalman filter into local estimators $\zeta_i[k]$ which is the response of observations from sensor $i$.
+%Define the following local estimate $\zeta_i(t)\in\Rb^n$ for sensor $i$.
+%When $t_{k-1}<t<t_k$,
+%\begin{align}\label{eq:local_est-}
+%	\zeta_i(t)=\exp\left( A (t-t_{k-1}) \right) \zeta_i(t_{k-1}) , 
+%\end{align}
+%When $t=t_k$, 
+%\begin{align}\label{eq:local_est_long}
+%	\zeta_i(t_{k})= e^{A\Delta_k}\zeta_i(t_{k-1})+ 
+%	\left\{
+%	\begin{array}{l}
+%	 K_i \left(y_i(t_k)-C_i e^{A\Delta_k}\zeta_i(t_{k-1})\right),\\
+%	 \hspace{90pt} \psi_i[k]=1. \\
+%	0,\ \psi_i[k]=0.
+%	\end{array}
+%\right.
+%\end{align}
+%Notice that the estimator can not acess $y_i(t_k)$ when $\psi_i[k]=0$. 
+%
+%We abuse the notation for conciseness and write (\ref{eq:local_est_long}) as
+%\begin{align}	\label{eq:local_est}
+%	\zeta_i(t_{k})=e^{A\Delta_k}\zeta_i(t_{k-1}) + \Psi[k]{'} K \left( y(t_k)- Ce^{A\Delta_k}\zeta_i(t_{k-1}) \right) .
+%\end{align} 
+%Even though the estimator can not acess $y_i(t_k)$ when $\psi_i[k]=0$, the zero elements in $\Psi[k]$ will cover the corresponding entries and (\ref{eq:local_est}) make sense.
+%
+%In the following we show that the asynchronous hybrid Kalman filter $\hat{x}(t)$ given in (\ref{eq:fixgain_xt})(\ref{eq:asy_xtk}) is the linear combination of local estimates $\zeta_i(t)$ defined in (\ref{eq:local_est-})(\ref{eq:local_est}).
+%
+%\begin{assumption}\label{as:distinct_eigvalue}
+%	$A[k]$ and $A[k]-K[k+1]CA[k]$ are both invertible for all $k$, moreover, $A[k]-K[k+1]CA[k]$ has $n$ distinct eigenvalues and do not share any eigenvalue with $A[k]$ for all $k$.
+%\end{assumption}
+Before establishing the local estimator, we need to define the following assumption.
+Define
+\begin{align*}
+\Pi[k] &\triangleq A[k]-K[k+1]C A[k] .
+\end{align*}
+The local estimator is defined in the following:
+\begin{align}\label{eq:def_zeta}
+	\zeta_{i}[k+1]=\Pi[k] \zeta_{i}[k] + K_i[k+1] y_i[k+1],
+\end{align}
+and $\zeta_{i}$ is initialized as $\zeta_{i}(0)= \mathbf{0}$.
+Since $K_i[k+1]=\mathbf{0}$ if system operator have no access to $y_i[k+1]$, this local estimator make sense in the asynchronous measurements formulation.
+%Define 
+%\begin{align*}
+%	F_i[k]=V_A\cdot \diag\left(K_i[k]\right) \cdot V^{-1}[k]
+%\end{align*}
+By summing equation \eqref{eq:def_zeta} over $i$, it is easily verified that the asynchronous Hybrid Kalman Filter (\ref{eq:def_xhat}) can be written as the linear combination of local estimators:
+\begin{equation}\label{eq:sum_zeta=xhat}
+\hat{x}[k]= \sum_{i=1}^{m} \zeta_{i}[k] .
+\end{equation}
+
+In the following we show the relationship between $\zeta_{i}[k]$ and $\hat{x}(t_k)$. Define the following matrix sequence:
+\begin{equation}\label{eq:defG}
+	G_i[k+1]=\Pi[k] G_i[k] A^{-1}[k]+K_i[k+1]C_i.
+\end{equation}
+We have the following results
+\begin{lemma}\label{lm:epsilon}
+ Let $\epsilon_i[k]\triangleq G_i[k] x(t_k)-\zeta_{i}[k]$, then
+	\begin{align}\label{eq:epsilon_recursive}
+		\epsilon_i[k+1]=\Pi[k]\epsilon_i[k]+\Pi[k] G_i[k] A^{-1}[k] w[k]
+		-K_i[k+1] v_{i}[k+1].
+%		\left(G_{i}[k]-\mathbf{1}_{n} C_i\right) w[k]-\mathbf{1}_{n} v_{iT}[k+1].
+	\end{align}
+\end{lemma}
+
+\begin{proof}
+According to the definition of $\epsilon_i[k]$, we have
+\begin{align*}
+	&\epsilon_{i}[k+1] =
+	G_{i}[k+1] x(t_{k+1})-\zeta_{i}[k+1] \\
+	=& G_{i}[k+1] \left(A[k] x(t_k)+ w[k]\right)-\Pi[k]\zeta_{i}[k] \\
+	&-K_i[k+1]\left(C_i A[k] x(t_k)+C_i w[k]+v_{i}[k+1]\right) \\
+	=&\left(G_{i}[k+1] A[k]-K_i[k+1] C_i A[k]\right) x(t_k)-\Pi[k] \zeta_{i}[k] \\
+	&+\left(G_{i}[k+1]-K_i[k+1] C_i\right) w[k]-K_i[k+1] v_{i}[k+1] \\
+	=&\Pi[k] G_{i}[k] x(t_k)-\Pi[k] \zeta_{i}[k] +\Pi[k] G_i[k] A^{-1}[k] w[k]\\
+	&-K_i[k+1] v_{i}[k+1],
+\end{align*}
+where the last equality comes from \eqref{eq:defG}. The proof is completed.
+\end{proof}
+We show an interesting property of $G_i[k]$ in the following lemma.
+\begin{lemma}
+	If $\sum_{i=1}^{m} G_i[0]=I$, the following holds for all $k\in\Zb^+$:
+	\begin{align}
+	\sum_{i=1}^{m} G_i[k]=I.
+	\end{align}
+\end{lemma}
+%The proof is reported in the Appendix.
+\begin{proof}
+	Assume that $\sum_{i=1}^{m} G_i[k]=I$ and we intend to prove that $\sum_{i=1}^{m} F_i[k+1]G_i[k+1]=I$.
+	\begin{align*}
+	\sum_{i=1}^{m} G_i[k+1]
+	=&\sum_{i=1}^{m} \Pi[k] G_i[k] A^{-1}[k]+K_i[k+1]C_i[k+1]\\
+	=& \Pi[k]A^{-1}[k]+K[k+1]C = I
+	\end{align*}
+	where the third equality comes from the assumption that $\sum_{i=1}^{m} G_i[k]=I$.
+\end{proof}
+
+In the following we show that, for fixed sensor $i$, the span of rows of $G_i[k]$ are the same for all $k$ under an assumption. 
+%This will help us find a canonical form of $G_i[k]$, which will simplify the analysis of secure fusion scheme. 
+We introduce the following assumption.
+\begin{assumption}\label{as:geo_mul}
+	All the eigenvalues of $A$ have geometric multiplicity 1.
+	Without loss of generality, we assume $A$ is in the Jordan canonical form.
+\end{assumption}
+
+Define the observable matrix of system $(A,C_i)$ as 
+$$
+O_{i} \triangleq\left[\begin{array}{c}
+C_{i} \\
+C_{i} A \\
+\vdots \\
+C_{i} A^{n-1}
+\end{array}\right].
+$$
+Before continuing on, we need the following notation of state observability. 
+%Define $\Sc\triangleq \{1,2,\cdots,n\}$ as the index set of all states and $\Sc_i\subseteq\Sc$ as the index set of states that sensor $i$ can observe, i.e.,
+%\begin{equation}
+%	\Sc_i\triangleq \{j\in\Sc\ |\ O_i{'} e_j\neq \mathbf{0} \},
+%\end{equation}
+Define $\Ec_j$ as the index set of sensors that can observe state $j$, i.e.
+\begin{equation}\label{eq:def_Oc}
+\Ec_j\triangleq \{i\in\Ss\ |\ O_i{'} e_j\neq \mathbf{0} \},
+\end{equation}
+where $\Ss\triangleq \{1,2,\cdots,m\}$ is the index set of all sensors and $e_j$ is the canonical basis vector with 1 on the $j$-th entry and 0 on the other entries.
+
+
+We have the following result quantifying the characteristic of $G_i[k]$. The proof of Lemma \ref{lm:span} is presented in the appendix.
+\begin{lemma}\label{lm:span}
+	Given $G_i[k]$ as the matrix sequence that satisfy dynamics in \eqref{eq:defG}, if $\rs(G_i[0])=\rs(O_i)$, the following holds for all $k\in\Zb^+$:
+	\begin{align*}
+	\rs(G_i[k])=\rs(O_i)=\rs(H_i)
+	\end{align*}
+	where $H_i$ is the following diagonal matrix
+	\begin{equation*}
+	H_i\triangleq \begin{bmatrix}
+	\Ib_{i\in\Ec_1} & & & \\
+	&\Ib_{i\in\Ec_2} & &  \\
+	& & \ddots &  \\
+	& & & \Ib_{i\in\Ec_n}
+	\end{bmatrix} ,
+	\end{equation*}
+	and $\mathbb{I}_\Es$ is the indicator function that takes the value 1 when $\Es$ is true and value 0 when $\Es$ is not.
+\end{lemma}
+
+\begin{proof}
+	Recall the dynamics of $G_i[k]$ in \eqref{eq:defG}:
+	 	$$G_i[k+1]=\Pi[k] G_i[k] A^{-1}[k]+K_i[k+1]C_i.$$
+	If $\rs(G_i[k])= \rs(O_i)$, according to Assumption \ref{as:geo_mul}, one obtains
+	$$\rs(G_i[k]A^{-1}[k])= \rs(O_i).$$
+	and thus $\rs(\Pi[k]G_i[k]A^{-1}[k])= \rs(O_i).$ Moreover, since $\rs(K_i[k+1]C_i)\subseteq \rs(O_i)$, one obtains that $\rs(G_i[k+1])\subseteq \rs(O_i)$. It suffices to show that the column rank of $\Pi[k] G_i[k] A^{-1}[k]$ do not degenerate after adding $K_i[k+1]C_{i}$.
+	
+	if columns of $G_i[k]$ are linear independent, columns of $G_i[k+1]$ are also linear independent. According to Assumption \ref{as:geo_mul}, columns of  $\Pi[k] G_i[k] A^{-1}[k]$ are linear 
+\end{proof}
+
+\begin{remark}
+	The row span of $G_i[k]$ is time-invariant and is equivalent to the observable space of $(A,C_i)$. Therefore, we have an fixed matrix $H_i$ and a invertible matrix sequence $P_i[k]$ such that $P_i[k] G_i[k]=H_i$. 
+\end{remark}
+
+In view of Lemma \ref{lm:span}, we initialize sequence $G_i[k]$ as 
+\begin{align}\label{eq:init_G}
+G_i[0]\triangleq \begin{bmatrix}
+1/|\Ec_1| & & & \\
+&1/|\Ec_2| & &  \\
+& & \ddots &  \\
+& & & 1/|\Ec_n|
+\end{bmatrix} .
+\end{align}
+Since the system is observable, $\Ec_i\neq\varnothing, \forall 1\leq i\leq n$, and this initialization satisfy that $\sum_{i=1}^{m} G_i[0]=I$.
+
+%After transformation $P_i$, matrix $G_i$ is transformed into canonical form $H_{i}$ whose rows are either canonical basis vectors or zero vectors. 
+%The non-zero entries of $H_i$ records the state observability of sensor $i$. Therefore, the sparse observability index can be directly obtained from $H_i$.
+%\begin{corollary}\label{co:sparse_obs}
+%	Denote $s$ as the sparse observability index of system \eqref{eq:system}-\eqref{eq:y_i_def}. Then 
+%	\begin{equation*}
+%	s=\min_{j\in\{1,2,\cdots,n\}} |\Sc_{j}| - 1 .
+%	\end{equation*}
+%\end{corollary} 
+%\begin{proof}
+%	For arbitrary $\overline{s}$ that satisfy $\overline{s}\geq s+1$, there exists a state index $j^*$ and a sensor index set $\I^*$ with $|\I^*|=\overline{s}$ such that $\Sc_{j^*} \cap \left(\Rc\setminus\I^*\right)=\varnothing$.
+%	As a result, state $j^*$ can not be observed by any sensor in $\Rc\setminus \I^*$, i.e.,
+%	\begin{equation*}
+%	e_{j^*}\notin \rs(O_i),\ \forall i\in\Rc\setminus \I^*.
+%	\end{equation*}
+%	and thus system $(A,C_{\Rc\setminus\I^*})$ is not observable.
+%	For arbitrary $\underline{s}$ that satisfy $\underline{s}\leq s$, arbitrary $j$ and arbitrary $\I$ with $|\I|=\underline{s}$, one obtains $\Sc_{j^*} \cap \left(\Rc\setminus\I^*\right)\neq\varnothing$, which means for all $j$, there exists $i^*\in\Rc\setminus \I$ such that: $e_{j}\in \rs(O_{i^*})$. Therefore, system $(A,C_{\Rc\setminus\I})$ is observable. According to Definition \ref{df:sparse_obs}, the system is $s$-sparse observable.
+%\end{proof}
+%\begin{remark}
+%	Corollary \ref{co:sparse_obs} provides an intuitive interpretation and calculation method of the sparse observability index, i.e., by calculating the minimum number of sensors that can observe a state.
+%	%	The cardinality of $|\Sc_{j}|$ is the number of. The  plus one coincides with the minimum number of sensors that can observe a state.
+%\end{remark}
+
+\subsection{Least Square Interpretation}
+In the following, we show that linear fusion \eqref{eq:sum_zeta=xhat} can be interpreted as a least square problem, which will later be used to derive a secure fusion scheme.
+Define $
+\epsilon[k]=\begin{bmatrix}
+\epsilon_1[k]{'} & \cdots & \epsilon_1[k]{'}
+\end{bmatrix}{'} \in \Cb^{mn\times 1}.
+$
+Recalling that the covariance of $w[k]$ is $Q[k]$ and the covariance of $v[k]$ is $R[k]$, one can calculate the covariance of noise term in $\epsilon[k]$:
+\begin{align*}
+\tilde{Q}[k]&\triangleq \cov\left(\Pi[k] G_i[k] A^{-1}[k] w[k]-K_i[k+1] v_{i}[k+1]\right) \\
+&=\begin{bmatrix}
+\Pi[k]G_1[k]A^{-1}[k] \\
+\vdots \\
+\Pi[k]G_m[k]A^{-1}[k]
+\end{bmatrix}
+Q[k]
+\begin{bmatrix}
+\Pi[k] G_1[k]A^{-1}[k] \\
+\vdots \\
+\Pi[k] G_m[k]A^{-1}[k]
+\end{bmatrix}^{'}\\
+&\quad +\begin{bmatrix}
+K_1[k+1] \\
+\vdots \\
+K_m[k+1]
+\end{bmatrix}
+\begin{bmatrix}
+K_1[k+1] \\
+\vdots \\
+K_m[k+1]
+\end{bmatrix}^{'}
+\circ
+\left( R[k+1]\otimes \mathbf{1}_{n\times n} \right)
+\end{align*}
+where $\circ$ denotes the elementary-wise matrix multiplication, and $\otimes$ denotes the Kronecker product.
+According to the dynamics in \eqref{eq:epsilon_recursive}, we have
+\begin{equation}
+\cov(\epsilon[k+1])=\tilde{\Pi}[k] \cov(\epsilon[k]) \tilde{\Pi}{'}[k] +\tilde{Q}[k]
+\end{equation}
+where
+\begin{equation*}
+\tilde{\Pi}[k]=
+\begin{bmatrix}
+\Pi[k] & & \\
+& \ddots & \\
+& & \Pi[k]
+\end{bmatrix}\in\Cb^{mn\times mn} .
+\end{equation*}
+Consider the matrix sequence $\tilde{W}[k]\in\Cb^{mn\times mn}$ that satisfies the following recursive equation 
+\begin{equation}\label{eq:defW}
+\tilde{W}[k+1]=\tilde{\Pi}[k] \tilde{W}[k] \tilde{\Pi}{'}[k] +\tilde{Q}[k]
+\end{equation}
+with initial value defined as $\tilde{W}[0]\triangleq \mathbf{1}_{m\times m}  \otimes \Sigma .$
+Since according to Lemma \ref{lm:epsilon}, $\cov\left(\epsilon_i[k]\right)$ is upper bounded, the matrix$\tilde{W}[k]$ at any time $k\in\Zb^+$ satisfy that $\tilde{W}[k] \preceq N_{\max} I$ where $N_{\max}$ is a constant. Moreover, one can verify that $\tilde{W}[k]\succ 0$. therefore, the following least square problem is well-defined
+%
+%\begin{lemma}\label{lm:cond_num}
+%	If Assumption \ref{as:sample_time} is satisfied, there exists constant $N_{\min}$ and $N_{\max}$ such that for all $k\in\Zb^+$,
+%	\begin{equation}
+%	N_{\min} I \preceq \tilde{W}[k] \preceq N_{\max} I ,
+%	\end{equation}
+%	where $I$ is the identity matrix of size $mn\times mn$.
+%\end{lemma}
+%
+%\begin{proof}
+%
+%	For any sampling time sequence $\{k_1,k_2,\cdots,k_s\}$, consider the following two sampling availability sequence $\phi^1=\{\phi^1[k_1],\cdots ,\phi^1[k_s]\},\ \phi^2= \{\phi^2[k_1],\cdots ,\phi^2[k_s]\}$ that satisfy 
+%	\begin{align*}
+%	&\phi^1[k_1]=\phi^2[k_1],\phi^1[k_s]=\phi^2[k_s], \\
+%	&\phi^1[k_1]\neq \mathbf{0},\ \forall 1\leq j\leq s,\\
+%	&\phi^2[k_1]= \mathbf{0},\ \forall 1< j< s.
+%	\end{align*}
+%	We call the asynchronous hybrid Kalman estimator with sampling availability sequence $\phi^1$ as estimator 1 and that with sampling availability sequence $\phi^2$ as estimator 2.
+%%	\begin{align*}
+%%	&\text{Estimator 1:}\ \forall 1 < j \leq s \\
+%%	&P^-[k_j]=A[k_{j-1}]P[k_{j-1}]A{'}[k_{j-1}] + Q[k_{j-1}],\\
+%%	&K[k_j]=P^-[k] C{'}[k_j] \left(C[k_j] P^-[k_j] C{'}[k_j]+R[k_j] \right)^\dag \\
+%%	& P[k_j] = (I-K[k_j] C[k_j]) P^-[k_j] \\
+%%	&\text{Estimator 2:}\ \\
+%%	&P^-[k_s,k_1]=A[k_s,k_{1}]P[k_{1}]A{'}[k_s,k_{1}] + Q[k_s,k_{1}],\\
+%%	&K[k_s,k_1]=P^-[k_s,k_1] C{'}[k_s] \left(C[k_s] P^-[k_s,k_1] C{'}[k_s]+R[k_s] \right)^\dag \\
+%%	& P[k_s,k_1] = (I-K[k_s,k_1] C[k_s]) P^-[k_s,k_1] \\
+%%	\end{align*}
+%Denote the correspongind kalman gain and estimation error covariance as $K^1.K^2,P^1,P^2$.
+%	We have the following lemma quantifying the estimation error covariance:
+%
+%\begin{lemma}\label{lm:est_cov_compare}
+%	Suppose the initial estimation error covariance is the same for two estimators, i.e., $P^1[k_1]=P^2[k_1]$, then 
+%%	the estimation error covariance of estimator 1 at time $k_s$ is smaller than that of estimator 2 at time $k_s$, i.e.,
+%	$$P^1[k_s]\preceq P^2[k_s].$$
+%\end{lemma}
+%	\begin{proof}[Proof of Lemma \ref{lm:est_cov_compare}]
+%		The estimation error covariance update of estimator 2 can be seen as the same with estimator 1 with $K[k_j]=\mathbf{0}$ for all $1<j<s$, i.e., 
+%		$$P^2[k_j] = A[k_{j-1}]P^2[k_{j-1}]A{'}[k_{j-1}] + Q[k_{j-1}].$$
+%		In contrast, the update step for estimator 1 is
+%		$$P^1[k_j] = (I-K^1[k_j] C[k_j])\left(A[k_{j-1}]P^1[k_{j-1}]A{'}[k_{j-1}] + Q[k_{j-1}]\right).$$
+%		Since the initial covariance is the same, i.e., $P^1[k_1]=P^2[k_1]$, it suffices to show that 
+%		\begin{align}\label{eq:KC>0}
+%		K^1[k_j] C[k_j] \left(A[k_{j-1}]P^1[k_{j-1}]A{'}[k_{j-1}] + Q[k_{j-1}]\right) \succeq 0 .
+%		\end{align}
+%		According to \eqref{eq:def_Kk_asy}, one obtains that
+%		$$K^1[k_j]C[k_j]=P^{1-}[k_j] C{'}[k_j] \left(C[k_j] P^{1-}[k_j] C{'}[k_j]+R[k_j] \right)^\dag C[k_j].$$
+%		Since $P^{1-}[k_j]=A[k_{j-1}]P^1[k_{j-1}]A{'}[k_{j-1}] + Q[k_{j-1}]\succeq0$, one obtains that $K^1[k_j]C[k_j]\succeq 0$ and thus \eqref{eq:KC>0} holds.
+%\end{proof}
+%
+%We first prove that $\tilde{W}\succeq N_{\min} I$. Recall the sampling time set as $\Gamma$. Define the oracle synchronous Kalman filter with sampling time set $\Gamma$ and availability index $\phi_i[k]\equiv 1,\ \forall k\in\Zb^+,i\in\Ss$. Denote the matrix sequence $\tilde{W}[k],\Pi[k],K[k],G_i[k]$ of this oracle synchronous Kalman filter as $\tilde{W}^o[k],\Pi^o[k],K^o[k],G^o_i[k]$. Since according to Assumption \ref{as:sample_time}, the sampling interval length is lower bounded, we conclude that the oracle synchronous Kalman filter has positive definite error covariance, i.e., $\tilde{W}^o[k]\succeq N_{\min}I$. Therefore, it suffices to prove that $\tilde{W}^o[k]\preceq \tilde{W}[k], \ \forall k\in\Zb^+$. 
+%Recalling the dynamics of $\tilde{W}[k]$ in \eqref{eq:defW} and the fact that $\tilde{W}[0]=\tilde{W}^o[0]$, we intend to prove that if $\tilde{W}[k]=\tilde{W}^o[k]$, then $\tilde{W}^o[k+1]\preceq\tilde{W}[k+1]$ holds for all $k\in\Zb^+$. 
+%define block, We have
+%\begin{align}
+%\tilde{W}_{ij}[k+1]& = (I-K[k+1]C)A[k]\tilde{W}_{ij}[k+1]A'[k](I-K[k+1]C)' \notag \\
+%&+\Pi[k]G_i[k]A^{-1}[k] Q[k] \left(\Pi[k]G_j[k]A^{-1}[k]\right){'} \notag \\
+%&+K_i[k+1]K_j{'}[k+1] \circ \left( R_{i j}[k+1]\otimes \mathbf{1}_{n\times n} \right). \label{eq:Wij_dynamic}
+%\end{align} 
+%Noticing that $K_i[k]=K_i^o[k]$ for all $i$ such that $K_i[k]\neq \mathbf{0}$ and that $K^o[k]$ has no zero columns, one obtains that the following holds for arbitrary positive-definite matrix $\Mc$.
+%\begin{align*}
+%(I-K^o[k+1]C)\Mc(I-K^o[k+1]C)' &\preceq\\
+% (I-K[k+1]&C)\Mc(I-K[k+1]C)' \\
+% K^o_i[k+1]K^o_j{'}[k+1] \circ \Mc \succeq K_i[k+1]&K_j{'}[k+1] \circ \Mc
+%\end{align*}
+%Therefore, combining these results with \eqref{eq:Wij_dynamic}, one can verify that $\tilde{W}^o[k+1]\preceq\tilde{W}[k+1]$.
+%
+%
+%
+%We now proceed to prove that $\tilde{W}[k]\preceq N_{\max}I$. 
+%Denote $\tilde{W}[k]=\left(\tilde{W}_{i j}[k]\right)_{m \times m}$, where each $\tilde{W}_{i j}[k] \in \mathbb{Cb}^{n \times n}$.
+%Since $\tilde{W}[k]$ is an semi-positive definite Hermitian matrix, it suffices to show that there exits a $N_{\max}$ such that $\tilde{W}_{ii}[k]\preceq N_{\max}I$ for all $i\in\Ss$. 
+%
+%Notice that at sampling time $t_k\in\Gamma\setminus \Gamma_i$, local estimator $\zeta_{i}[k]$ also updates because of other sensors' measurement update. We construct an asynchronous Kalman filter that only take measurements at sampling time $t_k\in\Gamma_i$ and name it as estimator $i$. 
+%Denote the local estimator defined in \eqref{eq:def_zeta} and sequence define in \eqref{eq:defG} with sampling time $\Gamma_i$ as $\zeta^i_{i}[k]$ and $G_i^i[k]$ respectively. 
+%According to Assumption \ref{as:sample_time}, $\zeta^i_{i}[k]$ has bounded estimation error covariance, i.e., $\cov\left(\epsilon^i_i[k]\right)\preceq N_{\max}I$, \todo{need more explanation} where 
+%$$\epsilon_i^i[k]\triangleq \zeta_{i}^i[k]-G_i^i[k]x(t_k).$$
+%Based on Lemma \ref{lm:est_cov_compare}, $\tilde{W}_{ii}[k]=\cov\left(\epsilon_i[k]\right)\preceq \cov\left(\epsilon^i_i[k]\right)\preceq N_{\max}I$.
+%
+%
+%\end{proof}
+%
+\begin{subequations}\label{pb:least_square}
+	\begin{align}
+	\underset{{x_{ls}}[k], \theta[k]}{\text{minimize}}&\quad \frac{1}{2} \theta[k]{'} \tilde{W}^{-1}[k] \theta[k]   \\
+	\text { subject to}&\quad
+	\zeta[k]=
+	G[k] x_{ls}[k]+\theta[k] .  
+	\end{align}
+\end{subequations}
+where 
+\begin{align*}
+\zeta[k]=\begin{bmatrix}
+\zeta_1[k] \\ \vdots \\ \zeta_m[k]
+\end{bmatrix}\in \Cb^{mn\times 1},\
+G[k]=\begin{bmatrix}
+G_1[k] \\ \vdots \\ G_m[k]
+\end{bmatrix}\in\Cb^{mn\times n}.
+\end{align*}
+We have the following theorem quantifying the solution of problem \eqref{pb:least_square}.
+\begin{theorem}
+In the absence of attack, the solution to problem \eqref{pb:least_square} is given by
+	\begin{align*}
+	x_{ls}[k]=\hat{x}[k],
+	\end{align*}
+	where $\hat{x}[k]$ is the Kalman estimation defined in \eqref{eq:def_xhat}.
+\end{theorem}
+\begin{proof}
+Denote $\tilde{W}[k]=\left(\tilde{W}_{i j}[k]\right)_{m \times m}$, where each $\tilde{W}_{i j}[k] \in \mathbb{Cb}^{n \times n}$. According to \eqref{eq:defW}, we know that $\tilde{W}_{i j}[k]$ satisfies:
+\begin{align*}
+\tilde{W}_{i j}[k+1]= &\Pi[k] \tilde{W}_{i j}[k] \Pi{'}[k]+
+\\
+&\Pi[k]G_i[k]A^{-1}[k] Q[k] \left(\Pi[k]G_j[k]A^{-1}[k]\right){'}+
+\\
+&K_i[k+1]K_j{'}[k+1] \circ \left( R_{i j}[k+1]\otimes \mathbf{1}_{n\times n} \right)
+\end{align*}
+where scalar $R_{i j}[k+1]$ is the element of the matrix $R[k+1]$ on $i$-th row and $j$-th column. Since $\sum_{i=0}^{m}G_i[k]=I$, one finds that
+\begin{align*}
+\sum_{i=1}^{m} \tilde{W}_{i j}[k+1]=&\Pi[k] \left(\sum_{i=1}^{m} \tilde{W}_{i j}[k]\right) \Pi{'}[k]\\
+& +\left(I-K[k+1]C\right)Q[k]\left(\Pi[k]G_j[k]A^{-1}[k]\right){'}\\
+& + K[k+1]R_j[k+1]K_j{'}[k+1] 
+\end{align*}
+In the following we prove that $P[k]G_j{'}[k]$ satisfy the same dynamics with $\sum_{i=1}^{m}  \tilde{W}_{i j}[k]$, where $P[k]$ is defined in \eqref{eq:def_Pt}.
+According to \eqref{eq:asy_kalman}, $P[k]$ and $K[k]$ satisfy the following:
+\begin{align}
+&P[k+1]=\left(I-K[k+1]C\right) \left(A[k]P[k]A{'}[k] +Q[k]\right) \notag \\
+&K[k+1]R[k+1]=\Pi[k]P[k]A{'}[k]C{'}[k+1] \notag \\
+&\hspace{80pt}+\left(I-K[k+1]C\right)Q[k]C{'}[k+1] \label{eq:KR}
+\end{align}
+
+Considering the dynamics of $G_j[k]$ in \eqref{eq:defG}, we conclude that
+\begin{align*}
+&P[k+1]G_j{'}[k+1]\\
+=&\Pi[k]P[k]A{'}[k] G_j{'}[k+1]
+ +\left(I-K[k+1]C\right)Q[k]G_j{'}[k+1] \\
+=&\Pi[k]P[k] G_j{'}[k] \Pi{'}[k]+\Pi[k]P[k]A{'}[k] C_j{'}[k+1] K_j{'}[k+1]\\
+&+\left(I-K[k+1]C\right)Q[k]G_j{'}[k+1]\\
+=&\Pi[k]P[k] G_j{'}[k] \Pi{'}[k]\\
+&+\left(I-K[k+1]C\right)Q[k]\left(\Pi[k] G_j[k] A^{-1}[k]\right){'}\\
+&+\left(\Pi[k]P[k]A{'}[k]+\left(I-K[k+1]C\right)Q[k]\right)C_j{'}[k+1] K_j{'}[k+1].
+\end{align*}
+According to \eqref{eq:KR}, the last term equals to $K[k+1]R_j[k+1]K_j{'}[k+1]$.
+Thus, for all $j\in\Ss$ and arbitrary time $k\in\Zb^+$, we have that
+$$\sum_{i=1}^{m}  \tilde{W}_{i j}[k]=P[k] G_j{'}[k],$$
+which implies that 
+\begin{equation}\label{eq:FW=PG}
+\begin{bmatrix}
+	I & \cdots & I
+\end{bmatrix} \tilde{W}[k]=P[k]\begin{bmatrix}
+	G_{1}{'}[k] & \cdots & G_{m}{'}[k]
+\end{bmatrix}.
+\end{equation}
+On the other hand, the solution to least square problem \eqref{pb:least_square} is given by 
+\begin{align*}
+x_{ls}[k]=\left(G{'}[k]\tilde{W}^{-1}[k]G[k]\right)^{-1} G{'}[k]\tilde{W}^{-1}[k]\zeta[k]
+\end{align*}
+According to \eqref{eq:FW=PG}, we have that
+$$
+G{'}[k]\tilde{W}^{-1}[k]G[k]=P^{-1}[k]\begin{bmatrix}
+I & \cdots & I
+\end{bmatrix}G[k]=P^{-1}[k],
+$$
+where the last equality comes from the equation that $\sum_{i=1}^{m}G_i[k]=I$. We finally concludes that
+\begin{align*}
+x_{ls}[k]=P[k]G{'}[k] \tilde{W}^{-1}[k]\zeta[k]=
+\begin{bmatrix}
+I& \cdots&  I
+\end{bmatrix}\zeta[k]=\hat{x}[k].
+\end{align*}
+
+\end{proof}
+
+
+%According to (\ref{eq:def_G}), 
+%\begin{align*}
+%	\left( A[k]-\tilde{K}[k+1]CA[k] \right) G_{i} A^{-1}[k]=G_{i} \left( I-\tilde{K}[k+1]C \right) 
+%\end{align*}
+%Moreover, $G_{i}=\tilde{K}_i[k+1]C_i$ from $G_{i}[k]=\tilde{K}_i[k+1]C_i \left(\tilde{K}[k+1]C\right)^{-1}$
+%%(3) Multiplying $F_i[k+1]$ on both sides of (\ref{eq:def_G}):
+%%  \begin{align*}
+%%	F_i[k+1]G_i[k+1] = \Lambda[k] F_i[k] G_i[k] A^{-1}[k] + \mathbf{1}_n C_i
+%%\end{align*}
+%%Summing over $i$:
+%%\begin{align*}
+%%  &\sum_i F_i[k+1]G_i[k+1]A[k] \\ 
+%%   &=\Lambda[k] \sum_i F_i[k] G_i[k]  + \sum_i F_i[k+1]\mathbf{1}_n C_i A[k] \\
+%%   &=\Lambda[k] \sum_i F_i[k] G_i[k]  + K[k+1]C A[k] \\
+%%   &=\Lambda[k] \left(\sum_i F_i[k] G_i[k]  - I\right) + A[k].
+%%\end{align*}
+%%Then
+%%\begin{align*}
+%% \left(\sum_i F_i[k+1] G_i[k+1] - I\right) A[k]	=\Lambda[k] \left(\sum_i F_i[k] G_i[k]  - I\right) .
+%%\end{align*}
+
+%
+%
+%Next, we will show the relationship between $\zeta_{i}[k]$ and $x[k]$. Define the following matrix sequences:
+%\begin{align}\label{eq:def_G}
+%	G_i[k+1]=\left(A[k]-L_i[k+1]C_i A[k]\right) G_i[k] A^{-1}[k] \notag \\
+%	+L_i[k+1]C_i
+%\end{align}
+%with $G_i(0)=I$.
+
+
+
+%%We have the following proposition from \cite{liuxinghua-IFAC}.
+%%\begin{proposition}
+%%	The Kalman filter can be decomposed as linear composition of $\zeta_{i}[k]$:
+%%	\begin{equation}\label{eq:kalman_decomp}
+%%		\hat{x}[k]=\sum_{i=1}^{m} F_{i} \zeta_{i}[k].
+%%	\end{equation}
+%%\end{proposition}
+%%
+%%Moreover, the relationship between $\zeta_{i}[k]$ and $x[k]$ is shown in the following proposition (\cite{liuxinghua-IFAC} Theorem 1).
+
+%Define 
+%\begin{equation}\label{eq:def_Gi}
+%	G_{i} \triangleq\left[\begin{array}{c}
+%		C_{i} A\left(A-\pi_{1} I\right)^{-1} \\
+%		\vdots \\
+%		C_{i} A\left(A-\pi_{n} I\right)^{-1}
+%	\end{array}\right].
+%\end{equation}
+
+%\begin{proposition}
+%	Let $\epsilon_i[k]\triangleq G_i x[k]-\zeta_{i}[k]$, then 
+%	\begin{align*}
+%		\epsilon_{i}[k+1]=& \Pi \epsilon_{i}[k]+\left(G_{i}-\mathbf{1}_{n\times 1} C_{i}\right) w[k] \\
+%		&-\mathbf{1}_{n\times 1} v_{i}[k+1]-\mathbf{1}_{n\times 1} a_{i}[k+1] .
+%	\end{align*}
+%\end{proposition}
+%
+%\subsection{Least square interpretation}
+
+
+%The problem of dynamic estimation can be formulated as an optimization problem. 
+%Define $\tilde{\Pi},\tilde{Q} \in \mathbb{R}^{m n \times m n}$ as
+%$$
+%\tilde{\Pi} \triangleq\left[\begin{array}{ccc}
+%	\Pi & & \\
+%	& \ddots & \\
+%	& & \Pi
+%\end{array}\right],
+%$$
+%\begin{align}
+%	\tilde{Q} \triangleq
+%	\begin{bmatrix}
+%		G_1-\mathbf{1}_{n\times 1} C_1 \\
+%		\vdots \\
+%		G_m-\mathbf{1}_{n\times 1} C_m
+%	\end{bmatrix}
+%	Q\begin{bmatrix}
+%		G_1-\mathbf{1}_{n\times 1} C_1 \\
+%		\vdots \\
+%		G_m-\mathbf{1}_{n\times 1} C_m
+%	\end{bmatrix}{'}
+%	+ R\otimes \mathbf{1}_{n\times n},
+%\end{align}
+%where $\otimes$ is the Kronecker product.
+%Next, let us define $\tilde{W}$ as the solution of the following Lyapunov equation:
+%$$
+%\tilde{W}=\tilde{\Pi} \tilde{W} \tilde{\Pi}{'}+\tilde{Q}.
+%$$
+%Now we propose the following least-square problem:
+%\begin{subequations}\label{pb:LS_problem}
+%	\begin{align}
+%	&\underset{\check{x}[k]\in \Rb^n, e[k]\in\Cb^{mn}}{\operatorname{minimize}}\quad \frac{1}{2} e[k]^{T} \tilde{W}^{-1} e[k]  \\
+%	&\text { subject to }
+%	\begin{bmatrix}
+%		{\zeta}_{1}[k] \\
+%		\vdots \\
+%		{\zeta}_{m}[k]
+%	\end{bmatrix}=
+%	\begin{bmatrix}
+%		G_{1} \\
+%		\vdots \\
+%		G_{m}
+%	\end{bmatrix} \check{x}[k]+e[k]. 
+%\end{align}
+%\end{subequations}
+%The solution to this problem $\check{x}[k]$ is equivalent to the Kalman estimation $\hat{x}[k]$, according to the following proposition (\cite{liuxinghua-IFAC} Theorem 2).
+%\begin{proposition}
+%	The solution to least-square problem (\ref{pb:LS_problem}) is equivalent to the estimation of fixed gain Kalman filter defined in (\ref{eq:fix_gain_kalman}):
+%	\begin{equation}\label{eq:LSP_result=decomp}
+%		\check{x}[k]=\hat{x}[k].  % \sum_{i=1}^{m} F_{i} \zeta_{i}[k]
+%	\end{equation}
+%\end{proposition}
+
+%where $e[k] \in \mathbb{R}^{m n}$ is defined as
+%\begin{align*}
+%	\tilde{\mu}[k] \triangleq\left[\begin{array}{c}
+%		\mu_{1}[k] \\
+%		\vdots \\
+%		\mu_{m}[k]
+%	\end{array}\right]
+%\end{align*}
+
+\section{Secure Information Fusion}\label{sec:secure_info_fuse}
+In this section, we propose a secure dynamic state estimation scheme which is resilient with mild assumption on the system dynamic matrix $A$.
+The resiliency performance is attained by leveraging the structure of $G_i$.
+We will prove the sufficient and necessary condition of estimation resiliency in this section.
+Compared to previous work \cite{liuxinghua-IFAC}, the condition will not depend on the structure of stable eigen-values and we will show this condition is also necessary by refering to \cite{yori}
+
+\subsection{Sparse attack and resilient estimation}
+
+Define the measurements received by the system operator at time $t_k$ as a set :
+\begin{align}\label{eq:def_zphi}
+%	{z}^\Phi_i(t_k)=
+%	\left\{ 
+%	\begin{array}{c}
+%	z_i(t_k), \ \phi_i[k]=1 \\
+%	\text{NaN},\ \phi_i[k]=0
+%	\end{array}
+%	\right.
+%	.
+{z}^\Phi(t_k)\triangleq\left\{z_i(t_k)| \ i\in\Ss, \phi_i[k]=1\right\}.
+\end{align}
+Suppose a malicious attacker intend to deteriorate the sensor measurements. 
+It can affect the measurement in two way. 
+
+(1) By change the measurement value at sensor $i$:
+\begin{equation}\label{eq:y_def}
+y_i(t_k)=z_i(t_k)+a_i(t_k), \ t_k\in\gm .
+\end{equation}
+%where 
+%\begin{align}
+%	y[k] \triangleq\begin{bmatrix}
+%	y_{1}[k] \\
+%	\vdots \\
+%	y_{m}[k]
+%	\end{bmatrix}  , \
+%	a[k]  \triangleq\begin{bmatrix}
+%	a_{1}[k] \\
+%	\vdots \\
+%	a_{m}[k]
+%	\end{bmatrix}  .
+%\end{align}
+The scalar $a_i(t_k)$ denotes the bias injected by the adversary to measurement of sensor $i$ at time $t_k$.
+
+(2) By changing the measurement availability at sensor $i$:
+%erasing original measurements or adding new measurements:
+\begin{align*}
+% &\text{erasing:  } t^i_k:=+\ift \\
+% &\text{adding:  } y_i(\tau^i_k)=a_i(\tau^i_k) 
+\phi_i[k]=\phi^o_i[k]+b_i[k]\in\{0,1\}, 
+\end{align*}
+where $\phi^o_i[k]$ is the original measurement availability sequence and $b_i[k]$ is the injected data.
+By seting $\phi^o_i[k]$ from $1$ to $0$, the adversarial attacker can block the measurement. 
+By seting $\phi^o_i[k]$ from $0$ to $1$ and combine with the value changing operation, the attacker can inject new fake measurements. Similar to $z^\phi$ defined in (\ref{eq:def_zphi}), $y^\phi$ is the manipulated measurements received by the system operator at time $t_k$ :
+\begin{align}\label{eq:def_ypsi}
+{y}^\phi(t_k)\triangleq\left\{z_i(t_k)+a_i(t_k)| \ i\in\Ss, \phi_i[k]=1\right\}.
+\end{align}
+
+For any index set $\I \subseteq \Ss,$ define the complement set to be $\I^{c} \triangleq$ $\Ss \backslash \I$. 
+In our attack model, we assume that the attacker can only compromise at most $p$ sensors but can arbitrarily choose $a_{i}$ or change time stamp at those corrupted sensors. Formally, a $(p, m)$ -sparse attack can be defined as follows. 
+\begin{definition}[$(p, m)$-sparse attack]
+	A vector $a$ is called a $(p, m)$-sparse attack if there exists an index set $\I \subset \Ss,$ such that the following conditions hold:
+	\begin{enumerate}
+		\item $a_{i}(t_k)=0 ,\ \forall i \in \I^{c}, \forall t_k\in\Gamma ;$
+		\item $\phi_i[k]=\phi^o_i[k], \ \forall i \in \I^{c}, \forall k\geq0 ;$
+		\item $|\I| \leq p$. 
+	\end{enumerate}
+	
+\end{definition}
+Define the collection of all possible index sets of malicious sensors as follows:
+$$
+\Cc \triangleq\{\I: \I \subset \Ss,|\I|=p\}.
+$$
+The set of all possible $(p, m)$-sparse attacks is denoted as $\mathcal{A}$.
+%$$
+%\mathcal{A} \triangleq \bigcup_{\I \in \Cc}\left\{a:\left\|a_{i}\right\|=0, i \in \I^{c}\right\}
+%$$
+
+%Define the set of all (partly manipulated) sample time as 
+%\begin{align*} 
+%	\Gamma \triangleq \bigcup_{i\in\Ss} \{t^i_0,t^i_1,t^i_2,\cdots\} , \
+%	\tilde{\Gamma} \triangleq \bigcup_{i\in\Ss} \{\tau^i_0,\tau^i_1,\tau^i_2,\cdots\} .
+%\end{align*}
+%Reorder the elements in $\gm$ ($\tgm$) such that they are strictly increasing and denote them as $t_k$ ($\tau_k$):
+%\begin{align*} 
+%t_0<t_1<t_2<\cdots, t_k\in\gm , \
+%\tau_0<\tau_1<\tau_2<\cdots, \tau_k\in\tgm .
+%\end{align*}
+%
+%Define the index set of sensors that has measurement at time $t$ as
+%\begin{align*}
+%	\Ss(t) &\triangleq \{i\in\Ss|  \exists k , \ t^i_k\in\gm, t^i_k=t\} , \\
+%	\tilde{\Ss}(t) &\triangleq \{i\in\Ss|  \exists k , \ \tau^i_k\in\tgm, \tau^i_k=t\} .
+%\end{align*}
+%By these notations, we can rewrite (\ref{eq:def_zi}) as a compact form:
+%\begin{equation*}
+%	z(t^i_k)=C(t^i_k) x(t^i_k)+v(t^i_k) ,
+%\end{equation*} 
+%where $z,v\in\Rb^m$, $C\in\Rb^{m\times n}$. The covariance of $v$ at time $t_k$ is denoted as $R[k]$. 
+%$R[k]$ is a diagonal matrix with $i$-th diagonal element as $R_{i,l}$ if exists $i$ such that $t^i_l=t_k$. Otherwise the 
+%$i$-th diagonal element is zero.
+
+%Then the (manipulated measurements) at time $\tau_k$ are
+%\begin{align*}
+%	y(\tau_k) = \{y_i(\tau_k), i\in\Ss(\tau_k)\},\ \forall \tau_k\in\Gamma .
+%\end{align*}
+
+Define the union of all (manipulated) measurements from the beginning to time $t$ as
+\begin{align*}
+z^{\Phi^o}(0:t)\triangleq \bigcup_{t_k\in\gm,t_k\leq t} z^{\Phi^o}(t_k), \
+y^\Phi(0:t)\triangleq \bigcup_{\tau_k\in\gm,t_k\leq t} y^\Phi(t_k),
+\end{align*}
+
+The resilience of an estimator against attacks is defined as follows.
+\begin{definition}[Resilience]
+	An estimator $g$ that maps the measurements $y(0:t)$ to a state estimate $\hat{x}(t)$ is said to be resilient to the $(p, m)$ -sparse attack if it satisfies the following condition:
+	$$
+	\left\|g\left(z^{\Phi^o}(0:t)\right)-g\left(y^\Phi(0:t)\right)\right\| \leq q, \quad \forall t\geq0,  a \in \mathcal{A}
+	$$
+\end{definition}
+where $q$ is a real-valued constant independent from attacks.
+
+The main task of this paper is to propose a secure sensor information fusion scheme that is optimal both in the absence and presence of attack.
+In the absence of attack, the estimation is the same as Kalman filter. In the presence of attack, the estimation is resilient as long as every unstable state has more honest sensor than corrupted sensors observing them. It is optimal in the sense that if this condition is violated, there exists attack that can drive the estimation $g(z+a)$ to be arbitrarily large\cite{yorie}.
+
+\subsection{States decomposition}\label{subsec:transform}
+
+As we can always do invertible linear transformation on the states $x$ such that $A$ can be Jordan diagonalized, we assume in the following that $A$ has already been Jordan diagonalized. 
+In order to analyze stable and unstable states separately with simple notation, we denote the index set of unstable entries\footnote{Unstable entries of state $x$ are the entries $x_i$ corresponding to eigenvalue $|\lambda_i| <1$.} of state $x$ as $\Uc$ and index set of stable entries as $\Sc$. 
+Furthermore, without loss of generality, we assume the unstable entries take the position of first $|\Uc|$ entries, i.e. $\Uc=\{1,2,\cdots,|\Uc|\}$ and $\Sc=\{|\Uc|+1,\cdots,n\}$.
+Define 
+\begin{equation}\label{eq:def_x_u}
+	x_u\triangleq [x_1,\cdots,x_{|\Uc|}]{'}, \ x_s\triangleq [x_{|\Uc|+1},\cdots,x_{n}]{'}.
+\end{equation}
+
+In order to prevent degenerating problems, we assume the geometric multiplicity of stable eigenvalues of $A$ are all $1$. It is stated formally in the following.
+\begin{assumption}
+	A is full rank and the sub-matrix corresponding to unstable states is in the Jordan standard form where geometric multiplicity of eigenvalues are all $1$, i.e.,
+	\begin{align*}
+		&A=
+		\begin{pmatrix}
+			\begin{array}{cc}
+				A_\Uc & \mathbf{0} \\
+				\mathbf{0} & A_{\Sc}			
+			\end{array}
+		\end{pmatrix}, \
+		A_\Uc=\begin{pmatrix}
+			J_{1} & \mathbf{0} & \cdots & \mathbf{0} \\
+			\mathbf{0} & J_{2} & \cdots & \mathbf{0} \\
+			\vdots & \vdots & \ddots & \vdots \\
+			\mathbf{0} & \mathbf{0} & \cdots & J_{l} 
+		\end{pmatrix},
+		\text{ where }\\
+		&
+		J_k=
+		\begin{pmatrix}
+			\lambda_{k} & 1 & 0 & \cdots & {0} \\
+			{0} & \lambda_{k} & 1 &  \cdots & {0} \\
+			\vdots & \vdots &  \vdots & \ddots & \vdots \\
+			{0} & {0} & {0} & \cdots & \lambda_{k} 
+		\end{pmatrix}
+		\in \Cb^{n_k \times n_k} , \sum_{k=1}^{l}n_k =|\Uc| .
+	\end{align*}
+	and $\lambda_i\neq \lambda_j$ when $i\neq j$, $\lambda_j\neq 0$ for all $j$.
+\end{assumption}
+
+
+
+
+\begin{proof}
+	Define the characteristic polynomial of $A$ as $p(x)=a_n x^n +\cdots+a_1 x +a_0$.
+	Define polynomial fraction  $q_\pi(x)$ with respect to constant $\pi$ as
+	$q_\pi(x)=\frac{p(x)-p(\pi)}{x-\pi}$ where $x\neq \pi$.
+	Therefore,
+	$$q_\pi(A)(A-\pi I) = p(A)-p(\pi)I=-p(\pi)I ,$$
+	where the last equality comes from Cayley-Hamilton Theorem.
+	As a result, when $\pi$ is not the eigenvalue of $A$,
+	\begin{align}\label{A-lambdaI}
+		(A-\pi I)^{-1}=-\frac{1}{p(\pi)} q_\pi(A)
+	\end{align}
+	In order to simplify notations, we define 
+	\begin{equation}\label{eq:bjk}
+		b_{j,k}\triangleq-\frac{1}{p(\pi_j)}\sum_{i=0}^{n-k-1} a_{i+k+1} \pi_j^i,
+	\end{equation}
+	where $\pi_j$ is the $j$-th diagonal element of $\Pi$, i.e., $j$-th eigenvalue of $A-KCA$ as defined in \eqref{eq:VLambda}.
+	According to (\ref{A-lambdaI}), the $j$-th row of matrix $G_i$ can be reformulated as
+	$$C_{i} A\left(A-\pi_{j} I\right)^{-1}=
+	\begin{bmatrix}
+		b_{j,0} & b_{j,1} & \cdots  & b_{j,n-1} 
+	\end{bmatrix} O_i A.$$
+	Therefore, $G_i$ can be interpreted as follows
+	\begin{align*}
+		G_i = \begin{bmatrix}
+			b_{1,0} & b_{1,1} & \cdots  & b_{1,n-1} \\
+			b_{2,0} & b_{2,1} & \cdots  & b_{2,n-1} \\
+			\vdots & \vdots & \ddots  & \vdots \\
+			b_{n,0} & b_{n,1} & \cdots  & b_{n,n-1} 
+		\end{bmatrix}
+		O_i A 
+		= & \mathcal{D}_1\mathcal{D}_2\mathcal{D}_3 O_i A , %\label{eq:GandOA}		
+	\end{align*}
+	where $\mathcal{D}_1\triangleq\text{diag}\left(-\frac{1}{p(\pi_1)},-\frac{1}{p(\pi_2)},\cdots,-\frac{1}{p(\pi_n)}\right)$,
+	\begin{align*}
+		\mathcal{D}_2\triangleq
+		\begin{bmatrix}
+			\pi_1^{n-1} & \pi_1^{n-2} & \cdots  & 1 \\
+			\pi_2^{n-1} & \pi_2^{n-2} & \cdots  & 1 \\
+			\vdots & \vdots & \cdots  & \vdots \\
+			\pi_n^{n-1} & \pi_n^{n-2} & \cdots  & 1
+		\end{bmatrix}, 
+		\mathcal{D}_3\triangleq
+		\begin{bmatrix}
+			a_n & 0 & \cdots &   0 \\
+			a_{n-1} & a_n & \cdots &   0 \\
+			\vdots & \vdots & \ddots  & \vdots \\
+			a_1 & a_2 & \cdots  & a_n 
+		\end{bmatrix}.
+	\end{align*}
+	According to Assumption \ref{as:distinct_eigvalue}, all $\pi_j$ are distinct eigenvalues and they are not the eigenvalues of $A$, i.e. the diagonal matrix $\mathcal{D}_1$ and the Vandermonde matrix $\mathcal{D}_2$ are invertible. Moreover, $a_n=1$. Therefore, the lower triangular Toeplitz matrix $\mathcal{D}_3$ is invertible and thus $\rs(G_i)=\rs(O_i A)$. 		
+	We continue to prove $\rs(O_i)=\rs(O_i A)$. Considering that $A^n=-a_{n-1}A^{n-1}-\cdots-a_0 I$, one obtains the following equation \eqref{eq:O_OA}.
+	\begin{equation}
+		\label{eq:O_OA}
+		O_i A=
+		\begin{bmatrix}
+			0 & 1 & 0 &  \cdots & 0 \\
+			0 & 0 & 1 &  \cdots & 0 \\
+			\vdots & \vdots & \vdots & \ddots & \vdots \\
+			0 & 0 & 0 &  \cdots & 1 \\
+			-a_0 & -a_1 & -a_2 & \cdots &  -a_{n-1}
+		\end{bmatrix}
+		O_i .
+	\end{equation}	%\vspace{-20pt}
+	According to Assumption \ref{as:geo_mul_1}, $A$ is invertible and $a_0=(-1)^n\det(A)\neq 0$, which leads to the equation that $\rs(O_i)=\rs(O_i A)$.
+	Since $A$ is assumed to be in the Jordan canonical form and all eigenvalues have geometric multiplicity 1, one can verify that nonzero columns of $O_i$ are linear independent, and equivalently nonzero columns of $G_i$ are linear independent. Therefore, $i\in\Sc_j$ is equivalent to that $j$-th column of $G_i$ is non-zero, i.e., $G_i$ has the same row-span with the canonical form $H_i$.
+\end{proof}
+According to Theorem \ref{th:span}, one directly obtains the following corollary:
+
+
+Define the non-zero column index vector of some matrix $X\in\Cb^{ n_{\text{row}}\times n_{\text{col}} }$ as $\theta(X)\in\{0,1\}^{n_{\text{col}}}$ which is a row vector with $j$-th entry defined as:
+$$\left[\theta(X)\right]_j\triangleq \Ib\{X(:,j)\neq\mathbf{0} \},\ j\in\{1,2,\cdots,n_{\text{col}}\}. $$
+According to Lemma \ref{lm:span}, 
+\begin{equation}\label{eq:thetaGO}
+	\theta(G_i)=\theta(O_i).
+\end{equation}
+
+We consider the columns corresponding to unstable states.
+Denote the first $|\Uc|$ columns of $O_i$ and $G_i$ as $$\Oi\triangleq O_i(:,\Uc),\ \Gi\triangleq G_i(:,\Uc) .$$
+Define $r_i=\rank(\Oi).$ According to Lemma \ref{lm:span}, 
+\begin{equation}\label{eq:rankOiGi}
+	\rank(\Gi)=\rank(\Oi)=r_i .
+\end{equation}
+Since the geometric multiplicity of first $|\Uc|$ eigenvalues of $A$ are all 1, one can prove the non-zero columns of $\Oi$ are linear independent, i.e. $r_i$ equals to the number of nonzero columns:
+\begin{equation*}
+	r_i=\sum_{j=1}^{|\Uc|} \left[\theta(O_i)\right]_j .
+\end{equation*}
+Therefore, we can define the elementary column operation matrix that move the nonzero columns in first $|\Uc|$ columns of $O_i$ to first $r_i$ columns as $E_i\in\{0,1\}^{n\times n}$, i.e. 
+\begin{equation}
+	\theta(O_i E_i)= [\overbrace{1,\cdots,1}^{r_i \text{ ones}},
+	\overbrace{0,\cdots,0}^{|\Uc|-r_i\text{ zeros}},
+	\overbrace{\theta_{|\Uc|+1},\cdots,\theta_{|\Uc|+|\Sc|}}^{\text{the other }|\Sc|\text{ entries}} ].
+\end{equation}
+where $\theta_{|\Uc|+1},\cdots,\theta_{|\Uc|+|\Sc|}$ denotes 0 or 1 at the last $|\Sc|$ entries. According to (\ref{eq:thetaGO}) and (\ref{eq:rankOiGi}), $\theta(O_i E_i)=\theta(G_i E_i)$
+
+In the following, we intend to transform the first $|\Uc|$ columns of $G_i$ to a standard form. 
+For abtrary $i\in\{1,2,\cdots,m\}$, $G_i E_i$ can be written in the following form:
+\begin{equation}
+	G_i E_i =
+	\left[
+	\begin{array}{c}
+		{} \\ {}
+	\end{array}
+	\right.
+	\overbrace{
+		\begin{array}{c}
+			T_{1,i} \\
+			T_{2,i}
+		\end{array}
+	}^{r_i}
+	\overbrace{
+		\begin{array}{c}
+			\mathbf{0} \\
+			\mathbf{0}
+		\end{array}
+	}^{|\Uc|-r_i}
+	\overbrace{
+		\begin{array}{c}
+			N_{1,i} \\
+			N_{2,i}
+		\end{array}
+	}^{|\Sc|}
+\left.
+\begin{array}{c}
+	{} \\ {}
+\end{array}
+\right]
+\begin{array}{l}
+	\left. \right\} r_i \\
+	\left. \right\} n-r_i
+\end{array} .
+\end{equation}
+ Moreover, according to (\ref{eq:rankOiGi}), $T_{1,i}$ is invertible. (need more illustration!!!)
+ Define 
+ \begin{equation*}
+ 	N_{3,i}\triangleq [\mathbf{0}_{r_i \times (|\Uc|-r_i)}\ N_{1,i}], \
+ 	N_{4,i}\triangleq [\mathbf{0}_{(n-r_i) \times (|\Uc|-r_i)}\ N_{2,i}] .
+ \end{equation*}
+Choose transformation matrix
+\begin{equation}\label{eq:defP}
+	P_i\triangleq 
+	\begin{bmatrix}
+		T^{-1}_{1,i} & \mathbf{0}_{r_i \times (n-r_i)} \\
+		-T_{2,i}T^{-1}_{1,i} & I_{(n-r_i) \times (n-r_i)}
+	\end{bmatrix}.
+\end{equation}
+Then 
+\begin{align*}
+	P_i G_i E_i = &
+	\begin{bmatrix}
+		I_{r_i \times r_i} & T^{-1}_{1,i} N_{3,i} \\
+		\mathbf{0}_{(n-r_i) \times r_i} & N_{4,i}-T_{2,i} T^{-1}_{1,i} N_{3,i}
+	\end{bmatrix}\\
+=&
+	\begin{bmatrix}
+	I_{r_i \times r_i} & \mathbf{0}_{r_i \times (|\Uc|-r_i)}  & T^{-1}_{1,i} N_{1,i} \\
+	\mathbf{0}_{(n-r_i) \times r_i} & \mathbf{0}_{(n-r_i) \times (|\Uc|-r_i)} & N_{2,i}-T_{2,i} T^{-1}_{1,i} N_{2,i}
+\end{bmatrix}.
+\end{align*}
+Therefore, by row operation matrix $P_i$, the first $|\Uc|$ columns of $G_i E_i$ or the nonzero columns of $G_i$ are transformed to a standard matrix. Summarizing the results leads to the following theorem.
+
+\begin{theorem}\label{th:Si_form}
+	For every $G_i$ there exists a invertible matrix $P_i$ such that $H_i=P_i G_i$ where $H_i$ is in the following form:
+	\begin{equation}
+	H_i=\begin{bmatrix}
+		H_{uu,i}	& 	H_{us,i} \\
+		\mathbf{0}_{|\Sc|\times|\Uc|} & H_{ss,i}
+	\end{bmatrix}
+	,
+%	\quad
+%	\tilde{S}_i=\begin{bmatrix}
+%		I_{r_i\times r_i} & \mathbf{0} \\
+%		\mathbf{0} & \mathbf{0} 
+%	\end{bmatrix},
+	\end{equation}
+where 
+\begin{align*}
+H_{uu,i} & \triangleq 	
+\begin{bmatrix}
+I_{r_i\times r_i} & \mathbf{0} \\
+	\mathbf{0} & \mathbf{0} 
+\end{bmatrix}
+E_i^{-1}(\Uc,\Uc),\\
+H_{us,i}& \triangleq T^{-1}_{1,i} N_{1,i},
+\\
+H_{ss,i}& \triangleq N_{2,i}-T_{2,i} T^{-1}_{1,i} N_{2,i}.
+\end{align*}
+
+\end{theorem}
+
+\begin{remark}
+	After transformation $P_i$, the non-zero columns of $G_i$ are transformed to non-zero columns of $H_i$ who are composed of canonical basis vectors. $H_i$ function as the standard form of $G_i$ after elementary row operations. 
+\end{remark}
+\begin{remark}
+	Notice the first $|\Uc|$ columns of $H_i$ only depends on $r_i$ and $E_i$, i.e. the number of non-zero columns in $\Oi$ and their column index.
+	In the following section we present a sufficient condition of resilient estimation based on the structure of $H_i$. 
+	According to Theorem \ref{th:Si_form}, one can verify the condition without actually implementing the transfomation $P_i$ since first $|\Uc|$ columns of $H_i$ is known as long as we know $\Oi$. 
+\end{remark}
+
+By the transformation $P_1,\cdots,P_m$, we have the following optimization problem equivalent to (\ref{pb:LS_problem}).
+\begin{subequations}\label{pb:compact_least_square}
+	\begin{align}
+		\underset{{x}[k]\in \Rb^n, \mu[k]\in\Cb^{mn}}{\text{minimize}}&\quad \frac{1}{2} \mu[k]^{T} \tilde{M}^{-1} \mu[k]   \\
+		\text { subject to }\quad&
+		\Upsilon [k]=
+		S x[k]+\mu[k] .  
+	\end{align}
+\end{subequations}
+where 
+\begin{equation}
+	\tilde{M}\triangleq\tilde{P}\tilde{W}\tilde{P}{'},\
+	\tilde{P} \triangleq\left[\begin{array}{ccc}
+		P_1 & & \\
+		& \ddots & \\
+		& & P_m
+	\end{array}\right],\
+\eta_i[k]\triangleq P_i\zeta_{i}[k].
+\end{equation}
+and
+\begin{align}
+	\Upsilon [k]\triangleq
+	\begin{bmatrix}
+		\eta_{1}[k] \\
+		\vdots \\
+		\eta_{m}[k]
+	\end{bmatrix}, \
+	S\triangleq\begin{bmatrix}
+		H_{1} \\
+		\vdots \\
+		H_{m}
+	\end{bmatrix} .	
+\end{align}
+
+
+\subsection{Secure Information Fusion}
+
+In the following we do some transformation on problem (\ref{pb:compact_least_square}) which yields a more resilient estimation and the sufficient condition only relies on unstable states.
+Define 
+\begin{align*}
+	&\Nc\triangleq
+	I_{m\times m} \otimes 
+	\begin{bmatrix}
+		\mathbf{0}_{|\Sc|\times|\Uc|} & I_{|\Sc|\times|\Sc|}
+	\end{bmatrix}
+	\in \Cb^{m|\Sc|\times mn },
+	\\
+	&\Mc\triangleq
+	\begin{bmatrix}
+		I_{mn\times mn} & \mathbf{0}_{mn\times m|\Sc|} \\ 
+		\Nc		
+		& I_{m|\Sc|\times m|\Sc|} 
+	\end{bmatrix}
+	\in \Cb^{m(n+|\Sc|)\times m(n+|\Sc|) },
+	\\
+	&\Upsilon_s[k] \triangleq\Nc\Upsilon [k], \\
+	&\Xi_s[k] \triangleq\Nc S x[k].
+\end{align*}
+
+Consider the objective function of the least square problem (\ref{pb:compact_least_square}) added by a constant term\footnote{For legibility, the time index $[k]$ is omitted.}:
+\begin{align}
+	&\frac{1}{2} (\Upsilon - Sx ){'} \tilde{M}^{-1} (\Upsilon - Sx ) +\frac{1}{2}  \Upsilon_s{'} \Upsilon_s \notag \\
+	=&\frac{1}{2}\begin{bmatrix}
+		\Upsilon - Sx \\ \Upsilon_s
+	\end{bmatrix}{'}
+	\begin{bmatrix}
+		\tilde{M}^{-1} & \mathbf{0} \\
+		\mathbf{0} &  I
+	\end{bmatrix}
+	\begin{bmatrix}
+		\Upsilon - Sx \\ \Upsilon_s
+	\end{bmatrix}. \label{eq:expand_mn_to_mn+ms}
+\end{align}
+Notice that 
+\begin{equation*}
+	H_i x =\begin{bmatrix}
+		H_{uu,i} x_u + H_{us,i} x_s \\
+		H_{ss,i} x_s
+	\end{bmatrix},
+\end{equation*}
+then 
+\begin{equation*}
+	\begin{bmatrix}
+		\Upsilon - Sx \\
+		\Upsilon_s
+	\end{bmatrix}=\Mc
+	\begin{bmatrix}
+		\Upsilon - Sx \\
+		\Xi_s
+	\end{bmatrix}.
+\end{equation*}
+Therefore, (\ref{eq:expand_mn_to_mn+ms}) can be wriiten as 
+\begin{align}
+	&\frac{1}{2}
+	\left(\Mc
+	\begin{bmatrix}
+		\Upsilon - Sx \\
+		\Xi_s
+	\end{bmatrix}
+	\right){'}
+	\begin{bmatrix}
+		\tilde{M}^{-1} & \mathbf{0} \\
+		\mathbf{0} &  I
+	\end{bmatrix}
+	\left(\Mc
+	\begin{bmatrix}
+		\Upsilon - Sx \\
+		\Xi_s
+	\end{bmatrix}
+	\right) \notag
+	\\
+	=&\frac{1}{2}
+	\begin{bmatrix}
+		\Upsilon - Sx \\
+		\Xi_s
+	\end{bmatrix}{'}
+	\Wc
+	\begin{bmatrix}
+		\Upsilon - Sx \\
+		\Xi_s
+	\end{bmatrix} \label{eq:obj_function}
+\end{align}
+where 
+\begin{align}\label{eq:def_W}
+\Wc\triangleq \begin{bmatrix}
+	\tilde{M}^{-1}+ \Nc{'}\Nc & \Nc{'} \\
+	\Nc &  I
+\end{bmatrix}\succ 0.
+\end{align}
+
+
+%\begin{align*}
+%	-\frac{\alpha}{2}\Xi_s{'} \Xi_s = -\frac{\alpha}{2}x_s{'} \left(\sum_{i=1}^{m}S{'}_{ss,i}H_{ss,i}\right) x_s.
+%\end{align*}
+%According to lemma \ref{lm:span} and the assumption that $C$ is full-rank, we have
+%\begin{equation*}
+%	\bigcup_{i=1}^{m} \rs (H_{ss,i}) \supseteq \Rb^{|\Sc|}.
+%\end{equation*}
+%Therefore, $\sum_{i=1}^{m}S{'}_{ss,i}H_{ss,i}$ is positive definite.
+
+In the following we propose a secure information fusion scheme based on objective function defined in (\ref{eq:obj_function}) and prove its sufficient condition of resiliency.
+
+\begin{subequations}\label{pb:resilient_LASSO}
+	\begin{align}
+		\underset{{\tilde{x}}[k]\in \Rb^n,\ \mu[k],\nu[k]\in\Cb^{mn}}{\text{minimize}}&\quad \frac{1}{2} 
+		\begin{bmatrix}
+			\mu[k] \\
+			\Nc S \tilde{x}[k]
+		\end{bmatrix}^{T} \Wc
+		 \begin{bmatrix}
+		 	\mu[k] \\
+		 	\Nc S \tilde{x}[k]
+		 \end{bmatrix} + \gamma\left\|\nu[k]\right\|_1  \\
+		\text { subject to }\quad&
+		\Upsilon [k]= S \tilde{x}[k]+\mu[k]+\nu[k] .  
+	\end{align}
+\end{subequations}
+where $\gamma$ is a non-negative constant chosen by the system operator.
+
+\begin{theorem}
+	\leavevmode
+	\begin{enumerate}
+		\item In absence of attack, i.e. $a[k]=0$, solution to problem (\ref{pb:resilient_LASSO}) is equivalent to the solution to (\ref{pb:LS_problem}) and thus equivalent to estimation of Kalman Filter, i.e.
+		\begin{equation*}
+			\tilde{x}[k]=\check{x}[k]=\hat{x}[k].
+		\end{equation*}
+	\item In absence of attack, the estimation of the stable state is resilient. Moreover,
+	$\|\tilde{x}_s\|_\infty<\frac{\gamma}{2}
+	\left\|\Hc\right\|_\infty,$ where $\Hc$ is defined in (\ref{eq:def_H}).
+	
+	\item In presence of arbitrary admissible attack, if the following condition holds for all state $j=1,2,\cdots,|\Uc|$,
+	\begin{equation}\label{cond:suff}
+		\sum_{i\in\I} H_{i} e_j < \sum_{i\in\I^c} H_{i} e_j
+%		\sum_{i \in \I}\left\|	H_{uu,i} x_u\right\|_{1}<
+%		\sum_{i \in \I^{c}}\left\|H_{uu,i} x_u\right\|_{1},
+%		\ \forall \I\in\Cc ,
+	\end{equation}
+	then the estimate $\tilde{x}[k]$ solved from (\ref{pb:resilient_LASSO}) is resilient,
+	where $e_j$ is the canonical basis vector where the $j$-th entry is $1$ and others are $0$.
+%	Moreover,  $\|\tilde{x}\|\leq const$.
+	\end{enumerate}
+\end{theorem}
+
+\begin{remark}
+	Condition (\ref{cond:suff}) reduces the sufficient condition in \cite{liuxinghua-IFAC}\cite{handuo_tac} in two ways.
+	On the one hand, the part of $H_i$ that corresponding to stable states do not affect the estimator resilience because the transofrmation (\ref{eq:expand_mn_to_mn+ms})(\ref{eq:obj_function}) extract the stable states $\tilde{x}_s$ to appear explicitly in the objective function.
+	On the other hand, by normalizing $G_i$ to $H_i$, condition (\ref{cond:suff}) is easily verified by checking the number of $1$ in first $|\Uc|$ columns of $H_i$.
+\end{remark}
+
+\begin{proof}
+Consider the KKT condition of problem (\ref{pb:resilient_LASSO}) and denote the dual variables for equation constraints as $\lambda=[\lambda_1{'},\cdots,\lambda_m{'}]{'}\in \Cb^{mn\times 1}$. 	
+\begin{align}
+	2(\tilde{M}^{-1}+\Nc{'}\Nc)\mu+2(\Nc{'} \Nc S)\tilde{x} - \lambda &= \mathbf{0} \label{eq:KKT1}\\
+	2(S{'} \Nc{'}\Nc)\mu+2(S{'} \Nc{'} \Nc S)\tilde{x} -  S{'}\lambda &= \mathbf{0} \label{eq:KKT2} \\
+	\gamma \cdot  \sgn(\nu) - \lambda &= \mathbf{0} \label{eq:KKT3} \\
+	\Upsilon - S \tilde{x} - \mu - \nu &= \mathbf{0}  \label{eq:KKT4}
+\end{align}
+
+And $\sgn(\cdot)$ is the subgradient of $\|\cdot\|_1$, i.e., for the $i$-th entry:
+\begin{align*}
+	[\sgn(\nu)]_i=\partial |[\nu]_i|=
+	\left\{
+	\begin{array}{cc}
+		-1 ,& \ [\nu]_i<0 \\
+		1 , &\ [\nu]_i>0  \\
+	\left[-1,1\right],& \ [\nu]_i=0 
+	\end{array}
+\right. .
+\end{align*}
+
+Combining (\ref{eq:KKT1}) and (\ref{eq:KKT2}) leads to:
+\begin{equation}\label{eq:KKT12}
+	\begin{bmatrix}
+		\tilde{M}^{-1}+\Nc{'}\Nc & \Nc{'} \Nc S\\
+		S{'} \Nc{'} \Nc  & S{'} \Nc{'} \Nc S
+	\end{bmatrix}
+	\begin{bmatrix}
+		\mu \\ \tilde{x}
+	\end{bmatrix}=\frac{1}{2}
+	\begin{bmatrix}
+		\lambda \\ S{'} \lambda 
+	\end{bmatrix}.
+\end{equation}
+According to the definition of $\Nc$, the first $\Uc$ rows of $S{'} \Nc{'} \Nc$ are zeros. Therefore, we extract the non-zeros part of equation (\ref{eq:KKT12}) in the following:
+\begin{equation}\label{eq:KKT12_nonzero}
+	\begin{bmatrix}
+		\tilde{M}^{-1}+\Nc{'}\Nc & \Nc{'} \Nc S \Lc{'}\\
+		\Lc S{'} \Nc{'} \Nc  &  \Lc S{'} \Nc{'} \Nc S \Lc{'}
+	\end{bmatrix}
+	\begin{bmatrix}
+		\mu \\ \tilde{x}_s
+	\end{bmatrix}=\frac{1}{2}
+	\begin{bmatrix}
+		\lambda \\ \Lc S{'} \lambda 
+	\end{bmatrix}.
+\end{equation}
+where 
+$$\Lc\triangleq 
+\begin{bmatrix}
+	\mathbf{0}_{|\Sc|\times|\Uc|} & I_{|\Sc|\times|\Sc|}
+\end{bmatrix}
+\in \Cb^{|\Sc|\times n },
+$$
+and $\tilde{x}_s=\Lc \tilde{x}$.
+
+%Notice that
+%\begin{align}
+%&\Lc S{'} \Nc{'} \Nc S \Lc{'} 
+%- \Lc S{'} \Nc{'} \Nc(\tilde{M}^{-1}+\Nc{'}\Nc)^{-1} \Nc{'} \Nc S \Lc{'} \notag \\
+%= &\Lc S{'} \Nc{'}  \left(I -\Nc(\tilde{M}^{-1}+\Nc{'}\Nc)^{-1}\Nc{'} \right)  \Nc S \Lc{'} . \label{eq:schur_comp}
+%\end{align}
+%Since $I -\Nc(\tilde{M}^{-1}+\Nc{'}\Nc)^{-1}\Nc{'}$ is invertible and $\Lc S{'} \Nc{'} $ is row full-rank (\ref{eq:schur_comp}) is also invertible due to the Frobenius rank inequality.
+%Therefore, according to the result of Schur complement, matrix on the left of (\ref{eq:KKT12_nonzero}) is invertible.
+
+Rewrite (\ref{eq:KKT12_nonzero}) as:
+\begin{align}\label{eq:KKT12_matrix}
+\left(
+\begin{bmatrix}
+I & \mathbf{0} \\
+\mathbf{0}  &  \Lc S{'} \Nc{'}
+\end{bmatrix}
+\Wc
+\begin{bmatrix}
+I & \mathbf{0} \\
+\mathbf{0}  &  \Nc S \Lc{'}
+\end{bmatrix}
+\right)
+\begin{bmatrix}
+\mu \\ \tilde{x}_s
+\end{bmatrix}=\frac{1}{2}
+\begin{bmatrix}
+I & \mathbf{0} \\
+\mathbf{0}  &  \Lc S{'}
+\end{bmatrix}
+\lambda .
+\end{align}
+Notice that $\Wc$ is positive definite and $\begin{bmatrix}
+	I & \mathbf{0} \\
+	\mathbf{0}  &  \Lc S{'} \Nc{'}
+\end{bmatrix}$
+is full row-rank\footnote{
+$\Lc S{'} \Nc{'}=
+\begin{bmatrix}
+	S{'}_{ss,1} & S{'}_{ss,2} & \cdots & S{'}_{ss,m}
+\end{bmatrix}
+$ is row full-rank due to the fact that for every state, there is at least one sensor who is able to observe the state.
+}, 
+due to the Frobenius rank inequality, the matrix on the left of (\ref{eq:KKT12_matrix}) is also invertible.
+
+Define
+\begin{align}\label{eq:def_H}
+\Hc	\triangleq
+\left(
+\begin{bmatrix}
+I & \mathbf{0} \\
+\mathbf{0}  &  \Lc S{'} \Nc{'}
+\end{bmatrix}
+\Wc
+\begin{bmatrix}
+I & \mathbf{0} \\
+\mathbf{0}  &  \Nc S \Lc{'}
+\end{bmatrix}
+\right)^{-1}
+\begin{bmatrix}
+	I & \mathbf{0} \\ \mathbf{0} &\Lc S{'}
+\end{bmatrix}.
+\end{align}
+
+%Sufficient condition of (\ref{eq:KKT2}) is:
+%\begin{align}\label{eq:KKT2_2}
+%	\Nc \mu + \Nc S \tilde{x} - \frac{1}{2}(\Nc^\dag){'} \lambda = \mathbf{0} 
+%\end{align}
+%where $\Nc^\dag$ is the pseudo-inverse of $\Nc$.
+%Combining (\ref{eq:KKT1}) and (\ref{eq:KKT2_2}) leads to:
+%\begin{equation}\label{eq:KKT12}
+%	\begin{bmatrix}
+%		\tilde{M}^{-1}+\Nc{'}\Nc & \Nc{'} \\
+%		\Nc & I
+%	\end{bmatrix}
+%	\begin{bmatrix}
+%		\mu \\ \Nc S \tilde{x}
+%	\end{bmatrix}=\frac{1}{2}
+%	\begin{bmatrix}
+%		\lambda \\ (\Nc^\dag){'} \lambda 
+%	\end{bmatrix}.
+%\end{equation}
+
+According to (\ref{eq:KKT3}), $\|\lambda\|_\infty \leq \gamma$. 
+Therefore we have the following from (\ref{eq:KKT12_matrix})
+\begin{equation}\label{eq:mu_xs_bounded}
+	\left\|\begin{bmatrix}
+		\mu \\ \tilde{x}_s 
+	\end{bmatrix}\right\|_\infty
+\leq \frac{\gamma}{2}
+ \left\|\Hc\right\|_\infty.
+\end{equation}
+
+Now we continue to prove that the estimation of unstable states $\tilde{x}_u$ are resilient under condition (\ref{cond:suff}).
+%Denote $\mu^*, x^*_s$ as the optimal solution of problem (\ref{pb:resilient_LASSO}). 
+Consider the 1-norm term:
+\begin{align*}
+ &\left\| \Upsilon-\mu-S x \right\|_1 \\
+=&\sum_{i\in\Ss} 
+\left\|\eta_{i,u}-\mu_{i,u}-(H_{uu,i} x_u + H_{us,i} x_s) \right\|_1 \notag \\
+&\quad + \sum_{i\in\Ss} \left\|\eta_{i,s}-\mu_{i,s}- H_{ss,i} x_s \right\|_1 
+\end{align*}
+where $\eta_{i,u}, \mu_{i,u}$ is the vector composed of first $|\Uc|$ element of $\eta_{i}, \mu_{i}$ and 
+$\eta_{i,s}, \mu_{i,s}$ is the vector composed of last $|\Sc|$ element of $\eta_{i}, \mu_{i}$.
+Notice that we are optimizing the following problem (\ref{pb:LASSO_free}) and suppose $\mu$ and $x_s$ have taken the value of optimal solution $\mu^*, x_s^*$.
+\begin{align}\label{pb:LASSO_free}
+	\min _{\mu,x} \frac{1}{2} \mu{'} M \mu+\gamma\left\|\Upsilon-\mu-S x\right\|_1 ,
+\end{align}
+It is sufficient to minimize the following :
+\begin{align}\label{pb:1-norm_min}
+ \min_{x_u} \sum_{i\in\Ss} \left\|\eta_{i,u}-\mu^*_{i,u}- H_{us,i} x^*_s - H_{uu,i} x_u \right\|_1  .
+\end{align}
+Define $\xi_i\triangleq \eta_{i,u}-\mu^*_{i,u}- H_{us,i} x^*_s $ and recall $[\cdot]_j$ is the $j$-th entry of a vector. The objective function in (\ref{pb:1-norm_min}) can be written as 
+\begin{align*}
+ &\sum_{i\in\Ss}\sum_{j=1}^{|\Uc|} \left| [\xi_i]_j -[H_{uu,i} x_u]_j \right| \\
+=&\sum_{j=1}^{|\Uc|}\sum_{i\in\Oc_j} \left| [\xi_i]_j -[x_u]_j \right| .
+\end{align*}
+where $\Oc_j$ is the index set of sensors that can observe state $j$, i.e.
+\begin{equation*}
+	\Oc_j\triangleq \{i\in\Ss, [\theta(O_i)]_j = 1\}=\{i\in\Ss, [\theta(H_{uu,i})]_j = 1\}.
+\end{equation*}
+For each unstable state $j$, the estimation $[\tilde{x}_u]_j$ is the median of all $[\xi_i]_j$ where $i\in\Oc_j$. 
+
+
+Before proving that $[\tilde{x}_u]_j$ is bounded, let us define the following operator: $f_{i}: R \times R \times \cdots \times R \rightarrow R,$ such that $f_{i}\left(\beta_{1}, \ldots, \beta_{m}\right)$ equals to the $i$ th smallest element in the set $\left\{\beta_{1}, \ldots, \beta_{m}\right\} .$ For even number $m$, we further define 
+$$f_{\frac{m+1}{2}} = \left(f_{\frac{m}{2}} + f_{\frac{m}{2}+1}\right)/2.$$ 
+Thus, $f_{(m+1)/2}\left(\beta_{1}, \ldots, \beta_{m}\right)$ is the median number of set $\left\{\beta_{1}, \ldots, \beta_{m}\right\}$ and 
+\begin{align*}
+	[\tilde{x}_u]_j = f_{(m+1)/2}\left([\xi_i]_j, i\in\Oc_j\right).
+\end{align*}
+Define the number of honest sensors and compromised sensors that can observe state $j$ as:
+\begin{equation*}
+	h_j\triangleq	\sum_{i\in\I^c} [\theta(H_{uu,i})]_j , \
+	c_j\triangleq \sum_{i\in\I} [\theta(H_{uu,i})]_j.
+\end{equation*}
+Notice that for sensor $i\in\I$, the data $\eta_{i}$ may have been rewritten by the malicious attacker. Define the uncorrupted data corresponding to sensor $i$ as $\eta^{\re}_{i}$. Define $\xi^{\re}_{i}$ correspondingly as $\xi^\re_i\triangleq \eta^\re_{i,u}-\mu^*_{i,u}- H_{us,i} x^*_s $.
+Since $\mu^*_u$ and $x^*_s$ has been proved to be bounded in (\ref{eq:mu_xs_bounded}), $\xi^\re_i$ is also bounded for each $i$.
+Based on the definition of $h_j,c_j$, we have
+\begin{align}	
+f_{(h_j-c_j)}\left([\xi^\re_i]_j, i\in\Oc_j\right) &\leq
+f_{(m+1)/2}\left([\xi_i]_j, i\in\Oc_j\right), \label{eq:x_u_leftbound}\\
+f_{(m+1)/2}\left([\xi_i]_j, i\in\Oc_j\right)&\leq 
+f_{2c_j}\left([\xi^\re_i]_j, i\in\Oc_j\right) .  \label{eq:x_u_rightbound}
+\end{align}
+According to condition (\ref{cond:suff}), among the sensors who can observe state $j$, honest ones are more than compromised ones. Otherwise suppose $j^*$ satisfy $ c_j\geq h_j$, then
+$$\sum_{i\in\I} H_i e_{j^*}  =c_j \geq h_j =\sum_{i\in\I^c} H_{i} e_{j^*} $$
+%
+%there exists a $x$ such that
+%$$[x]_j=\left\{
+%\begin{array}{l}
+%	1 ,\ j=j^* \\
+%	0,\ \text{otherwise}
+%\end{array}\right. .
+%$$
+%This leads to
+%$$	\sum_{i \in \I}\left\|	H_{uu,i} x_u\right\|_{1} =c_j \geq h_j =
+%	\sum_{i \in \I^{c}}\left\|H_{uu,i} x_u\right\|_{1},
+%$$ 
+which contradicts condition (\ref{cond:suff}).
+Therefore, $h_j-c_j>0$ and $2c_j<h_j+c_j=|\Oc_j|$.
+As a result, according to (\ref{eq:x_u_leftbound})(\ref{eq:x_u_rightbound}),
+$$\min \left\{ [\xi^\re_i]_j, i\in\Oc_j \right\}\leq [\tilde{x}_u]_j\leq \max \left\{ [\xi^\re_i]_j, i\in\Oc_j \right\}.$$
+Therefore, 
+$$\|\tilde{x}_u\|_\infty \leq\|\Upsilon^{\rm real} \|_\infty + \|\mu\|_\infty+ \max_i  \|H_{us,i}\tilde{x}_s\|_\infty .$$
+Combining with (\ref{eq:mu_xs_bounded}), $\|\tilde{x}\|_\infty$ is bounded and this completes the proof.
+
+
+\end{proof}
+
+
+\section{Illustrative Example}
+
+
+
+\section{Conclusion}\label{sec:conclusion}
+
+%\addtolength{\textheight}{-12cm}   % This command serves to balance the column lengths
+% on the last page of the document manually. It shortens
+% the textheight of the last page by a suitable amount.
+% This command does not take effect until the next page
+% so it should come on the page before the last. Make
+% sure that you do not shorten the textheight too much.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\appendix
+
+\section{Proof of Lemma \ref{lm:span}}
+\begin{proof}
+	We first prove $\rs(O_i)=\rs(O_i A)$. Define $p(\pi)=a_n \pi^n +\cdots+a_1 \pi +a_0$ is the characteristic polynomial of $A$ where $\{a_n,\cdots,a_0\}$ are the coefficients. 
+	According to Cayley-Hamilton Theorem, $A^n=-a_{n-1}A^{n-1}+\cdots-a_0 I$. Therefore, 
+	$$
+	O_i A=
+	\begin{pmatrix}
+		0 & 1 & 0 &  \cdots & 0 \\
+		0 & 0 & 1 &  \cdots & 0 \\
+		\vdots & \vdots & \vdots & \ddots & \vdots \\
+		0 & 0 & 0 &  \cdots & 1 \\
+		-a_0 & -a_1 & -a_2 & \cdots &  -a_{n-1}
+	\end{pmatrix}
+	O_i
+	$$
+	Recall that $a_0=(-1)^n\det(A)\neq 0$. Thus, $\rs(O_i)=\rs(O_i A)$ is proved.
+	
+	Define $q_\pi(A)=\sum_{k=0}^{n-1} \sum_{i=0}^{n-k-1} a_{i+k+1} \pi^i A^k$. According to Cayley-Hamilton Theorem, when $\pi$ is not the eigenvalue of $A$,
+	\begin{align}\label{A-lambdaI}
+		(A-\pi I)^{-1}=-\frac{1}{p(\pi)} q_\pi(A)
+	\end{align}
+	In order to simplify notations, we define 
+	\begin{equation}\label{eq:bjk}
+	b_{j,k}\triangleq-\frac{1}{p(\pi_j)}\sum_{i=0}^{n-k-1} a_{i+k+1} \pi_j^i.
+	\end{equation}
+	According to (\ref{A-lambdaI}), the $j$-th row of matrix $G_i$ is
+	$$C_{i} A\left(A-\pi_{j} I\right)^{-1}=
+	\begin{bmatrix}
+		b_{j,0} & b_{j,1} & \cdots  & b_{j,n-1} 
+	\end{bmatrix} O_i A.$$
+	
+	Then $G_i$ can be interpreted as (\ref{eq:GandOA}).
+		\begin{align}
+		G_i = \begin{pmatrix}
+			b_{1,0} & b_{1,1} & \cdots  & b_{1,n-1} \\
+			b_{2,0} & b_{2,1} & \cdots  & b_{2,n-1} \\
+			\vdots & \vdots & \ddots  & \vdots \\
+			b_{n,0} & b_{n,1} & \cdots  & b_{n,n-1} 
+		\end{pmatrix}
+		O_i A 
+		= & \mathcal{D}\mathcal{V}\mathcal{T}O_i A \label{eq:GandOA}		
+	\end{align}
+	where 
+	\begin{align*}
+		&\mathcal{D}\triangleq\begin{pmatrix}
+			-\frac{1}{p(\pi_1)} & 0 & \cdots  & 0 \\
+			0 & -\frac{1}{p(\pi_2)} & \cdots  & 0 \\
+			\vdots & \vdots & \ddots  & \vdots \\
+			0 & 0 & \cdots  & -\frac{1}{p(\pi_n)}
+		\end{pmatrix}, \\
+	&\mathcal{V}\triangleq
+		\begin{pmatrix}
+			\pi_1^{n-1} & \pi_1^{n-2} & \cdots  & 1 \\
+			\pi_2^{n-1} & \pi_2^{n-2} & \cdots  & 1 \\
+			\vdots & \vdots & \cdots  & \vdots \\
+			\pi_n^{n-1} & \pi_n^{n-2} & \cdots  & 1
+		\end{pmatrix}, \\
+	&\mathcal{T}\triangleq
+		\begin{pmatrix}
+			a_n & 0 & \cdots &   0 \\
+			a_{n-1} & a_n & \cdots &   0 \\
+			\vdots & \vdots & \ddots  & \vdots \\
+			a_1 & a_2 & \cdots  & a_n 
+		\end{pmatrix}.
+	\end{align*}
+	According to Assumption \ref{as:distinct_eigvalue}, all $\pi_j$ are distinct eigenvalues and they are not the eigenvalues of $A$, i.e. the diagonal matrix $\mathcal{D}$ and the Vandermonde matrix $\mathcal{V}$ are invertible. Moreover, $a_n=1$. Therefore, the lower triangular Toeplitz matrix $\mathcal{T}$ is invertible and thus $\rs(G_i)=\rs(O_i A)=\rs(O_i)$. 		
+\end{proof}
+
+\subsection{Proof of Theorem }
+\begin{proof}[Proof of Theorem ]
+
+	
+\end{proof}
+%	\section*{ACKNOWLEDGMENT}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bibliographystyle{plain}
+%	\bibliographystyle{plain}
+\bibliography{ref_zishuo}
+
+
+\end{document}

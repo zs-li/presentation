@@ -18,6 +18,9 @@
 
 \tikzset{decoration={name=none},}
 
+\usepackage{esvect}
+\usetikzlibrary{circuits}
+\usetikzlibrary{intersections} 
 \newlength\figureheight
 \newlength\figurewidth
 
@@ -65,7 +68,7 @@ minimum height=2em, minimum width=7em]
 \title[Kalman Filter]{Kalman Filtering from 3 Different Perspectives}
 \author[Yilin Mo]{Yilin Mo}
 \institute[Tsinghua]{Department of Automation, Tsinghua University}
-\date[May 12, 2021]{May 12, 2021}
+\date[May 12, 2021]{May 12, 2021 at SJTU}
 
 \usetheme[block=fill]{metropolis}
 \definecolor{thupurple}{RGB}{102,8,116}
@@ -90,6 +93,7 @@ minimum height=2em, minimum width=7em]
 	\item health care
 	\item industrial monitoring
 	\item military applications (threat detection)
+	\item \ldots
       \end{itemize}
     \item {\bf Low cost} nodes with {\bf limited energy budget} and {\bf limited communication capability}.
     \item Communication is unreliable. 
@@ -203,6 +207,7 @@ minimum height=2em, minimum width=7em]
     \item Only need to track the {\bf mean and variance}
   \end{itemize}
 \end{frame}
+
 \subsection{Event-Based Sensor Scheduling}
 \frame{\tableofcontents[currentsection]}
 \begin{frame}{Sensor Scheduling}
@@ -390,6 +395,14 @@ minimum height=2em, minimum width=7em]
 \end{frame}
 
 
+\begin{frame}{Reference}
+  [1] Duo Han, Yilin Mo, Junfeng Wu, Sean Weerakkody, Bruno Sinopoli and Ling Shi, Stochastic Event-triggered Sensor Schedule for Remote State Estimation, IEEE Transactions on Automatic Control, Oct 2015, Volume 60, Issue 10, Pages 2661-2675
+
+  [2] Sean Weerakkody, Yilin Mo, Bruno Sinopoli, Duo Han, Ling Shi, Multi-Sensor Scheduling for State Estimation with Event-Based Stochastic Triggers, IEEE Transactions on Automatic Control, Sept 2016, Volume 61, Issue 9, Pages 2695-2701
+
+\end{frame}
+
+
 \section{Kalman Filter is Solving a Least Square Problem}
 
 \begin{frame}{Maximum a posteriori Estimator}
@@ -549,17 +562,24 @@ minimum height=2em, minimum width=7em]
       \left[ {\begin{array}{*{20}c}
 	    x_{k+1,1}  \\
 	    x_{k+1,2}
-      \end{array}} \right] &=
-      \left[ {\begin{array}{*{20}c}
+	  \end{array}
+      }\right] &=
+      \left[ {
+	  \begin{array}{*{20}c}
 	    0 & 2  \\
 	    2 & 0 
-	    \end{array}} \right]  \left[ {\begin{array}{*{20}c}
+	  \end{array}
+	} \right]  \left[
+	{\begin{array}{*{20}c}
 	    x_{k,1}  \\
 	    x_{k,2}
-      \end{array}} \right] + w_k,\\
-      y_k &= \left[ {\begin{array}{*{20}c}
-	    1 & 0 
-      \end{array}} \right] x_k + v_k.
+	  \end{array}
+      } \right] + w_k,\\
+y_k &= \left[
+  {\begin{array}{*{20}c}
+      1 & 0 
+    \end{array}
+} \right] x_k + v_k.
 	  \end{split}
 	\end{displaymath}
 	\begin{center}
@@ -572,18 +592,18 @@ minimum height=2em, minimum width=7em]
 	  \item  Kalman filter solves the MAP problem recursive
 	  \item The performance is related to a stochastic Riccati equation
 	  \item Instead we can unwind the Kalman filter to consider MAP problem directly:
-	\begin{displaymath}
-	  \left[ {\begin{array}{*{20}c}
-		{\gamma_k y_k } \\
-		\vdots \\                                                           {\gamma_0y_0 } \\
-		\bar x_0 \\
-		\end{array}} \right] = \left[ {\begin{array}{*{20}c}                  
-		{\gamma_k CA^{ - 1} } \\
-		\vdots \\
-		{\gamma_{0}CA^{ - k-1} } \\
-		{A^{ - k - 1} } \\
-	  \end{array}} \right]x_{k + 1} + noise.
-	\end{displaymath} 
+	    \begin{displaymath}
+	      \left[ {\begin{array}{*{20}c}
+		    {\gamma_k y_k } \\
+		    \vdots \\                                                           {\gamma_0y_0 } \\
+		    \bar x_0 \\
+		    \end{array}} \right] = \left[ {\begin{array}{*{20}c}                  
+		    {\gamma_k CA^{ - 1} } \\
+		    \vdots \\
+		    {\gamma_{0}CA^{ - k-1} } \\
+		    {A^{ - k - 1} } \\
+	      \end{array}} \right]x_{k + 1} + noise.
+	    \end{displaymath} 
 	\end{itemize}
       \end{frame}
 
@@ -1229,33 +1249,299 @@ minimum height=2em, minimum width=7em]
 	  % \end{frame}
 
 
+\begin{frame}{Reference}
+
+  [1] Yilin Mo and Bruno Sinopoli, Kalman Filtering with Intermittent Observations: Tail Distribution and Critical Value, IEEE Transactions on Automatic Control, Mar 2012, Volume 57, Issue 3, Pages 677-689
+
+
+  [2] Yilin Mo and Richard M. Murray, Privacy Preserving Average Consensus, IEEE Transactions on Automatic Control, Feb 2017, Volume 62, Issue 2, Pages 753-765
+\end{frame}
+
+
 	  \section{(Steady State) Kalman Filter is an LTI System with Multiple Inputs}
+	  \begin{frame}{Steady State Kalman Filter}
+	    \begin{enumerate}
+	      \item Recall the following linear system 
+		\begin{align}
+		  x(k+1) = A x(k) + w(k),\, y(k) = C x(k) + v(k).
+		\end{align}
+	      \item Kalman filter in steady state:
+		\begin{align}
+		  \hat x(k+1) = A \hat x(k) + K(y(k+1)-CA\hat x(k)),
+		\end{align}
+		where $K$ is the steady state (asymptotic) Kalman gain, and $A-KCA$ is stable.
+		\begin{center}
+		  \begin{tikzpicture}[x=2cm, y=0.75cm]
+		    \node at (-0.7,0) {State Est:};
+		    \node [blue!70] at (-0.7,1) {Sensor 2:};
+		    \node [red!70] at (-0.7,-1) {Sensor 1:};
 
-	  \subsection{Distributed Estimation}
-	  \begin{frame}{Problem formulation}
+		    \node            (x0)  at (0,0) {$\hat x(0)$};
+		    \node [blue!70] (y20)  at (0,1)    {$y_2(0)$};
+		    \node [red!70]  (y10)  at (0,-1)   {$y_1(0)$};
+		    \draw [->,semithick,blue!70] (y20) to (x0);
+		    \draw [->,semithick,red!70]  (y10) to (x0);
+
+		    \node            (x1)  at (1,0) {$\hat x(1)$};
+		    \node [blue!70] (y21)  at (1,1)    {$y_2(1)$};
+		    \node [red!70]  (y11)  at (1,-1)   {$y_1(1)$};
+		    \draw [->,semithick,blue!70] (y21) to (x1);
+		    \draw [->,semithick,red!70]  (y11) to (x1);
+
+		    \node            (x2)  at (2,0) {$\hat x(2)$};
+		    \node [blue!70] (y22)  at (2,1)    {$y_2(2)$};
+		    \node [red!70]  (y12)  at (2,-1)   {$y_1(2)$};
+		    \draw [->,semithick,blue!70] (y22) to (x2);
+		    \draw [->,semithick,red!70]  (y12) to (x2);
+
+		    \draw [->,semithick] (x0) to (x1);
+		    \draw [->,semithick] (x1) to (x2);
+		  \end{tikzpicture}
+		\end{center}
+	    \end{enumerate}
+	  \end{frame}
+
+	  \begin{frame}{Decomposing the Kalman Filter}
+
 	    \begin{itemize}
-	      \item The system and measurement equation:
-		\begin{align*}
-		  x(k+1)&=Ax(k)+w(k)\\
-		  y_i(k)&=C_ix(k)+v_i(k), \;\forall i\in\{1,...,m\}.
-		\end{align*}
+	      \item We can view the Kalman filter as an {\bf linear time invariant system} with {\bf multiple inputs}.
+	      \item Hence, we could compute the response of the filter corresponding to {\bf each sensor's data}
+	      \item The Kalman estimate can then be recovered as the sum of all the responses.
+	    \end{itemize}
+	    \begin{center}
+	      \begin{tikzpicture}[x=2cm, y=0.75cm]
+		\node at (-0.7,0) {State Est:};
+		\node [blue!70] at (-0.7,2) {Sensor 2:};
+		\node [blue!70] at (-0.7,1) {Local Est 2:};
+		\node [red!70] at (-0.7,-2) {Sensor 1:};
+		\node [red!70] at (-0.7,-1) {Local Est 1:};
+
+		\node            (x0)  at (0,0)    {$\hat x(0)$};
+		\node [blue!70] (y20)  at (0,2)       {$y_2(0)$};
+		\node [blue!70] (x20)  at (0,1)  {$\hat \xi_2(0)$};
+		\node [red!70]  (y10)  at (0,-2)      {$y_1(0)$};
+		\node [red!70]  (x10)  at (0,-1) {$\hat \xi_1(0)$};
+		\draw [->,semithick,blue!70] (y20) to (x20);
+		\draw [->,semithick,red!70]  (y10) to (x10);
+		\draw [->,semithick,blue!70] (x20) to  (x0);
+		\draw [->,semithick,red!70]  (x10) to  (x0);
+
+		\node            (x1)  at (1,0)    {$\hat x(1)$};
+		\node [blue!70] (y21)  at (1,2)       {$y_2(1)$};
+		\node [blue!70] (x21)  at (1,1)  {$\hat \xi_2(1)$};
+		\node [red!70]  (y11)  at (1,-2)      {$y_1(1)$};
+		\node [red!70]  (x11)  at (1,-1) {$\hat \xi_1(1)$};
+		\draw [->,semithick,blue!70] (y21) to (x21);
+		\draw [->,semithick,red!70]  (y11) to (x11);
+		\draw [->,semithick,blue!70] (x21) to  (x1);
+		\draw [->,semithick,red!70]  (x11) to  (x1);
+
+		\node            (x2)  at (2,0)    {$\hat x(2)$};
+		\node [blue!70] (y22)  at (2,2)       {$y_2(2)$};
+		\node [blue!70] (x22)  at (2,1)  {$\hat \xi_2(2)$};
+		\node [red!70]  (y12)  at (2,-2)      {$y_1(2)$};
+		\node [red!70]  (x12)  at (2,-1) {$\hat \xi_1(2)$};
+		\draw [->,semithick,blue!70] (y22) to (x22);
+		\draw [->,semithick,red!70]  (y12) to (x12);
+		\draw [->,semithick,blue!70] (x22) to  (x2);
+		\draw [->,semithick,red!70]  (x12) to  (x2);
+
+		\draw [->,semithick,blue!70] (x20) to (x21);
+		\draw [->,semithick,blue!70] (x21) to (x22);
+		\draw [->,semithick,red!70] (x10) to (x11);
+		\draw [->,semithick,red!70] (x11) to (x12);
+	      \end{tikzpicture}
+	    \end{center}
+	    \begin{itemize}
+	      \item It is "easy" to create a {\bf secure} or {\bf distributed} summation algorithm. 
 	    \end{itemize}
 	  \end{frame}
 
-	  \begin{frame}{Centralized Kalman filter}
+	  \begin{frame}{Decomposition of Kalman filter}
+	    \centering
+	    \includegraphics[width=1.0\textwidth]{pic/decomp}
+	  \end{frame}
+
+	  \begin{frame}{Decomposition of Kalman filter}
 	    \begin{itemize}
-	      \item The centralized Kalman filter in steady state:
+	      \item $(A,C)$ is observable.
+		\begin{itemize}
+		  \item[a)] $A-KCA$ has {\color{thupurple} $n$ distinct} eigenvalues: $A-KCA=V\Lambda V^{-1}$;
+		  \item[b)] $A-KCA$ and $A$ {\color{thupurple}do not share} any eigenvalues.
+		\end{itemize}
+		\begin{theorem}
+		  
+		The Kalman filter can be losslessly decomposed as a linear combination of local filters :
 		\begin{align*}
-		  \hat x(k+1)=(A-KCA)\hat x(k)+Ky(k+1),
+		  \hat \xi_i(k+1)&=\Lambda\hat \xi_i(k)+\1_ny_i(k+1),\\
+		  \hat x(k)&=\sum_{i=1}^m F_i\hat \xi_i(k),
 		\end{align*}
-	      \item Information flow:
-		\begin{figure}
-		  \centering
-		  \resizebox{0.5\textwidth}{!}{\input{Kalman.tikz}}
-		  %\caption{The information flow of centralized Kalman filter.}
-		\end{figure}
+		where $K=[K_1,\cdots,K_m]$, $F_i=V \diag(V^{-1}K_i)$, and 
+		\begin{itemize}
+		  \item $\hat\xi_i(k)$ is a stable estimate of $G_ix(k)$
+		  \item $\beta^T\hat\xi_i(k)$ is an stable predition of $y_i(k+1)$, where $\sum_{i=1}^n \beta_i(A-\lambda_i I)^{-1}=I$.
+		\end{itemize}	
+		\end{theorem}
 	    \end{itemize}
 	  \end{frame}
+
+%	  \begin{frame}{Decomposition of Kalman filter}
+%	    \begin{itemize}
+%	      \item Each sensor runs the following filter:
+%		\begin{align*}
+%		  \hat\xi_i(k+1)=\textcolor{thupurple}{\Lambda}\xi_i(k)+\1_n \textcolor{red}{y_i(k+1)},
+%		\end{align*}
+%		where $y_i(k+1)$ is not stable.
+%	      \item With an equivalent transformation $z_i(k)=y_i(k+1)-\beta^T\hat\xi_i(k)$, we have
+%		\begin{align*}
+%		  \hat\xi_i(k+1)&=\textcolor{red}{(\Lambda+\1_n\beta^T)}\hat\xi_i(k)+\1_n\textcolor{thupurple}{z_i(k)}\\
+%				&=\textcolor{red}{S}\hat\xi_i(k)+\1_n\textcolor{thupurple}{z_i(k)},
+%		\end{align*}
+%		where $\sum_{i=1}^n \beta_i(A-\lambda_i I)^{-1}=I$ and $S\triangleq \Lambda+\1_n\beta^T$.
+%	      \item {\color{thupurple}$z_i(k)$ is stable}, i.e. $cov(z_i(k))$ is bounded.
+%	      \item \textcolor{thupurple}{stable system matrix} + \textcolor{red}{unstable update} $\rightarrow$ \textcolor{red}{unstable system matrix} + \textcolor{thupurple}{stable update}.
+%	    \end{itemize}
+%	  \end{frame}
+
+	  \subsection{Secure Dynamic State Estimation}
+
+\frame{\tableofcontents[currentsection]}
+
+\begin{frame}{Securing the Global Estimate with LASSO}
+  \begin{itemize}
+    \item The Kalman estimate can be recovered as the solution of a least square problem:
+      \begin{align*}
+      &\mathop{\textrm{minimize}}\limits_{\hat x(k),\hat \epsilon(k)}&
+      & \frac{1}{2}\hat \epsilon(k)^T \tilde W^{-1} \hat \epsilon(k)\\
+      &\textrm{subject to} &
+      &\hat \xi_i(k)  =  G_i\hat x(k) + \hat \epsilon_i(k),&
+      \end{align*}
+      where the matrix $\tilde W$ is the asymptotic covariance of $[\epsilon_1^T,\ldots ,\epsilon_n^T]$.
+ 
+    \item We can secure the global estimator using LASSO:
+      \begin{align*}
+    &\mathop{\textrm{minimize}}\limits_{\hat x(k),\hat \epsilon(k), \hat \nu(k)}&
+    & \frac{1}{2}\hat \epsilon(k)^T \tilde W^{-1} \hat \epsilon(k) + \gamma \sum_{i=1}^m \|\hat \nu_i(k)\|_1\\
+    &\textrm{subject to} &
+    &\hat \xi_i(k)  =  G_i\hat x(k) + \hat \epsilon_i(k)+\hat \nu_i(k).&
+      \end{align*}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Efficiency and Security}
+  \begin{block}{Efficiency}
+    \begin{itemize}
+      \item In the absence of attack, we recover the Kalman estimate if the noise is "small".
+      \item Given a probability $p<1$, we can tune $\gamma$ such that we recover KF with probability $p$.
+    \end{itemize}
+  \end{block}
+  \begin{block}{Security}
+    In the presence of attack, the estimator is stable if for any $u\neq 0$ and any index set $\mathcal I$ of cardinality $c$, the following inequality hold:
+    \begin{align*}
+      \sum_{i\in \mathcal I} \|G_iu\|_1 < \sum_{i\in \mathcal I^c} \|G_iu\|_1. 
+    \end{align*}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Numerical Example: Inverted pendulum}
+   \centering
+   \begin{columns}
+   	\begin{column}{0.5\textwidth}
+   		\scalebox{0.7}{\input{inv_pen.tex}}
+   	\end{column}
+   \begin{column}{0.5\textwidth}
+   	$x_1$: cart position
+   	
+   	$x_2$: cart velocity
+   	
+   	$x_3$: pendulum angle
+   	
+   	$x_4$: pendulum angle velocity
+   	
+   	Linearize at $x_3=x_4=0$, 
+   	
+   	Sample with interval $T_s=0.02$.
+   \end{column}
+   \end{columns}
+   
+   \vspace{-1pt}
+   {\footnotesize
+   \begin{align*}
+   x(k+1)=\begin{bmatrix}
+   1  \hspace{-2pt}&\hspace{-2pt}   2.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-2}  \hspace{-2pt}&\hspace{-2pt}  -2.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-4}  \hspace{-2pt}&\hspace{-2pt}  1.9\hspace{-2pt}\cdot\hspace{-2pt} 10^{-5}\\
+   0  \hspace{-2pt}&\hspace{-2pt}   1.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{0}   \hspace{-2pt}&\hspace{-2pt} -2.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-2}  \hspace{-2pt}&\hspace{-2pt}   1.8\hspace{-2pt}\cdot\hspace{-2pt} 10^{-3}\\
+   0  \hspace{-2pt}&\hspace{-2pt}   1.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-5} \hspace{-2pt}&\hspace{-2pt}   1.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{0} \hspace{-2pt}&\hspace{-2pt}   2.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-2}\\
+   0  \hspace{-2pt}&\hspace{-2pt}   1.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-3}\hspace{-2pt}&\hspace{-2pt}  2.1\hspace{-2pt}\cdot\hspace{-2pt} 10^{-1}  \hspace{-2pt}&\hspace{-2pt}  9.8\hspace{-2pt}\cdot\hspace{-2pt} 10^{-1}
+   \end{bmatrix}x(k)+\begin{bmatrix}
+   2.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-4}\\
+   2.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-2}\\
+   -2.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-4}\\
+   -2.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-2}
+   \end{bmatrix}
+   u(k)+w(k).
+   \end{align*}
+   \begin{align*}
+   y(k)=
+   \begin{bmatrix}
+   1\hspace{-2pt}&\hspace{-2pt} 0 \hspace{-2pt}&\hspace{-2pt}0 \hspace{-2pt}&\hspace{-2pt}0\\
+   1\hspace{-2pt}&\hspace{-2pt} 0 \hspace{-2pt}&\hspace{-2pt}0 \hspace{-2pt}&\hspace{-2pt}0\\
+   1\hspace{-2pt}&\hspace{-2pt} 0 \hspace{-2pt}&\hspace{-2pt}0 \hspace{-2pt}&\hspace{-2pt}0\\
+   0\hspace{-2pt}&\hspace{-2pt} 0 \hspace{-2pt}&\hspace{-2pt}1 \hspace{-2pt}&\hspace{-2pt}0
+   \end{bmatrix}x(k)+v(k)+a(k).
+   \end{align*} }
+\end{frame}
+\begin{frame}{Performance without attack}
+	\begin{figure}[htpb!]
+		\centering
+		\scalebox{0.65}{\input{cl_no.tex}}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Performance under attack}
+	\vspace{-30pt}
+	\begin{figure}[ht]
+		\centering
+		\scalebox{0.65}{\input{at.tex}}
+	\end{figure}
+\vspace{-10pt}
+	\small Attack signal and measurements of sensor 3. The attack signal is uniformly distributed in interval $(-1,1)$
+	\vspace{-10pt}
+	\begin{figure}[ht]
+		\centering
+		\scalebox{0.65}{\input{cl_at.tex}}
+	\end{figure}
+\vspace{-10pt}
+	Estimation of states under attack on sensor 3.
+\end{frame}
+
+
+\subsection{Distributed Estimation}
+
+\frame{\tableofcontents[currentsection]}
+%	  \begin{frame}{Problem formulation}
+%	    \begin{itemize}
+%	      \item The system and measurement equation:
+%		\begin{align*}
+%		  x(k+1)&=Ax(k)+w(k)\\
+%		  y_i(k)&=C_ix(k)+v_i(k), \;\forall i\in\{1,...,m\}.
+%		\end{align*}
+%	    \end{itemize}
+%	  \end{frame}
+%
+%	  \begin{frame}{Centralized Kalman filter}
+%	    \begin{itemize}
+%	      \item The centralized Kalman filter in steady state:
+%		\begin{align*}
+%		  \hat x(k+1)=(A-KCA)\hat x(k)+Ky(k+1),
+%		\end{align*}
+%	      \item Information flow:
+%		\begin{figure}
+%		  \centering
+%		  \resizebox{0.5\textwidth}{!}{\input{Kalman.tikz}}
+%		  %\caption{The information flow of centralized Kalman filter.}
+%		\end{figure}
+%	    \end{itemize}
+%	  \end{frame}
 
 	  \begin{frame}{Distributed estimation: literature review}
 	    \begin{itemize}
@@ -1286,46 +1572,6 @@ minimum height=2em, minimum width=7em]
 	    }
 	  \end{frame}
 
-	  \begin{frame}{Decomposition of Kalman filter}
-	    \centering
-	    \includegraphics[width=1.0\textwidth]{pic/decomp}
-	  \end{frame}
-
-	  \begin{frame}{Decomposition of Kalman filter}
-	    \begin{itemize}
-	      \item $(A,C)$ is observable.
-		\begin{itemize}
-		  \item[a)] $A-KCA$ has {\color{thupurple} $n$ distinct} eigenvalues: $A-KCA=V\Lambda V^{-1}$;
-		  \item[b)] $A-KCA$ and $A$ {\color{thupurple}do not share} any eigenvalues.
-		\end{itemize}
-	      \item {\textbf{[Mo2016]}}:
-		The Kalman filter can be losslessly decomposed as a linear combination of local filters :
-		\begin{align*}
-		  \hat \xi_i(k+1)&=\Lambda\hat \xi_i(k)+\1_ny_i(k+1),\\
-		  \hat x(k)&=\sum_{i=1}^m F_i\hat \xi_i(k),
-		\end{align*}
-		where $K=[K_1,\cdots,K_m]$, $F_i=V \diag(V^{-1}K_i)$, and {\color{thupurple}$\hat\xi_i(k)$ is a stable estimate of $G_ix(k)$}. 
-	    \end{itemize}
-	  \end{frame}
-
-	  \begin{frame}{Decomposition of Kalman filter}
-	    \begin{itemize}
-	      \item Each sensor runs the following filter:
-		\begin{align*}
-		  \hat\xi_i(k+1)=\textcolor{thupurple}{\Lambda}\xi_i(k)+\1_n \textcolor{red}{y_i(k+1)},
-		\end{align*}
-		where $y_i(k+1)$ is not stable.
-	      \item With an equivalent transformation $z_i(k)=y_i(k+1)-\beta^T\hat\xi_i(k)$, we have
-		\begin{align*}
-		  \hat\xi_i(k+1)&=\textcolor{red}{(\Lambda+\1_n\beta^T)}\hat\xi_i(k)+\1_n\textcolor{thupurple}{z_i(k)}\\
-				&=\textcolor{red}{S}\hat\xi_i(k)+\1_n\textcolor{thupurple}{z_i(k)},
-		\end{align*}
-		where $\sum_{i=1}^n \beta_i(A-\lambda_i I)^{-1}=I$ and $S\triangleq \Lambda+\1_n\beta^T$.
-	      \item {\color{thupurple}$z_i(k)$ is stable}, i.e. $cov(z_i(k))$ is bounded.
-	      \item \textcolor{thupurple}{stable system matrix} + \textcolor{red}{unstable update} $\rightarrow$ \textcolor{red}{unstable system matrix} + \textcolor{thupurple}{stable update}.
-	    \end{itemize}
-	  \end{frame}
-
 	  %\begin{frame}{Decomposition of Kalman filter}
 	  %	\centering
 	  %	\includegraphics[width=0.75\textwidth]{pic/filter.png}
@@ -1339,109 +1585,109 @@ minimum height=2em, minimum width=7em]
 	  %	\end{itemize}
 	  %\end{frame}
 
-	  \begin{frame}{Decomposition of Kalman filter}
-	    \begin{itemize}
-	      \item Each sensor runs a local filter:
-		\begin{align*}
-		  \hat \xi_i(k+1)&=S\hat\xi_i(k)+\1_n z_i(k)
-		\end{align*}
-
-	      \item Decomposition of Kalman filter:
-		\begin{align}
-		  \begin{bmatrix}
-		    \hat \xi_1(k+1) \\
-		    \vdots\\
-		    \hat \xi_m(k+1)
-		  \end{bmatrix}&=
-		  (I_m\otimes S)
-		  \begin{bmatrix}
-		    \hat \xi_1(k) \\
-		    \vdots\\
-		    \hat \xi_m(k)
-		  \end{bmatrix}+
-		  (I_m\otimes \1_n)
-		  \begin{bmatrix}
-		    z_1(k) \\
-		    \vdots\\
-		    z_m(k)
-		  \end{bmatrix},\\
-		  \hat{x}(k) &= F
-		  \begin{bmatrix}
-		    \hat \xi_1(k) \\
-		    \vdots\\
-		    \hat \xi_m(k)
-		  \end{bmatrix}.
-		\end{align}
-	    \end{itemize}
-	  \end{frame}
-
-	  \begin{frame}{Distributed implementation of Kalman filter}
-	    \begin{itemize}
-	      \item Let sensor $i$ estimate $\frac{1}{m}\hat\xi_j(k)$, denoted by $\eta_{i,j}(k)$:
-		\begin{equation*}
-		  \begin{split}
-		    \begin{bmatrix}
-		      \eta_{i,1}(k+1) \\
-		      \vdots\\
-		      \eta_{i,m}(k+1)
-		    \end{bmatrix}&=
-		    (I_m\otimes S)
-		    \begin{bmatrix}
-		      \eta_{i,1}(k) \\
-		      \vdots\\
-		      \eta_{i,m}(k)
-		    \end{bmatrix}+Bu_i(k)+
-		    (e_i\otimes \1_n)z_i(k),\\
-		    \breve{x_i}(k) &= mF
-		    \begin{bmatrix}
-		      \eta_{i,1}(k) \\
-		      \vdots\\
-		      \eta_{i,m}(k)
-		    \end{bmatrix}.
-		  \end{split}
-		\end{equation*}
-	      \item Matrix form:
-		\begin{align*}
-		  \eta_i(k+1) &=\tilde{S} \eta_i(k) + \tilde{B}u_i(k)+\textcolor{thupurple}{L_iz_i(k)}.
-		\end{align*}
-	    \end{itemize}
-	  \end{frame}
-
-	  \begin{frame}{Linear system synchronization}	
-	    \begin{itemize}
-	      \item Let us consider the synchronization of the following LTI system:
-		\begin{align}\label{eqn:linear}
-		  \eta_i(k+1) &= \tilde{S}\eta_i(k) + \tilde{B}u_i(k), \;\forall i\in\mathcal{V},
-		\end{align}
-	      \item \textit{Strong} synchronization:
-		\begin{enumerate}
-		  \item[1)]\textbf{Consistency:} the average of local states keeps consistent throughout the execution, i.e., 
-		    \begin{equation}\label{eqn:consistency}
-		      \textcolor{thupurple}{\sum_{i=1}^{m}\bar{\eta}(k+1) =\tilde{S}\sum_{i=1}^{m}\bar{\eta}(k).}
-		    \end{equation}
-		  \item[2)]\textbf{Exponential Stability:} agents exponentially reach consensus in the mean square sense, i.e., there exists $c>0$ and $\rho\in(0,1)$ such that 
-		    \begin{equation}\label{eqn:consensus}
-		      \textcolor{thupurple}{\mathbb{E}[||\eta_i(k)-\bar{\eta}(k)||^2] \leq c\rho^{k}, \;\forall i\in\mathcal{V}.}
-		    \end{equation}
-		\end{enumerate}
-	    \end{itemize}
-	  \end{frame}
-
-	  \begin{frame}{Linear system synchronization}	
-	    \begin{itemize}
-	      \item {\textbf{[You2011]}}: Consider the control protocol:
-		\begin{align*}
-		  u_i(k)&=\sum_{j=1}^m a_{ij}(\Gamma \eta_j(k)-\Gamma \eta_i(k)).
-		\end{align*}
-	      \item In undirected graphs, the discrete-time multi-agent systems are consensusable with the protocol above if
-		\begin{itemize}
-		  \item $(S,B)$ is a controllable pair;
-		  \item The product of the unstable eigenvalues of $S$ satisfies $$\prod_{j}|\lambda_j^u(S)|<\frac{1+\mu_2/\mu_m}{1-\mu_2/\mu_m},$$
-		\end{itemize}
-		where $0=\mu_1\leq \mu_2 \leq \cdots \leq \mu_m$ are the eigenvalues of $\mathcal{L}$.
-	      \item We can find a common gain $\Gamma$ such that $\rho(S-\mu_j B \Gamma)<1$ for all $j=2,...,m.$
-	    \end{itemize}
-	  \end{frame}
+%	  \begin{frame}{Decomposition of Kalman filter}
+%	    \begin{itemize}
+%	      \item Each sensor runs a local filter:
+%		\begin{align*}
+%		  \hat \xi_i(k+1)&=S\hat\xi_i(k)+\1_n z_i(k)
+%		\end{align*}
+%
+%	      \item Decomposition of Kalman filter:
+%		\begin{align}
+%		  \begin{bmatrix}
+%		    \hat \xi_1(k+1) \\
+%		    \vdots\\
+%		    \hat \xi_m(k+1)
+%		  \end{bmatrix}&=
+%		  (I_m\otimes S)
+%		  \begin{bmatrix}
+%		    \hat \xi_1(k) \\
+%		    \vdots\\
+%		    \hat \xi_m(k)
+%		  \end{bmatrix}+
+%		  (I_m\otimes \1_n)
+%		  \begin{bmatrix}
+%		    z_1(k) \\
+%		    \vdots\\
+%		    z_m(k)
+%		  \end{bmatrix},\\
+%		  \hat{x}(k) &= F
+%		  \begin{bmatrix}
+%		    \hat \xi_1(k) \\
+%		    \vdots\\
+%		    \hat \xi_m(k)
+%		  \end{bmatrix}.
+%		\end{align}
+%	    \end{itemize}
+%	  \end{frame}
+%
+%	  \begin{frame}{Distributed implementation of Kalman filter}
+%	    \begin{itemize}
+%	      \item Let sensor $i$ estimate $\frac{1}{m}\hat\xi_j(k)$, denoted by $\eta_{i,j}(k)$:
+%		\begin{equation*}
+%		  \begin{split}
+%		    \begin{bmatrix}
+%		      \eta_{i,1}(k+1) \\
+%		      \vdots\\
+%		      \eta_{i,m}(k+1)
+%		    \end{bmatrix}&=
+%		    (I_m\otimes S)
+%		    \begin{bmatrix}
+%		      \eta_{i,1}(k) \\
+%		      \vdots\\
+%		      \eta_{i,m}(k)
+%		    \end{bmatrix}+Bu_i(k)+
+%		    (e_i\otimes \1_n)z_i(k),\\
+%		    \breve{x_i}(k) &= mF
+%		    \begin{bmatrix}
+%		      \eta_{i,1}(k) \\
+%		      \vdots\\
+%		      \eta_{i,m}(k)
+%		    \end{bmatrix}.
+%		  \end{split}
+%		\end{equation*}
+%	      \item Matrix form:
+%		\begin{align*}
+%		  \eta_i(k+1) &=\tilde{S} \eta_i(k) + \tilde{B}u_i(k)+\textcolor{thupurple}{L_iz_i(k)}.
+%		\end{align*}
+%	    \end{itemize}
+%	  \end{frame}
+%
+%	  \begin{frame}{Linear system synchronization}	
+%	    \begin{itemize}
+%	      \item Let us consider the synchronization of the following LTI system:
+%		\begin{align}\label{eqn:linear}
+%		  \eta_i(k+1) &= \tilde{S}\eta_i(k) + \tilde{B}u_i(k), \;\forall i\in\mathcal{V},
+%		\end{align}
+%	      \item \textit{Strong} synchronization:
+%		\begin{enumerate}
+%		  \item[1)]\textbf{Consistency:} the average of local states keeps consistent throughout the execution, i.e., 
+%		    \begin{equation}\label{eqn:consistency}
+%		      \textcolor{thupurple}{\sum_{i=1}^{m}\bar{\eta}(k+1) =\tilde{S}\sum_{i=1}^{m}\bar{\eta}(k).}
+%		    \end{equation}
+%		  \item[2)]\textbf{Exponential Stability:} agents exponentially reach consensus in the mean square sense, i.e., there exists $c>0$ and $\rho\in(0,1)$ such that 
+%		    \begin{equation}\label{eqn:consensus}
+%		      \textcolor{thupurple}{\mathbb{E}[||\eta_i(k)-\bar{\eta}(k)||^2] \leq c\rho^{k}, \;\forall i\in\mathcal{V}.}
+%		    \end{equation}
+%		\end{enumerate}
+%	    \end{itemize}
+%	  \end{frame}
+%
+%	  \begin{frame}{Linear system synchronization}	
+%	    \begin{itemize}
+%	      \item {\textbf{[You2011]}}: Consider the control protocol:
+%		\begin{align*}
+%		  u_i(k)&=\sum_{j=1}^m a_{ij}(\Gamma \eta_j(k)-\Gamma \eta_i(k)).
+%		\end{align*}
+%	      \item In undirected graphs, the discrete-time multi-agent systems are consensusable with the protocol above if
+%		\begin{itemize}
+%		  \item $(S,B)$ is a controllable pair;
+%		  \item The product of the unstable eigenvalues of $S$ satisfies $$\prod_{j}|\lambda_j^u(S)|<\frac{1+\mu_2/\mu_m}{1-\mu_2/\mu_m},$$
+%		\end{itemize}
+%		where $0=\mu_1\leq \mu_2 \leq \cdots \leq \mu_m$ are the eigenvalues of $\mathcal{L}$.
+%	      \item We can find a common gain $\Gamma$ such that $\rho(S-\mu_j B \Gamma)<1$ for all $j=2,...,m.$
+%	    \end{itemize}
+%	  \end{frame}
 
 	  %\section{Consensus}
 	  %\begin{frame}{Consensus algorithm}
@@ -1483,8 +1729,8 @@ minimum height=2em, minimum width=7em]
 	    \begin{enumerate}
 	      \item \textcolor{thupurple}{Update the residual} $z_i(k)$.
 		\begin{align*}
-		  z_i(k)&=y_i(k+1)-\beta^T\hat\xi_i(k),\\
-		  \hat\xi_i(k+1)&=S\hat\xi_i(k)+\1_nz_i(k).
+		  \hat\xi_i(k+1)&=\Lambda\hat\xi_i(k)+\1_ny_i(k),\\
+		  z_i(k)&=y_i(k+1)-\beta^T\hat\xi_i(k).
 		\end{align*}
 	      \item Run the \textcolor{thupurple}{sychronization} algorithm.
 		\begin{align*}
@@ -1520,7 +1766,7 @@ minimum height=2em, minimum width=7em]
 	    \end{itemize}
 	  \end{frame}
 
-	  \begin{frame}{Recall linear system synchronization}
+	  \begin{frame}{Linear system synchronization}
 	    \begin{itemize}
 	      \item Bridge the fields of distributed estimation and linear system synchronization.
 	    \end{itemize}
@@ -1530,121 +1776,102 @@ minimum height=2em, minimum width=7em]
 	    \end{itemize}
 	  \end{frame}
 
-	  \begin{frame}{Numerical example}
-	    \begin{columns}[c]
-	      \column{5cm}
-	      \begin{align*}
-		A&=\begin{bmatrix}
-		  0.9 & 0\\
-		  0 & 1.1
-		\end{bmatrix},\\
-		  C&=\begin{bmatrix}
-		    1 & 0\\
-		    0 & 1\\
-		    1 & 1\\
-		    1 & -1
-		  \end{bmatrix},\\
-		    Q&=0.25I_2, R=4I_4.
-		  \end{align*}
-		  \column{7cm}
-		  \begin{figure}
-		    \centering
-		    \includegraphics[width=1\textwidth]{pic/topology.png}
-		    \caption{Topology of the communication graph.}
-		  \end{figure}
-		\end{columns}
-	      \end{frame}
-
-	      \begin{frame}{Simulation result}
-		\begin{figure}
-		  \centering
-		  \scalebox{0.7}{\input{pic/x1.tikz}}
-		  \scalebox{0.7}{\input{pic/x2.tikz}}
-		  \caption{Average mean square estimation error of state estimates under Kalman filter and local estimators in 10000 experiments.}
-		\end{figure}
-	      \end{frame}
-
-	      \begin{frame}{Numerical example}
-		We simulate the heat transfer process in a planar closed region:
-		\begin{align*}
-		  \frac{\partial u}{\partial t}=\alpha\Big(\frac{\partial^2u}{\partial x_1^2}+\frac{\partial^2u}{\partial x_2^2}\Big),
-		\end{align*}
-		with boundary conditions
-		\begin{align*}
-		  \frac{\partial u}{\partial x_1}\Big|_{t,0,x_2}=\frac{\partial u}{\partial x_1}\Big|_{t,l,x_2}=\frac{\partial u}{\partial x_2}\Big|_{t,x_1,0}=\frac{\partial u}{\partial x_2}\Big|_{t,x_1,l}=0,
-		\end{align*}
-	      \end{frame}
-
-	      \begin{frame}{Simulation result}
-		\begin{figure}[]
-		  \centering
-		  \includegraphics[width=0.6\textwidth]{pic/variance.pdf}
-		  \caption{(a) Position and topology of $m$ sensors; (b) Centralized KF; (c) Local KF; (d) Our estimators in 10000 experiments.}
-		  \label{fig:heatmap}
-		\end{figure}
-	      \end{frame}
-
-	      \begin{frame}{Equipments}
-		\begin{columns}[c]
-		  \column{6cm}
-		  \begin{itemize}
-		    \item Hardware: 30 raspberry pis, power banks and sensors.
-		    \item Software: batman-adv.
-		      \begin{itemize}
-			\item Operates entirely on layer 2.
-			\item Supports 1000 nodes and beyond.
-		      \end{itemize}
-		    \item Goal: build a mesh network and perform various distributed tasks.
-		  \end{itemize}
-		  \column{6cm}
-		  \begin{figure}
-		    \centering
-		    \includegraphics[width=0.6\textwidth,angle=90]{pic/rapberry_pi.jpg}
-		    \caption{Available equipments.}
-		  \end{figure}
-		\end{columns}
-	      \end{frame}
-
-	      \begin{frame}{Batman-adv}
-		\begin{figure}
-		  \centering
-		  \includegraphics[width=0.7\textwidth]{pic/batman-adv.png}
-		  \includegraphics[width=0.5\textwidth]{pic/batman-topology.png}
-		  \caption{Build mesh networks with batman-adv.}
-		\end{figure}
-		Future work:
-		\begin{itemize}
-		  \item Find ways to determine the topology.
-		  \item Time synchronization.
-		  \item Create a tool to visualize and monitor.
-		\end{itemize}
-	      \end{frame}
-
-	      \begin{frame}{Reference}
-		\footnotesize [1] Y. Mo, and E. Garone. ``Secure dynamic state estimation via local estimators." 2016 IEEE 55th Conference on Decision and Control (CDC). IEEE, 2016.
-
-		[2] K. You, and L. Xie. ``Network topology and communication data rate for consensusability of discrete-time multi-agent systems." IEEE Transactions on Automatic Control 56.10 (2011): 2262-2275.
-
-		[3] K. You, Z. Li, and L. Xie. ``Consensus condition for linear multi-agent systems over randomly switching topologies." Automatica 49.10 (2013): 3125-3132.
-
-		[4] L. Xu, Y. Mo, and L. Xie. ``Distributed consensus over markovian packet loss channels." IEEE Transactions on Automatic Control 65.1 (2019): 279-286.
-	      \end{frame}
-
-	      \begin{frame}{Reference}
-		J. Yan, X. Yang, Y. Mo, and K. You. ``A distributed implementation of steady-state Kalman filter." 
-
-		\vspace{10pt}
-		\centering
-		\includegraphics[width=0.3\textwidth]{pic/qr.jpeg}
-	      \end{frame}
-
+%	  \begin{frame}{Numerical example}
+%	    \begin{columns}[c]
+%	      \column{5cm}
+%	      \begin{align*}
+%		A&=\begin{bmatrix}
+%		  0.9 & 0\\
+%		  0 & 1.1
+%		\end{bmatrix},\\
+%		  C&=\begin{bmatrix}
+%		    1 & 0\\
+%		    0 & 1\\
+%		    1 & 1\\
+%		    1 & -1
+%		  \end{bmatrix},\\
+%		    Q&=0.25I_2, R=4I_4.
+%		  \end{align*}
+%		  \column{7cm}
+%		  \begin{figure}
+%		    \centering
+%		    \includegraphics[width=1\textwidth]{pic/topology.png}
+%		    \caption{Topology of the communication graph.}
+%		  \end{figure}
+%		\end{columns}
+%	      \end{frame}
+%
+%	      \begin{frame}{Simulation result}
+%		\begin{figure}
+%		  \centering
+%		  \scalebox{0.7}{\input{pic/x1.tikz}}
+%		  \scalebox{0.7}{\input{pic/x2.tikz}}
+%		  \caption{Average mean square estimation error of state estimates under Kalman filter and local estimators in 10000 experiments.}
+%		\end{figure}
+%	      \end{frame}
+%
+%	      \begin{frame}{Numerical example}
+%		We simulate the heat transfer process in a planar closed region:
+%		\begin{align*}
+%		  \frac{\partial u}{\partial t}=\alpha\Big(\frac{\partial^2u}{\partial x_1^2}+\frac{\partial^2u}{\partial x_2^2}\Big),
+%		\end{align*}
+%		with boundary conditions
+%		\begin{align*}
+%		  \frac{\partial u}{\partial x_1}\Big|_{t,0,x_2}=\frac{\partial u}{\partial x_1}\Big|_{t,l,x_2}=\frac{\partial u}{\partial x_2}\Big|_{t,x_1,0}=\frac{\partial u}{\partial x_2}\Big|_{t,x_1,l}=0,
+%		\end{align*}
+%	      \end{frame}
+%
+%	      \begin{frame}{Simulation result}
+%		\begin{figure}[]
+%		  \centering
+%		  \includegraphics[width=0.6\textwidth]{pic/variance.pdf}
+%		  \caption{(a) Position and topology of $m$ sensors; (b) Centralized KF; (c) Local KF; (d) Our estimators in 10000 experiments.}
+%		  \label{fig:heatmap}
+%		\end{figure}
+%	      \end{frame}
+%
+%	      \begin{frame}{Equipments}
+%		\begin{columns}[c]
+%		  \column{6cm}
+%		  \begin{itemize}
+%		    \item Hardware: 30 raspberry pis, power banks and sensors.
+%		    \item Software: batman-adv.
+%		      \begin{itemize}
+%			\item Operates entirely on layer 2.
+%			\item Supports 1000 nodes and beyond.
+%		      \end{itemize}
+%		    \item Goal: build a mesh network and perform various distributed tasks.
+%		  \end{itemize}
+%		  \column{6cm}
+%		  \begin{figure}
+%		    \centering
+%		    \includegraphics[width=0.6\textwidth,angle=90]{pic/rapberry_pi.jpg}
+%		    \caption{Available equipments.}
+%		  \end{figure}
+%		\end{columns}
+%	      \end{frame}
+%
+%	      \begin{frame}{Batman-adv}
+%		\begin{figure}
+%		  \centering
+%		  \includegraphics[width=0.7\textwidth]{pic/batman-adv.png}
+%		  \includegraphics[width=0.5\textwidth]{pic/batman-topology.png}
+%		  \caption{Build mesh networks with batman-adv.}
+%		\end{figure}
+%		Future work:
+%		\begin{itemize}
+%		  \item Find ways to determine the topology.
+%		  \item Time synchronization.
+%		  \item Create a tool to visualize and monitor.
+%		\end{itemize}
+%	      \end{frame}
 
 	      \begin{frame}{Experiment with Raspberry Pis}
 		\begin{columns}[c]
 		  \column{7cm}
 		  \begin{itemize}
-		    \item A mesh network is created over WiFi with batman-adv \cite{batman-adv}.
-		    \item Batman-adv is an implementation of the Batman wireless routing protocol, which enables each Raspberry Pi to find and communicate with its neighbors.
+		    \item A mesh network is created over WiFi with batman-adv.
+		    \item Batman wireless routing protocol enables each Raspberry Pi to find and communicate with its neighbors in an {\bf ad-hoc} fashion.
 		  \end{itemize}
 		  \column{5cm}
 		  \begin{figure}
@@ -1654,20 +1881,20 @@ minimum height=2em, minimum width=7em]
 		\end{columns}
 	      \end{frame}
 
-	      \begin{frame}{Experiment with Raspberry Pis}
-		\begin{columns}[c]
-		  \column{7cm}
-		  \begin{itemize}
-		    \item Raspberry Pis send messages with ZeroMQ \cite{ZeroMQ}, an open-source universal messaging library.
-		    \item ZeroMQ is aimed at use in distributed or concurrent applications and supports many patterns (pub/sub, request/reply, client/server etc.)
-		  \end{itemize}
-		  \column{5cm}
-		  \begin{figure}
-		    \centering
-		    \includegraphics[width=1\textwidth]{pic/msg.png}
-		  \end{figure}
-		\end{columns}
-	      \end{frame}
+%	      \begin{frame}{Experiment with Raspberry Pis}
+%		\begin{columns}[c]
+%		  \column{7cm}
+%		  \begin{itemize}
+%		    \item Raspberry Pis send messages with ZeroMQ \cite{ZeroMQ}, an open-source universal messaging library.
+%		    \item ZeroMQ is aimed at use in distributed or concurrent applications and supports many patterns (pub/sub, request/reply, client/server etc.)
+%		  \end{itemize}
+%		  \column{5cm}
+%		  \begin{figure}
+%		    \centering
+%		    \includegraphics[width=1\textwidth]{pic/msg.png}
+%		  \end{figure}
+%		\end{columns}
+%	      \end{frame}
 
 	      \begin{frame}{Experiment}
 		We simulate the heat transfer process in a planar closed region:
@@ -1689,12 +1916,30 @@ minimum height=2em, minimum width=7em]
 		\begin{figure}[]
 		  \centering
 		  \includegraphics[width=0.65\textwidth]{pic/variance.pdf}
-		  \caption{(a) Position and topology of $m$ sensors; (b) Centralized KF; (c) Local KF; (d) Our estimators in 10000 experiments.}
 		\end{figure}
 	      \end{frame}
 
+	      \begin{frame}{Reference}
+
+		[1] Xinghua Liu, Yilin Mo and Emanuele Garone, Local Decompostion of Kalman Filters and Its Application for Secure State Estimation, IEEE Transactions on Automatic Control, Accepted
+
+		[2] J. Yan, X. Yang, Y. Mo, and K. You. ``A distributed implementation of steady-state Kalman filter'', IEEE Transactions on Automatic Control, submitted
+
+		\vspace{10pt}
+		\centering
+		\includegraphics[width=0.3\textwidth]{pic/qr.jpeg}
+	      \end{frame}
 
 	      \section{Conclusion}
+
+	      \begin{frame}{Conclusion}
+		We presented 3 different views of Kalman filter:
+		\begin{itemize}
+		  \item a Bayes filter for Linear Gaussian system 
+		  \item a recursive way to solve a least square problem
+		  \item an LTI system with multiple inputs
+		\end{itemize}
+	      \end{frame}
 
 	      \begin{frame}[standout]
 		Thank you for your time! 

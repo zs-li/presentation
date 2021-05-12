@@ -1,0 +1,29 @@
+  \begin{center}
+	\begin{tikzpicture}[x=2cm, y=0.75cm]
+	  \node at (-0.7,0) {State Est:};
+	  \node [blue!70] at (-0.7,1) {Sensor 2:};
+	  \node [red!70] at (-0.7,-1) {Sensor 1:};
+
+	  \node            (x0)  at (0,0) {$\hat x(0)$};
+	  \node [blue!70] (y20)  at (0,1)    {$y_2(0)$};
+	  \node [red!70]  (y10)  at (0,-1)   {$y_1(0)$};
+	  \draw [->,semithick,blue!70] (y20) to (x0);
+	  \draw [->,semithick,red!70]  (y10) to (x0);
+
+	  \node            (x1)  at (1,0) {$\hat x(1)$};
+	  \node [blue!70] (y21)  at (1,1)    {$y_2(1)$};
+	  \node [red!70]  (y11)  at (1,-1)   {$y_1(1)$};
+	  \draw [->,semithick,blue!70] (y21) to (x1);
+	  \draw [->,semithick,red!70]  (y11) to (x1);
+
+	  \node            (x2)  at (2,0) {$\hat x(2)$};
+	  \node [blue!70] (y22)  at (2,1)    {$y_2(2)$};
+	  \node [red!70]  (y12)  at (2,-1)   {$y_1(2)$};
+	  \draw [->,semithick,blue!70] (y22) to (x2);
+	  \draw [->,semithick,red!70]  (y12) to (x2);
+
+	  \draw [->,semithick] (x0) to (x1);
+	  \draw [->,semithick] (x1) to (x2);
+	\end{tikzpicture}
+      \end{center}
+

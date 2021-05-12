@@ -1,0 +1,18 @@
+\begin{tikzpicture}[auto, node distance=1.8cm,>=latex']
+
+\node at (0,3.5) {{$\gamma_{ii}(k)mess_i(k)$}};
+\node at (2,3.5) {$\cdots$};
+\node at (4,3.5) {{ $\gamma_{ij}(k)mess_j(k)$}};
+
+\draw [->] (0,3.2) -- (0,2.5);
+\draw [->] (2,3.2) -- (2,2.5);
+\draw [->] (4,3.2) -- (4,2.5);
+
+\draw [rounded corners, fill=blue!20](-1,2.5) rectangle (5,1.7);
+\node at (2,2.1) {LTI system};
+
+\draw [->] (2,1.7) -- (2,1);
+\node at (2,0.7) {$u_i(k)$};
+\end{tikzpicture}
+
+

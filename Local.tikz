@@ -1,0 +1,41 @@
+\begin{tikzpicture}[auto, node distance=1.8cm,>=latex']
+
+\node at (0,3.4) {$y_1(k)$};
+\node at (2,3.4) {$\cdots$};
+\node at (4,3.4) {$y_m(k)$};
+
+\draw [->] (0,3.1) -- (0,2.5);
+\draw [->] (4,3.1) -- (4,2.5);
+
+\draw [rounded corners, fill=orange!20](-1,2.5) rectangle (1,1.7);
+\node at (0,2.1) {Local filter};
+
+\draw [rounded corners, fill=orange!20](3,2.5) rectangle (5,1.7);
+\node at (4,2.1) {Local filter};
+
+\node at (2,2.1) {$\cdots$};
+
+\draw [->] (0,1.7) -- node{$\hat{\xi}_1(k)$}(0,0.9);
+\draw [->] (4,1.7) -- node{$\hat{\xi}_m(k)$}(4,0.9);
+
+\draw [rounded corners, fill=blue!20](-1,0.9) rectangle (5,0.1);
+\node at (2,0.5) {Weighted sum};
+
+\draw [->] (2,0.1) -- (2,-0.6);
+\node at (2,-0.8){$\hat{x}(k)$};
+
+%\node at (0,0.9) {$\hat{\xi}_1(k)$};
+%\node at (4,0.9) {$\hat{\xi}_m(k)$};
+%
+%\draw [->] (0.1,0.7) -- (1.8,0.3);
+%\draw [->] (3.9,0.7) -- (2.2,0.3);
+%
+%\node[above] at (1,0.5) {$F_1$};
+%\node[above] at (3,0.5) {$F_m$};
+%
+%\draw[fill=blue!20] (2,0.3) circle (6pt);
+%\node at (2,0.3){$+$};
+%
+%\draw [->] (2,0.1) -- (2,-0.6);
+%\node at (2,-0.8){$\hat{x}(k)$};
+\end{tikzpicture}
