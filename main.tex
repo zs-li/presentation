@@ -97,8 +97,7 @@ minimum height=2em, minimum width=7em]
 	\item \ldots
       \end{itemize}
     \item {\bf Low cost} nodes with {\bf limited energy budget} and {\bf limited communication capability}.
-    \item Communication is unreliable. 
-    \item Communication costs too much resources (energy, bandwidth). 
+    \item Communication is unreliable, local, expensive, \ldots
     \item Sensor may be compromised.
     \item \ldots
     \item \bf How to do information fusion in sensor network?
@@ -274,6 +273,89 @@ minimum height=2em, minimum width=7em]
 %	  \end{frame}
 
 \section{Secure Dynamic State Estimation}
+
+\begin{frame}{Secure Dynamic State Estimation}
+  \begin{itemize}
+    \item Consider the following dynamic system
+      \begin{align}
+	x(k+1) = A x(k) + w(k),\, y(k) = C x(k) + v(k) + a(k).
+      \end{align}
+    \item $a(k)$ is a $c$-sparse attack signal, the support of which is unknown
+    \item Consider a steady-state Kalman filter:
+      \begin{align}
+	\hat x(k+1) = A \hat x(k) + K(y(k+1)-CA\hat x(k)),
+      \end{align}
+      \begin{center}
+	\begin{tikzpicture}[x=2cm, y=0.75cm]
+	  \node at (-0.7,0) {State Est:};
+	  \node [blue!70] at (-0.7,1) {Sensor 2:};
+	  \node [red!70] at (-0.7,-1) {Sensor 1:};
+
+	  \node            (x0)  at (0,0) {$\hat x(0)$};
+	  \node [blue!70] (y20)  at (0,1)    {$y_2(0)$};
+	  \node [red!70]  (y10)  at (0,-1)   {$y_1(0)$};
+	  \draw [->,semithick,blue!70] (y20) to (x0);
+	  \draw [->,semithick,red!70]  (y10) to (x0);
+
+	  \node            (x1)  at (1,0) {$\hat x(1)$};
+	  \node [blue!70] (y21)  at (1,1)    {$y_2(1)$};
+	  \node [red!70]  (y11)  at (1,-1)   {$y_1(1)$};
+	  \draw [->,semithick,blue!70] (y21) to (x1);
+	  \draw [->,semithick,red!70]  (y11) to (x1);
+
+	  \node            (x2)  at (2,0) {$\hat x(2)$};
+	  \node [blue!70] (y22)  at (2,1)    {$y_2(2)$};
+	  \node [red!70]  (y12)  at (2,-1)   {$y_1(2)$};
+	  \draw [->,semithick,blue!70] (y22) to (x2);
+	  \draw [->,semithick,red!70]  (y12) to (x2);
+
+	  \draw [->,semithick] (x0) to (x1);
+	  \draw [->,semithick] (x1) to (x2);
+	\end{tikzpicture}
+      \end{center}
+    \item The error introduced by the attack may accumulate over time.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Dynamic State Estimate: A Moving Horizon Approach}
+  \begin{itemize}
+    \item  {\bf Fundamental limit}: If the system becomes undetectable after removing $2c$ sensors, then there exists an attack on $c$ sensors, such that NO estimator can have bounded estimation error[Nakahira2018].
+    \item  In order to convert the dynamic estimation problem into a static one, we can use a moving horizon approach[Fawzi2014][Shoukry2017]:
+  \begin{center}
+    \begin{tikzpicture}[x=2cm, y=0.75cm]
+      \node at (-0.7,0) {State Est:};
+      \node [blue!70] at (-0.7,1) {Sensor 2:};
+      \node [red!70] at (-0.7,-1) {Sensor 1:};
+
+      \node            (x0)  at (0,0) {$\hat x(0)$};
+      \node [blue!70] (y20)  at (0,1)    {$y_2(0)$};
+      \node [red!70]  (y10)  at (0,-1)   {$y_1(0)$};
+      \draw [->,semithick,blue!70] (y20) to (x0);
+      \draw [->,semithick,red!70]  (y10) to (x0);
+
+      \node            (x1)  at (1,0) {$\hat x(1)$};
+      \node [blue!70] (y21)  at (1,1)    {$y_2(1)$};
+      \node [red!70]  (y11)  at (1,-1)   {$y_1(1)$};
+      \draw [->,semithick,blue!70] (y21) to (x1);
+      \draw [->,semithick,red!70]  (y11) to (x1);
+      \draw [->,semithick,blue!70] (y20) to (x1);
+      \draw [->,semithick,red!70]  (y10) to (x1);
+
+      \node            (x2)  at (2,0) {$\hat x(2)$};
+      \node [blue!70] (y22)  at (2,1)    {$y_2(2)$};
+      \node [red!70]  (y12)  at (2,-1)   {$y_1(2)$};
+      \draw [->,semithick,blue!70] (y22) to (x2);
+      \draw [->,semithick,red!70]  (y12) to (x2);
+      \draw [->,semithick,blue!70] (y21) to (x2);
+      \draw [->,semithick,red!70]  (y11) to (x2);
+    \end{tikzpicture}
+  \end{center}
+
+\item However, the historical data are discarded and the estimation performance may be poor when the system is operating normally.
+  \end{itemize}
+\end{frame}
+
+
 
 
 \begin{frame}{Securing the Global Estimate with LASSO}
@@ -745,6 +827,13 @@ minimum height=2em, minimum width=7em]
   \end{itemize}
 \end{frame}
 
+\begin{frame}{Acknowledgement}
+  \begin{itemize}
+    \item Duo Han, Zishuo Li, Xinghua Liu, Lihua Xie, Emanuele Garone
+    \item Jiaqi Yan, Liang Xu, Keyou You
+  \end{itemize}
+\end{frame}
+
 \begin{frame}{Reference}
 
   [1] Xinghua Liu, Yilin Mo and Emanuele Garone, Local Decompostion of Kalman Filters and Its Application for Secure State Estimation, IEEE Transactions on Automatic Control, Accepted
@@ -755,7 +844,6 @@ minimum height=2em, minimum width=7em]
   \centering
   \includegraphics[width=0.3\textwidth]{pic/qr.jpeg}
 \end{frame}
-
 
 \begin{frame}[standout]
   Thank you for your time! 
