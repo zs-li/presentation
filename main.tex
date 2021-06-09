@@ -55,10 +55,10 @@
 \DeclareMathOperator{\argmax}{arg\;max}
 \let\Tiny\tiny
 
-\title[Secure CPS]{Secure State Estimation in Cyber-Physical System}
+\title[Secure CPS]{信息物理系统中的安全控制算法设计}
 \author[Yilin Mo]{Yilin Mo}
 \institute[Tsinghua]{Department of Automation, Tsinghua University}
-\date[Nov 22, 2020]{Nov 22, 2020}
+\date[June 6, 2021]{June 6, 2021}
 
 \usetheme[subsectionpage=none,block=fill]{metropolis}
 \definecolor{thupurple}{RGB}{102,8,116}
@@ -194,193 +194,193 @@
   \end{itemize}
 \end{frame}
 
-%\section{Active Intrusion Detection}
-%
-%\begin{frame}{Stuxnet}
-%  \begin{itemize}
-%    \item NY times:``The worm itself now appears to have included two major components. One was designed to send Iran's nuclear centrifuges spinning wildly out of control. Another seems right out of the movies: The computer program also \alert{secretly recorded what normal operations at the nuclear plant looked like, then played those readings back to plant operators}, like a pre-recorded security tape in a bank heist, so that it would appear that everything was operating normally while the centrifuges were actually tearing themselves apart.''
-%  \end{itemize}
-%\end{frame}
+\section{Active Intrusion Detection}
 
-%\begin{frame}{System Model}
-%  \begin{block}{System Description}
-%    \begin{displaymath}
-%      \begin{split}
-%	x(k+1) &= Ax(k)  + Bu(k)+w(k),\\
-%	y(k) &= C x(k) + v(k).
-%      \end{split}
-%    \end{displaymath}
-%  \end{block}
-%  \begin{itemize}
-%    \item $x(k) \in \mathbb R^n$ is the state vector.
-%    \item  $y(k) \in \mathbb R^m$ is the measurements from the sensors.
-%    \item  $u(k) \in \mathbb R^p$ is the control input.
-%    \item $w(k),v(k),x(0)$ are independent Gaussian random vectors, and $x(0) \sim \mathcal N(0,\;\Sigma)$, $w(k) \sim \mathcal N(0,\;Q)$ and $v(k) \sim \mathcal N(0,\;R)$ with $Q,R>0$.
-%    \item The system is assumed to be controllable and observable.
-%  \end{itemize}
-%\end{frame}
-%
-%\begin{frame}{LQG Controller and Kalman filter}
-%  \begin{itemize}
-%    \item We assume that the system operator wants to minimize the following cost function:
-%      \begin{displaymath}
-%	J = \lim_{T\rightarrow \infty}\min_{u(0),\ldots,u(T)}E\frac{1}{T}\left[\sum_{k=0}^{T-1} x(k)'Wx(k)+u(k)'Uu(k)\right],
-%      \end{displaymath}
-%      where $W, U$ are positive semidefinite matrices. 
-%    \item The optimal controller is a fixed gain controller, which takes the following form:
-%      \begin{displaymath}
-%	u(k) =  L^*\hat x(k),
-%      \end{displaymath}
-%    \item The optimal estimator (Kalman filter) follows the following update equations:
-%      \begin{align*}
-%	\hat x(k+1|k) &= A\hat x(k)+Bu(k),\\
-%	\hat x(k+1) &= \hat x(k+1|k) + K^*\left[y(k+1) - C\hat x(k+1|k)\right],
-%      \end{align*}
-%  \end{itemize}
-%\end{frame}
-%
-%\begin{frame}{$\chi^2$ Failure Detector}
-%  \begin{itemize}
-%    \item The residue $z(k)$ of the Kalman filter is defined as
-%      \begin{displaymath}
-%	z(k) \triangleq y(k) - C\hat x(k|k-1),
-%      \end{displaymath} 
-%      which is i.i.d. Gaussian distributed with zero mean. 
-%    \item $\chi^2$ detector triggers an alarm based on the following event:
-%      \begin{displaymath}
-%	g(k)=  z(k)^T\mathcal P^{-1}z(k)> threshold,
-%      \end{displaymath}
-%      where $\mathcal P$ is the covariance matrix of $z(j)$ and $\mathcal T$ is the window size.
-%    \item The alarm rate at time $k$ is 
-%      \begin{displaymath}
-%	\beta(k) = P(g(k) > threshold).
-%      \end{displaymath}
-%      If the system is operating normally, then the alarm rate is a constant, which we denote as the false alarm rate $\alpha$.
-%  \end{itemize}
-%\end{frame}
-%
-%\begin{frame}{System Diagram}
-%  \begin{figure}[htpb]
-%    \begin{center}
-%      \inputtikz{systemdiagram}
-%    \end{center}
-%  \end{figure}
-%  Assumptions: Linear System, Kalman Filter, LQG controller and $\chi^2$ detector.
-%\end{frame}
-%
-%\begin{frame}{Replay Attack Model}
-%  \begin{enumerate}
-%    \item The attacker can read and modify all the measurements $y(k)$ arbitrarily.
-%    \item It can inject an external control input $u^a(k)$ into the system. 
-%  \end{enumerate}
-%  The strategy of the attacker can be divided into two stages:
-%  \begin{enumerate}
-%    \item The attacker records a sufficient number of $y(k)$s without injecting any control input $u^a(k)$. 
-%    \item The attacker injects a sequence of desired control input $u^a(k)$ while replaying the previous recorded $y(k)$s starting from time $0$.
-%  \end{enumerate}
-%  When the system is under attack, the controller will be unable to perform closed-loop control. Hence the only way to counter this attack is to detect its presence. 
-%\end{frame}
-%
-%\begin{frame}{Replay Attack: First Stage}
-%  \begin{figure}[htpb]
-%    \begin{center}
-%      \inputtikz{replaydiagramone}
-%    \end{center}
-%  \end{figure}
-%\end{frame}
-%
-%\begin{frame}{Replay Attack: Second Stage}
-%  \begin{figure}[htpb]
-%    \begin{center}
-%      \inputtikz{replaydiagramtwo}
-%    \end{center}
-%  \end{figure}
-%\end{frame}
-%
-%\begin{frame}{Feasibility of Replay Attacks}
-%  \begin{figure}[htpb]
-%    \setlength\figureheight{4.5cm}
-%    \setlength\figurewidth{10cm}
-%    \begin{center}
-%      \inputtikz{replayunstableA2}
-%    \end{center}
-%  \end{figure}
-%  Replay attack is not always feasible!
-%\end{frame}
-%
-%\begin{frame}{Feasibility of Replay Attacks}
-%  \begin{figure}[htpb]
-%    \begin{center}
-%      \inputtikz{replaydiagramthree}
-%    \end{center}
-%  \end{figure}
-%\end{frame}
-%
-%\begin{frame}{Feasibility of Replay Attacks}
-%  The update equation of Kalman filter follows:
-%  \begin{align*}
-%    \hat{x}(k+1|k)&=A\hat{x}(k)+Bu(k)=\left(A+BL^*\right)\hat{x}(k)\\
-%		  &=\left(A+BL^*\right)\left(I-K^*C\right)\hat{x}(k|k-1)+\left(A+BL^*\right)K^*y(k).
-%  \end{align*}
-%
-%  \begin{theorem}
-%    If $\mathcal A = (A+BL^*)(I-K^*C)$ is stable, then the detection rate of $\chi^2$ detector $\beta^c(k)$ converges to the false alarm rate $\alpha$ during the attack, i.e.,
-%    \begin{displaymath}
-%      \lim_{k\rightarrow\infty}\beta^c(k) = \alpha.  
-%    \end{displaymath}
-%    On the other hand, if $\mathcal A$ is strictly unstable, then the detection rate $\beta^c(k)$ converges to $1$, i.e.,
-%    \begin{displaymath}
-%      \lim_{k\rightarrow\infty}\beta^c(k) = 1.  
-%    \end{displaymath}
-%  \end{theorem}
-%\end{frame}
-%
-%\begin{frame}{Countermeasures: Authentication via Watermarking}
-%  \begin{itemize}
-%    \item We could change the control law by adding a random watermarking signal:
-%      \begin{displaymath}
-%%	u(k) = \text{Optimal LQG Control}+ \zeta(k).
-%	u(k) = \text{Optimal Control}+ \zeta(k).
-%      \end{displaymath}
-%    \item The watermarking signal $\zeta(k)$ acts as a ``challenge'' and the sensor measurement is the ``response''. 
-%    \item During normal operation, the ``challenge'' and ``response'' are correlated through the system dynamics, while the correlation cease to exist when the replay begins.
-%%    \item The CPS will remain stable. However, we sacrifice LQG performance since the control is not optimal.
-%    \item Optimize detection and minimize disturbance
-%  \end{itemize}
-%\end{frame}
-%
-%\begin{frame}{System with Physical Watermarks}
-%  \begin{figure}[htpb]
-%    \begin{center}
-%      \inputtikz{replaywithphywatermark}
-%    \end{center}
-%  \end{figure}
-%\end{frame}
+\begin{frame}{Stuxnet}
+  \begin{itemize}
+    \item NY times:``The worm itself now appears to have included two major components. One was designed to send Iran's nuclear centrifuges spinning wildly out of control. Another seems right out of the movies: The computer program also \alert{secretly recorded what normal operations at the nuclear plant looked like, then played those readings back to plant operators}, like a pre-recorded security tape in a bank heist, so that it would appear that everything was operating normally while the centrifuges were actually tearing themselves apart.''
+  \end{itemize}
+\end{frame}
 
-%\begin{frame}{Active Detection of Replay Attack}
-%  \setlength{\figureheight}{6cm}
-%  \setlength{\figurewidth}{7cm}
-%  \begin{figure}[htpb]
-%    \begin{center}
-%      \inputtikz{replay1}
-%    \end{center}
-%  \end{figure}
-%\end{frame}
-%
-%\begin{frame}{Detection Performance v.s. Control Performance}
-%  \begin{itemize}
-%    \item Assuming the watermarking signal is i.i.d. zero mean Gaussian with covariance $U$.
-%    \item The optimal watermarking signal design problem can be written as
-%      \begin{align*}
-%      &\mathop{\textrm{maximize}}\limits_{U\geq 0}&
-%      & Detection\;Performance\\
-%      &\textrm{subject to}&
-%      & Additional\;LQG\;Cost \leq \delta.
-%      \end{align*}
-%    \item The above problem can be relaxed into an Semi-Definite Programming problem. The optimal solution can be derived analytically using generalized eigenvectors.
-%  \end{itemize}
-%\end{frame}
+\begin{frame}{System Model}
+  \begin{block}{System Description}
+    \begin{displaymath}
+      \begin{split}
+	x(k+1) &= Ax(k)  + Bu(k)+w(k),\\
+	y(k) &= C x(k) + v(k).
+      \end{split}
+    \end{displaymath}
+  \end{block}
+  \begin{itemize}
+    \item $x(k) \in \mathbb R^n$ is the state vector.
+    \item  $y(k) \in \mathbb R^m$ is the measurements from the sensors.
+    \item  $u(k) \in \mathbb R^p$ is the control input.
+    \item $w(k),v(k),x(0)$ are independent Gaussian random vectors, and $x(0) \sim \mathcal N(0,\;\Sigma)$, $w(k) \sim \mathcal N(0,\;Q)$ and $v(k) \sim \mathcal N(0,\;R)$ with $Q,R>0$.
+    \item The system is assumed to be controllable and observable.
+  \end{itemize}
+\end{frame}
 
+\begin{frame}{LQG Controller and Kalman filter}
+  \begin{itemize}
+    \item We assume that the system operator wants to minimize the following cost function:
+      \begin{displaymath}
+	J = \lim_{T\rightarrow \infty}\min_{u(0),\ldots,u(T)}E\frac{1}{T}\left[\sum_{k=0}^{T-1} x(k)'Wx(k)+u(k)'Uu(k)\right],
+      \end{displaymath}
+      where $W, U$ are positive semidefinite matrices. 
+    \item The optimal controller is a fixed gain controller, which takes the following form:
+      \begin{displaymath}
+	u(k) =  L^*\hat x(k),
+      \end{displaymath}
+    \item The optimal estimator (Kalman filter) follows the following update equations:
+      \begin{align*}
+	\hat x(k+1|k) &= A\hat x(k)+Bu(k),\\
+	\hat x(k+1) &= \hat x(k+1|k) + K^*\left[y(k+1) - C\hat x(k+1|k)\right],
+      \end{align*}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{$\chi^2$ Failure Detector}
+  \begin{itemize}
+    \item The residue $z(k)$ of the Kalman filter is defined as
+      \begin{displaymath}
+	z(k) \triangleq y(k) - C\hat x(k|k-1),
+      \end{displaymath} 
+      which is i.i.d. Gaussian distributed with zero mean. 
+    \item $\chi^2$ detector triggers an alarm based on the following event:
+      \begin{displaymath}
+	g(k)=  z(k)^T\mathcal P^{-1}z(k)> threshold,
+      \end{displaymath}
+      where $\mathcal P$ is the covariance matrix of $z(j)$ and $\mathcal T$ is the window size.
+    \item The alarm rate at time $k$ is 
+      \begin{displaymath}
+	\beta(k) = P(g(k) > threshold).
+      \end{displaymath}
+      If the system is operating normally, then the alarm rate is a constant, which we denote as the false alarm rate $\alpha$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{System Diagram}
+  \begin{figure}[htpb]
+    \begin{center}
+      \inputtikz{systemdiagram}
+    \end{center}
+  \end{figure}
+  Assumptions: Linear System, Kalman Filter, LQG controller and $\chi^2$ detector.
+\end{frame}
+
+\begin{frame}{Replay Attack Model}
+  \begin{enumerate}
+    \item The attacker can read and modify all the measurements $y(k)$ arbitrarily.
+    \item It can inject an external control input $u^a(k)$ into the system. 
+  \end{enumerate}
+  The strategy of the attacker can be divided into two stages:
+  \begin{enumerate}
+    \item The attacker records a sufficient number of $y(k)$s without injecting any control input $u^a(k)$. 
+    \item The attacker injects a sequence of desired control input $u^a(k)$ while replaying the previous recorded $y(k)$s starting from time $0$.
+  \end{enumerate}
+  When the system is under attack, the controller will be unable to perform closed-loop control. Hence the only way to counter this attack is to detect its presence. 
+\end{frame}
+
+\begin{frame}{Replay Attack: First Stage}
+  \begin{figure}[htpb]
+    \begin{center}
+      \inputtikz{replaydiagramone}
+    \end{center}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Replay Attack: Second Stage}
+  \begin{figure}[htpb]
+    \begin{center}
+      \inputtikz{replaydiagramtwo}
+    \end{center}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Feasibility of Replay Attacks}
+  \begin{figure}[htpb]
+    \setlength\figureheight{4.5cm}
+    \setlength\figurewidth{10cm}
+    \begin{center}
+      \inputtikz{replayunstableA2}
+    \end{center}
+  \end{figure}
+  Replay attack is not always feasible!
+\end{frame}
+
+\begin{frame}{Feasibility of Replay Attacks}
+  \begin{figure}[htpb]
+    \begin{center}
+      \inputtikz{replaydiagramthree}
+    \end{center}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Feasibility of Replay Attacks}
+  The update equation of Kalman filter follows:
+  \begin{align*}
+    \hat{x}(k+1|k)&=A\hat{x}(k)+Bu(k)=\left(A+BL^*\right)\hat{x}(k)\\
+		  &=\left(A+BL^*\right)\left(I-K^*C\right)\hat{x}(k|k-1)+\left(A+BL^*\right)K^*y(k).
+  \end{align*}
+
+  \begin{theorem}
+    If $\mathcal A = (A+BL^*)(I-K^*C)$ is stable, then the detection rate of $\chi^2$ detector $\beta^c(k)$ converges to the false alarm rate $\alpha$ during the attack, i.e.,
+    \begin{displaymath}
+      \lim_{k\rightarrow\infty}\beta^c(k) = \alpha.  
+    \end{displaymath}
+    On the other hand, if $\mathcal A$ is strictly unstable, then the detection rate $\beta^c(k)$ converges to $1$, i.e.,
+    \begin{displaymath}
+      \lim_{k\rightarrow\infty}\beta^c(k) = 1.  
+    \end{displaymath}
+  \end{theorem}
+\end{frame}
+
+\begin{frame}{Countermeasures: Authentication via Watermarking}
+  \begin{itemize}
+    \item We could change the control law by adding a random watermarking signal:
+      \begin{displaymath}
+%	u(k) = \text{Optimal LQG Control}+ \zeta(k).
+	u(k) = \text{Optimal Control}+ \zeta(k).
+      \end{displaymath}
+    \item The watermarking signal $\zeta(k)$ acts as a ``challenge'' and the sensor measurement is the ``response''. 
+    \item During normal operation, the ``challenge'' and ``response'' are correlated through the system dynamics, while the correlation cease to exist when the replay begins.
+%    \item The CPS will remain stable. However, we sacrifice LQG performance since the control is not optimal.
+    \item Optimize detection and minimize disturbance
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{System with Physical Watermarks}
+  \begin{figure}[htpb]
+    \begin{center}
+      \inputtikz{replaywithphywatermark}
+    \end{center}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Active Detection of Replay Attack}
+  \setlength{\figureheight}{6cm}
+  \setlength{\figurewidth}{7cm}
+  \begin{figure}[htpb]
+    \begin{center}
+      \inputtikz{replay1}
+    \end{center}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Detection Performance v.s. Control Performance}
+  \begin{itemize}
+    \item Assuming the watermarking signal is i.i.d. zero mean Gaussian with covariance $U$.
+    \item The optimal watermarking signal design problem can be written as
+      \begin{align*}
+      &\mathop{\textrm{maximize}}\limits_{U\geq 0}&
+      & Detection\;Performance\\
+      &\textrm{subject to}&
+      & Additional\;LQG\;Cost \leq \delta.
+      \end{align*}
+    \item The above problem can be relaxed into an Semi-Definite Programming problem. The optimal solution can be derived analytically using generalized eigenvectors.
+  \end{itemize}
+\end{frame}
+%
 %\begin{frame}{Stationary Watermarking}
 %  \begin{itemize}
 %    \item We can consider a zero mean stationary Gaussian signal, with autocovariance function:
@@ -402,305 +402,305 @@
 %  \end{itemize} 
 %\end{frame}
 
-%\section{An Online Approach to Replay Attack Detection}
+\subsection{An Online Approach to Replay Attack Detection}
 
-%\begin{frame}{Data-Driven Approach}
-%  \begin{figure}[htpb]
-%    \inputtikz{systemdiagram2}
-%  \end{figure}
-%\end{frame}
-%
-%\begin{frame}{Modified System Model}
-%  \begin{figure}
-%    \centering
-%    \begin{tikzpicture}
-%      \node (p1) at (0,0) {$\zeta(k)$};
-%      \node [draw=thupurple!50,fill=thupurple!20,thick,rounded corners] (p2) at (3,0) {Unknown System};
-%      \node [draw=thupurple!50,fill=thupurple!20,thick,rounded corners] (p3) at (7,0) {Failure Detector};
-%      \draw [semithick,-stealth] (p1)--(p2);
-%      \draw [semithick,-stealth] (p2)--node[above]{$y(k)$} (p3);
-%    \end{tikzpicture}
-%  \end{figure}
-%  \begin{enumerate}
-%    \item System Dynamics:
-%      \begin{align*}
-%	x(k+1) = A x(k) + B\zeta(k)+w(k), \;y(k)  &= C x(k) + v(k) . 
-%      \end{align*}
-%    \item LQG cost:
-%      \begin{align*}
-%	J = \lim_{T \to +\infty} \mathbb E\left [\frac{1}{T}\sum_{k=0}^{T-1} \begin{bmatrix}
-%	    y(k)\\
-%	    \zeta(k)
-%	    \end{bmatrix}^TX \begin{bmatrix}
-%	    y(k)\\
-%	    \zeta(k)
-%	\end{bmatrix} \right ],
-%      \end{align*}
-%  \end{enumerate}
-%\end{frame}
-%
-%\begin{frame}{Assumptions}
-%  \begin{itemize}
-%    \item The system is stable (or has been stabilized by some inner-loop controller), controllable and observable.
-%    \item $A$ is diagonalizable.
-%    \item We can observe $y(k)$, and we know the dimension of the $x(k)$.
-%    \item The LQG weight matrix $X$ is known.
-%    \item The noise are all zero mean i.i.d. Gaussian.
-%  \end{itemize}
-%  \textbf{No additional knowledge} on the $A,B,C$ matrices or the covariance of the noise is assumed.
-%\end{frame}
-%%
-%\begin{frame}{Impact on the Control Performance}
-%  The additional LQG cost incurred by the watermarking signal is a linear function of $U$.
-%  \begin{displaymath}
-%    \text{Additional LQG cost} = \tr(U\mathcal X).
-%  \end{displaymath}
-%  where $\mathcal X$ is given by:
-%  \begin{align*}
-%    \mathcal X &\triangleq \sum_{k=0}^\infty\textcolor{thupurple}{\left(CA^kB\right)^T} X_{yy}\textcolor{thupurple}{\left(CA^kB\right)}+ \textcolor{thupurple}{\left(CB\right)^T}X_{y\phi} + X_{\phi y}\textcolor{thupurple}{CB}+ X_{\phi \phi}\\
-%	       &= \sum_{k=0}^\infty \textcolor{thupurple}{H_k^T} X_{yy}\textcolor{thupurple}{H_k}+ \textcolor{thupurple}{H_0^T}X_{y\phi} + X_{\phi y}\textcolor{thupurple}{H_0}+ X_{\phi \phi}.
-%  \end{align*}
-%\end{frame}
-%%
-%%
-%\begin{frame}{Detecting Replay Attacks}
-%  \begin{itemize}
-%    \item In the absence of the attack:  
-%      \begin{align*} 
-%	y(k) &=\textcolor{red}{\boxed{\sum_{t=0}^{k-1} CA^{t}B  \zeta(k-1-t)}} + \textcolor{blue}{\boxed{\sum_{t=0}^{k-1}  CA^{t} w(k-1-t)+v(k) }}\\ 
-%	     &=\textcolor{red}{\gamma(k-1)} +\textcolor{blue} {\vartheta(k-1)},
-%      \end{align*}
-%    \item  In the presence of the attack:
-%      \begin{align*}
-%	y^c(k) = y(k-\Delta k) = \textcolor{red}{\gamma(k-1-\Delta k)} + \textcolor{blue}{\vartheta(k-1-\Delta k)}.
-%      \end{align*}
-%    \item The KL divergence between ``compromised'' measurement $y^c(k)$ and ``normal'' measurement $y(k)$ is a convex function $U$:
-%      \begin{displaymath}
-%	\tr\left( U \mathcal P  \right) - \frac{1}{2}\logdet\left( I+ U \mathcal P \right),
-%      \end{displaymath}
-%      where
-%      \begin{align*}
-%	\mathcal P \triangleq\sum_{k=0}^\infty \textcolor{thupurple}{H_k^T\mathcal W^{-1}H_k},\\
-%      \end{align*}
-%      where $\mathcal W$ is the covariance of $\vartheta_{k-1}$.
-%  \end{itemize}
-%\end{frame}
-%
-%\begin{frame}{Optimal Watermark}
-%  \begin{block}{Problem 1}
-%    \begin{align*}
-%      &\mathop{\textrm{maximize}}\limits_{U}&
-%      & \tr\left( U \mathcal P  \right) - \frac{1}{2}\logdet\left( I+ U \mathcal P \right), \\
-%      &\textrm{subject to}&
-%      & \tr (U\textcolor{thupurple}{\mathcal X}) \leq \delta \\
-%      &&& U \text{ is positive semidefinite.}
-%    \end{align*}
-%  \end{block}
-%  \centering
-%  \begin{tikzpicture}[domain=-2:2.5]
-%    \draw[semithick] plot (\x,{\x*\x/4});
-%    \draw[semithick,->] (-2.5,-0.5)--(3,-0.5);
-%    \draw[dashed] (-2,-0.5)--(-2,1);
-%    \draw[dashed] (2.5,-0.5)--(2.5,1.5625);
-%  \end{tikzpicture}
-%
-%  The solution lies on the boundary of the feasible set!
-%\end{frame}
-%
-%\begin{frame}{Optimal Watermark}
-%  \begin{enumerate}
-%    \item The boundary of the set of positive semi-definite matrices are rank $1$ matrix:
-%      \[U = \alpha vv^T.\] 
-%    \item $v$ is the generalized eigenvector s.t. $\mathcal Pv = \lambda\mathcal Xv$, where $\lambda$ is the largest generalized eigenvalue.
-%    \item $\alpha$ is chosen such that $\tr(U\mathcal X)=\delta$.
-%  \end{enumerate}
-%\end{frame}
+\begin{frame}{Data-Driven Approach}
+  \begin{figure}[htpb]
+    \inputtikz{systemdiagram2}
+  \end{figure}
+\end{frame}
 
-%\begin{frame}{Online-Watermark Design}
-%  \begin{figure}[t]
-%    \centering
-%    \begin{tikzpicture}[scale=0.9]
-%      \draw[thick,rounded corners,fill=thupurple!30,draw=thupurple!60] (0,1) rectangle (3,2);
-%      \node at (1.5,1.5) {$\zeta(k)$ Generation};
-%      \draw[thick,rounded corners,fill=red!30,draw=red!60] (4,1) rectangle (7,2);
-%      \node at (5.5,1.5) {Inference};
-%      \draw[thick,->] (1.5,2) to [bend left] (5.5,2);
-%      \draw[thick,->] (5.5,1) to [bend left] (1.5,1);
-%    \end{tikzpicture}
-%  \end{figure}
-%  \begin{itemize}
-%    \item Generate the ``optimal'' $U$ (based on our current knowledge):
-%      \begin{align*}
-%	\hat U_k=&\mathop{\textrm{argmax}}\limits_{U\geq 0}&
-%		 & \tr (U\textcolor{thupurple}{\hat  P_k})\\
-%		 &\textrm{subject to}&
-%		 & \tr (U\textcolor{thupurple}{\hat  X_k}) \leq \delta.
-%      \end{align*}
-%    \item Generate the watermark signal:
-%      \begin{align*}
-%	\zeta(k) = \left(\hat U_k+k^{-\beta}I\right)^{1/2}\phi(k),\,where\; \phi(k)\sim\mathcal N(0,I).
-%      \end{align*}
-%    \item Update the estimated system parameters using the cross correlation between $y$ and $u$.
-%  \end{itemize}
-%\end{frame}
-%
-%\begin{frame}{Online-Watermark Design: Inference}
-%  \begin{figure}[t]
-%    \centering
-%    \begin{tikzpicture}[scale=0.9]
-%      \draw[thick,rounded corners,fill=thupurple!30,draw=thupurple!60] (0,1) rectangle (3,2);
-%      \node at (1.5,1.5) {$\zeta(k)$ Generation};
-%      \draw[thick,rounded corners,fill=red!30,draw=red!60] (4,1) rectangle (7,2);
-%      \node at (5.5,1.5) {Inference};
-%      \draw[thick,->] (1.5,2) to [bend left] (5.5,2);
-%      \draw[thick,->] (5.5,1) to [bend left] (1.5,1);
-%    \end{tikzpicture}
-%  \end{figure}
-%  \begin{itemize}
-%  \item If we compute $y(k)\phi(k)^T$, we get
-%    \begin{align*}
-%      y(k+1)\phi(k)^T &= \textcolor{thupurple}{CBU_k^{1/2}\phi(k)\phi(k)^T}+ \sum_{t=1}^{k}H_t U_{k-t}^{1/2} \phi(k-t) \phi(k)^T \\
-%                      &+\sum_{t=0}^{k}  CA^{t} w(k-t)\phi(k)^T +v(k+1)\phi(k)^T.
-%    \end{align*}
-%  \item One tentative way to infer $H_0$: 
-%    \begin{align*}
-%      H_0 \approx \text{the average of }y(k+1)\phi(k)^TU_{k}^{-1/2} . 
-%    \end{align*}
-%  \item Similarly we can estimate all $H_t$, and further infer $\mathcal P$ and $\mathcal X$.
-%  \end{itemize} 
-%\end{frame}
-%
-%\begin{frame}{Key Problems with the Naive Approach}
-%  \begin{itemize}
-%  \item There are infinitely $H_t$s we need to infer
-%  \item The ``optimal'' $U_k$ is rank 1 and not invertible
-%  \end{itemize}
-%\end{frame}
-%\begin{frame}{Infer all $H_t$ using finitely many $H_t$s}
-%  \begin{itemize}
-%  \item We can only store \textbf{finitely many} $H_t=CA^tB$s, but we need \textbf{all} $H_t$ to compute $\mathcal P$ and $\mathcal X$.
-%  \item Solution: Cayley-Hamilton Theorem: 
-%    \begin{align*}
-%      p(A) = A^n + \alpha_{n-1}A^{n-1}+\ldots+\alpha_1 A + \alpha_0 I = 0     
-%    \end{align*}
-%    where $p(x)$ is the characteristic polynomial of $A$. 
-%  \item As a result, we know that
-%    \begin{align*}
-%      H_{n+i} &+ \alpha_{n-1}H_{n-1+i}+\ldots+\alpha_0 H_i\\
-%              &= CA^{i}A^nB + \alpha_{n-1}CA^{i}A^{n-1}B+\ldots+\alpha_0 CA^iB\\
-%      &=CA^i p(A)B = 0.
-%    \end{align*}
-%    \item All $H_\tau$ can be deduced from $H_0,\ldots, H_{n-1}$, if we know $p(A)$.
-%    \item Actually as long as we know some non-trivial polynomial $\tilde p(x)$, such that $\tilde p(A) = 0$, we can deduce all $H_\tau$ from finitely many $H_\tau$s.
-%  \end{itemize} 
-%\end{frame}
-%
-%\begin{frame}{Infer the Characteristic Polynomial $p(A)$}
-%  \begin{itemize}
-%  \item Suppose that we find some coefficients $\tilde \alpha_i$, such that
-%    \begin{align*}
-%      H_{n+i} &+ \tilde \alpha_{n-1}H_{n-1+i}+\ldots+\tilde \alpha_0 H_i = 0.
-%    \end{align*}
-%  \item Let $\tilde p(x) = x^n + \alpha_{n-1}x^{n-1}+\ldots+\alpha_1 x + \alpha_0 $.
-%  \item Question: Under what condition, will $\tilde p(x) = 0$?
-%  \item $CA^i\tilde p(A)B = 0$ for $i=0$ to $2n-2$, then
-%    \begin{align*}
-%      \begin{bmatrix}
-%        C\\
-%        CA\\
-%        \cdots\\
-%        CA^{n-1}
-%      \end{bmatrix}\tilde p(A)\begin{bmatrix}
-%        B&AB&\cdots&A^{n-1}B
-%      \end{bmatrix}=0.
-%    \end{align*}
-%  \item If the system is controllable and observable, then $\tilde p(A)=0$. 
-%    
-%  \end{itemize} 
-%\end{frame}
+\begin{frame}{Modified System Model}
+  \begin{figure}
+    \centering
+    \begin{tikzpicture}
+      \node (p1) at (0,0) {$\zeta(k)$};
+      \node [draw=thupurple!50,fill=thupurple!20,thick,rounded corners] (p2) at (3,0) {Unknown System};
+      \node [draw=thupurple!50,fill=thupurple!20,thick,rounded corners] (p3) at (7,0) {Failure Detector};
+      \draw [semithick,-stealth] (p1)--(p2);
+      \draw [semithick,-stealth] (p2)--node[above]{$y(k)$} (p3);
+    \end{tikzpicture}
+  \end{figure}
+  \begin{enumerate}
+    \item System Dynamics:
+      \begin{align*}
+	x(k+1) = A x(k) + B\zeta(k)+w(k), \;y(k)  &= C x(k) + v(k) . 
+      \end{align*}
+    \item LQG cost:
+      \begin{align*}
+	J = \lim_{T \to +\infty} \mathbb E\left [\frac{1}{T}\sum_{k=0}^{T-1} \begin{bmatrix}
+	    y(k)\\
+	    \zeta(k)
+	    \end{bmatrix}^TX \begin{bmatrix}
+	    y(k)\\
+	    \zeta(k)
+	\end{bmatrix} \right ],
+      \end{align*}
+  \end{enumerate}
+\end{frame}
 
-%\begin{frame}{Exploration and Exploitation}
-%  \begin{figure}[ht]
-%    \centering
-%    \includegraphics[width=0.8\textwidth]{bandit.png}
-%    \caption{Multi-Armed Bandit}
-%  \end{figure}
-%\end{frame}
+\begin{frame}{Assumptions}
+  \begin{itemize}
+    \item The system is stable (or has been stabilized by some inner-loop controller), controllable and observable.
+    \item $A$ is diagonalizable.
+    \item We can observe $y(k)$, and we know the dimension of the $x(k)$.
+    \item The LQG weight matrix $X$ is known.
+    \item The noise are all zero mean i.i.d. Gaussian.
+  \end{itemize}
+  \textbf{No additional knowledge} on the $A,B,C$ matrices or the covariance of the noise is assumed.
+\end{frame}
 %
-%\begin{frame}{Balance Exploration and Exploitation}
-%  \begin{itemize}
-%    \item The solution of the optimization problem is a rank one matrix: Pure \textcolor{red}{Exploitation}.
-%    \item We could also consider classical system identification techniques, which use $\hat U_k=I$: Pure \textcolor{blue}{Exploration}.
-%    \item To achieve a balance, choose
-%      \begin{align*}
-%	\hat U_k = \text{``optimal'' } U + k^{-\beta} I.
-%      \end{align*}
-%    \item More \textcolor{blue}{exploration} at the beginning and more \textcolor{red}{exploitation} towards the end.
-%  \end{itemize}
-%\end{frame}
+\begin{frame}{Impact on the Control Performance}
+  The additional LQG cost incurred by the watermarking signal is a linear function of $U$.
+  \begin{displaymath}
+    \text{Additional LQG cost} = \tr(U\mathcal X).
+  \end{displaymath}
+  where $\mathcal X$ is given by:
+  \begin{align*}
+    \mathcal X &\triangleq \sum_{k=0}^\infty\textcolor{thupurple}{\left(CA^kB\right)^T} X_{yy}\textcolor{thupurple}{\left(CA^kB\right)}+ \textcolor{thupurple}{\left(CB\right)^T}X_{y\phi} + X_{\phi y}\textcolor{thupurple}{CB}+ X_{\phi \phi}\\
+	       &= \sum_{k=0}^\infty \textcolor{thupurple}{H_k^T} X_{yy}\textcolor{thupurple}{H_k}+ \textcolor{thupurple}{H_0^T}X_{y\phi} + X_{\phi y}\textcolor{thupurple}{H_0}+ X_{\phi \phi}.
+  \end{align*}
+\end{frame}
 %
-%\begin{frame}{Convergence of the Watermarking Signal}
-%  \begin{theorem}
-%    If $0 \leq \beta < 1$, then $\hat U_k$ converges to the optimal $U$ a.s. Furthermore, for any $\epsilon > 0$, we have
-%    \begin{align*}
-%      \frac{\hat U_k - U}{k^{-1/2+\beta/2+\epsilon}} \rightarrow 0,\,a.s.
-%    \end{align*}
-%  \end{theorem}
-%\end{frame}
 %
-%\begin{frame}{Tennessee Eastman Process}
-%  The TEP is created to provide a realistic industrial process for developing studying and evaluating process control technology. 
-%  \begin{columns}
-%    \begin{column}{0.45\textwidth}
-%      \begin{figure}
-%	\includegraphics[width=0.9\textwidth]{simplifiedmodel.png}
-%	\caption{The simplified process}
-%      \end{figure}
-%    \end{column}
-%    \begin{column}{0.55\textwidth} 		
-%      \begin{itemize}
-%	\item The vessel: a combination of the reactor and separation system in the original TE Process;
-%	\item Feed 1: A, C and trace amounts of an inert B;
-%	\item Feed 2: pure A;
-%	\item Stream 3: purge rate;
-%	\item Stream 4: product rate;
-%	\item Vapor: A, B, C;\\
-%	  Liquid: D.
-%      \end{itemize}
-%    \end{column}
-%  \end{columns}
-%  4 inputs, 4 outputs and 7 internal states.
-%\end{frame}
-%
-%\begin{frame}
-%  \frametitle{The Watermark Signal Design}
-%  \begin{columns}
-%    \begin{column}{0.6\textwidth}
-%      \begin{figure}[h!]
-%	\inputtikz{errU1_te}
-%      \end{figure}
-%    \end{column}
-%    \begin{column}{0.4\textwidth}
-%      \begin{itemize}
-%	\item $U$: the optimal covariance of the watermark signal;
-%	\item $U_k$: the estimation of $U$.
-%      \end{itemize}
-%    \end{column}
-%  \end{columns}
-%  ~\\
-%  As time $k$ goes to infinity, $U_k$ converges to the optimal covariance of the watermark signal, $U$.
-%\end{frame}
-%
-%\begin{frame}{The detection performance}
-%  \begin{itemize}
-%    \item $g$: the output of the failure detector designed with know parameters
-%    \item $\hat g$: the output of the failure detector when the parameters of the system are inferred through the learning technique. 
-%  \end{itemize}
-%  \begin{figure}[h!]
-%    \centering
-%    \inputtikz{gng_te}
-%  \end{figure}
-%\end{frame}
+\begin{frame}{Detecting Replay Attacks}
+  \begin{itemize}
+    \item In the absence of the attack:  
+      \begin{align*} 
+	y(k) &=\textcolor{red}{\boxed{\sum_{t=0}^{k-1} CA^{t}B  \zeta(k-1-t)}} + \textcolor{blue}{\boxed{\sum_{t=0}^{k-1}  CA^{t} w(k-1-t)+v(k) }}\\ 
+	     &=\textcolor{red}{\gamma(k-1)} +\textcolor{blue} {\vartheta(k-1)},
+      \end{align*}
+    \item  In the presence of the attack:
+      \begin{align*}
+	y^c(k) = y(k-\Delta k) = \textcolor{red}{\gamma(k-1-\Delta k)} + \textcolor{blue}{\vartheta(k-1-\Delta k)}.
+      \end{align*}
+    \item The KL divergence between ``compromised'' measurement $y^c(k)$ and ``normal'' measurement $y(k)$ is a convex function $U$:
+      \begin{displaymath}
+	\tr\left( U \mathcal P  \right) - \frac{1}{2}\logdet\left( I+ U \mathcal P \right),
+      \end{displaymath}
+      where
+      \begin{align*}
+	\mathcal P \triangleq\sum_{k=0}^\infty \textcolor{thupurple}{H_k^T\mathcal W^{-1}H_k},\\
+      \end{align*}
+      where $\mathcal W$ is the covariance of $\vartheta_{k-1}$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Optimal Watermark}
+  \begin{block}{Problem 1}
+    \begin{align*}
+      &\mathop{\textrm{maximize}}\limits_{U}&
+      & \tr\left( U \mathcal P  \right) - \frac{1}{2}\logdet\left( I+ U \mathcal P \right), \\
+      &\textrm{subject to}&
+      & \tr (U\textcolor{thupurple}{\mathcal X}) \leq \delta \\
+      &&& U \text{ is positive semidefinite.}
+    \end{align*}
+  \end{block}
+  \centering
+  \begin{tikzpicture}[domain=-2:2.5]
+    \draw[semithick] plot (\x,{\x*\x/4});
+    \draw[semithick,->] (-2.5,-0.5)--(3,-0.5);
+    \draw[dashed] (-2,-0.5)--(-2,1);
+    \draw[dashed] (2.5,-0.5)--(2.5,1.5625);
+  \end{tikzpicture}
+
+  The solution lies on the boundary of the feasible set!
+\end{frame}
+
+\begin{frame}{Optimal Watermark}
+  \begin{enumerate}
+    \item The boundary of the set of positive semi-definite matrices are rank $1$ matrix:
+      \[U = \alpha vv^T.\] 
+    \item $v$ is the generalized eigenvector s.t. $\mathcal Pv = \lambda\mathcal Xv$, where $\lambda$ is the largest generalized eigenvalue.
+    \item $\alpha$ is chosen such that $\tr(U\mathcal X)=\delta$.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Online-Watermark Design}
+  \begin{figure}[t]
+    \centering
+    \begin{tikzpicture}[scale=0.9]
+      \draw[thick,rounded corners,fill=thupurple!30,draw=thupurple!60] (0,1) rectangle (3,2);
+      \node at (1.5,1.5) {$\zeta(k)$ Generation};
+      \draw[thick,rounded corners,fill=red!30,draw=red!60] (4,1) rectangle (7,2);
+      \node at (5.5,1.5) {Inference};
+      \draw[thick,->] (1.5,2) to [bend left] (5.5,2);
+      \draw[thick,->] (5.5,1) to [bend left] (1.5,1);
+    \end{tikzpicture}
+  \end{figure}
+  \begin{itemize}
+    \item Generate the ``optimal'' $U$ (based on our current knowledge):
+      \begin{align*}
+	\hat U_k=&\mathop{\textrm{argmax}}\limits_{U\geq 0}&
+		 & \tr (U\textcolor{thupurple}{\hat  P_k})\\
+		 &\textrm{subject to}&
+		 & \tr (U\textcolor{thupurple}{\hat  X_k}) \leq \delta.
+      \end{align*}
+    \item Generate the watermark signal:
+      \begin{align*}
+	\zeta(k) = \left(\hat U_k+k^{-\beta}I\right)^{1/2}\phi(k),\,where\; \phi(k)\sim\mathcal N(0,I).
+      \end{align*}
+    \item Update the estimated system parameters using the cross correlation between $y$ and $u$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Online-Watermark Design: Inference}
+  \begin{figure}[t]
+    \centering
+    \begin{tikzpicture}[scale=0.9]
+      \draw[thick,rounded corners,fill=thupurple!30,draw=thupurple!60] (0,1) rectangle (3,2);
+      \node at (1.5,1.5) {$\zeta(k)$ Generation};
+      \draw[thick,rounded corners,fill=red!30,draw=red!60] (4,1) rectangle (7,2);
+      \node at (5.5,1.5) {Inference};
+      \draw[thick,->] (1.5,2) to [bend left] (5.5,2);
+      \draw[thick,->] (5.5,1) to [bend left] (1.5,1);
+    \end{tikzpicture}
+  \end{figure}
+  \begin{itemize}
+  \item If we compute $y(k)\phi(k)^T$, we get
+    \begin{align*}
+      y(k+1)\phi(k)^T &= \textcolor{thupurple}{CBU_k^{1/2}\phi(k)\phi(k)^T}+ \sum_{t=1}^{k}H_t U_{k-t}^{1/2} \phi(k-t) \phi(k)^T \\
+                      &+\sum_{t=0}^{k}  CA^{t} w(k-t)\phi(k)^T +v(k+1)\phi(k)^T.
+    \end{align*}
+  \item One tentative way to infer $H_0$: 
+    \begin{align*}
+      H_0 \approx \text{the average of }y(k+1)\phi(k)^TU_{k}^{-1/2} . 
+    \end{align*}
+  \item Similarly we can estimate all $H_t$, and further infer $\mathcal P$ and $\mathcal X$.
+  \end{itemize} 
+\end{frame}
+
+\begin{frame}{Key Problems with the Naive Approach}
+  \begin{itemize}
+  \item There are infinitely $H_t$s we need to infer
+  \item The ``optimal'' $U_k$ is rank 1 and not invertible
+  \end{itemize}
+\end{frame}
+\begin{frame}{Infer all $H_t$ using finitely many $H_t$s}
+  \begin{itemize}
+  \item We can only store \textbf{finitely many} $H_t=CA^tB$s, but we need \textbf{all} $H_t$ to compute $\mathcal P$ and $\mathcal X$.
+  \item Solution: Cayley-Hamilton Theorem: 
+    \begin{align*}
+      p(A) = A^n + \alpha_{n-1}A^{n-1}+\ldots+\alpha_1 A + \alpha_0 I = 0     
+    \end{align*}
+    where $p(x)$ is the characteristic polynomial of $A$. 
+  \item As a result, we know that
+    \begin{align*}
+      H_{n+i} &+ \alpha_{n-1}H_{n-1+i}+\ldots+\alpha_0 H_i\\
+              &= CA^{i}A^nB + \alpha_{n-1}CA^{i}A^{n-1}B+\ldots+\alpha_0 CA^iB\\
+      &=CA^i p(A)B = 0.
+    \end{align*}
+    \item All $H_\tau$ can be deduced from $H_0,\ldots, H_{n-1}$, if we know $p(A)$.
+    \item Actually as long as we know some non-trivial polynomial $\tilde p(x)$, such that $\tilde p(A) = 0$, we can deduce all $H_\tau$ from finitely many $H_\tau$s.
+  \end{itemize} 
+\end{frame}
+
+\begin{frame}{Infer the Characteristic Polynomial $p(A)$}
+  \begin{itemize}
+  \item Suppose that we find some coefficients $\tilde \alpha_i$, such that
+    \begin{align*}
+      H_{n+i} &+ \tilde \alpha_{n-1}H_{n-1+i}+\ldots+\tilde \alpha_0 H_i = 0.
+    \end{align*}
+  \item Let $\tilde p(x) = x^n + \alpha_{n-1}x^{n-1}+\ldots+\alpha_1 x + \alpha_0 $.
+  \item Question: Under what condition, will $\tilde p(x) = 0$?
+  \item $CA^i\tilde p(A)B = 0$ for $i=0$ to $2n-2$, then
+    \begin{align*}
+      \begin{bmatrix}
+        C\\
+        CA\\
+        \cdots\\
+        CA^{n-1}
+      \end{bmatrix}\tilde p(A)\begin{bmatrix}
+        B&AB&\cdots&A^{n-1}B
+      \end{bmatrix}=0.
+    \end{align*}
+  \item If the system is controllable and observable, then $\tilde p(A)=0$. 
+    
+  \end{itemize} 
+\end{frame}
+
+\begin{frame}{Exploration and Exploitation}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{bandit.png}
+    \caption{Multi-Armed Bandit}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Balance Exploration and Exploitation}
+  \begin{itemize}
+    \item The solution of the optimization problem is a rank one matrix: Pure \textcolor{red}{Exploitation}.
+    \item We could also consider classical system identification techniques, which use $\hat U_k=I$: Pure \textcolor{blue}{Exploration}.
+    \item To achieve a balance, choose
+      \begin{align*}
+	\hat U_k = \text{``optimal'' } U + k^{-\beta} I.
+      \end{align*}
+    \item More \textcolor{blue}{exploration} at the beginning and more \textcolor{red}{exploitation} towards the end.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Convergence of the Watermarking Signal}
+  \begin{theorem}
+    If $0 \leq \beta < 1$, then $\hat U_k$ converges to the optimal $U$ a.s. Furthermore, for any $\epsilon > 0$, we have
+    \begin{align*}
+      \frac{\hat U_k - U}{k^{-1/2+\beta/2+\epsilon}} \rightarrow 0,\,a.s.
+    \end{align*}
+  \end{theorem}
+\end{frame}
+
+\begin{frame}{Tennessee Eastman Process}
+  The TEP is created to provide a realistic industrial process for developing studying and evaluating process control technology. 
+  \begin{columns}
+    \begin{column}{0.45\textwidth}
+      \begin{figure}
+	\includegraphics[width=0.9\textwidth]{simplifiedmodel.png}
+	\caption{The simplified process}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.55\textwidth} 		
+      \begin{itemize}
+	\item The vessel: a combination of the reactor and separation system in the original TE Process;
+	\item Feed 1: A, C and trace amounts of an inert B;
+	\item Feed 2: pure A;
+	\item Stream 3: purge rate;
+	\item Stream 4: product rate;
+	\item Vapor: A, B, C;\\
+	  Liquid: D.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  4 inputs, 4 outputs and 7 internal states.
+\end{frame}
+
+\begin{frame}
+  \frametitle{The Watermark Signal Design}
+  \begin{columns}
+    \begin{column}{0.6\textwidth}
+      \begin{figure}[h!]
+	\inputtikz{errU1_te}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+      \begin{itemize}
+	\item $U$: the optimal covariance of the watermark signal;
+	\item $U_k$: the estimation of $U$.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  ~\\
+  As time $k$ goes to infinity, $U_k$ converges to the optimal covariance of the watermark signal, $U$.
+\end{frame}
+
+\begin{frame}{The detection performance}
+  \begin{itemize}
+    \item $g$: the output of the failure detector designed with know parameters
+    \item $\hat g$: the output of the failure detector when the parameters of the system are inferred through the learning technique. 
+  \end{itemize}
+  \begin{figure}[h!]
+    \centering
+    \inputtikz{gng_te}
+  \end{figure}
+\end{frame}
 
 \section{Static State Estimation}
 
@@ -1518,50 +1518,52 @@ In order to convert the dynamic estimation problem into a static one, we can use
 
 \section{Conclusion}
 
-\begin{frame}{Towards a Science of CPS Security}
-  \begin{itemize}
-    \item We consider both the static and dynamic state estimation problem in adversarial environment 
-    \item For static estimation, we propose a convex optimization based estimator and derive necessary and sufficient condition for its stability
-    \item For dynamic estimation, we propose a local filter + global fusion design:
-      \begin{enumerate}
-	\item In the absence of the attack, we recover the optimal Kalman filter with certain probabiliy
-	\item In the presence of the attack, we provide a sufficient condition for stability
-	\item For $A$ matrix whose unstable eigenvalues have geometric multiplicity of 1, the filter also achieves optimal security 
-      \end{enumerate}
-    \item Future directions: How to combine information security with system theory to provide defense in depth?
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Acknowledgement}
-  \begin{itemize}
-    \item Duo Han, Xinghua Liu, Zishuo Li
-    \item Lihua Xie, Emanuele Garone 
-    \item NTU Autonomous Driving Group: Danwei Wang, Jakub Tomasek, Qipeng Liu, Ehsan Mihankhah, Xiaoqiang Ren, Xiaoyu Mo 
-  \end{itemize}
-\end{frame}
-
-
 %\begin{frame}{Towards a Science of CPS Security}
 %  \begin{itemize}
-%  \item We consider intrusion detection problem in adversarial environment and propose an active detection scheme.
-%  \item How to systematically design secure algorithms?
-%  \item How to combine information security with system theory to provide defense in depth?
+%    \item We consider both the static and dynamic state estimation problem in adversarial environment 
+%    \item For static estimation, we propose a convex optimization based estimator and derive necessary and sufficient condition for its stability
+%    \item For dynamic estimation, we propose a local filter + global fusion design:
+%      \begin{enumerate}
+%	\item In the absence of the attack, we recover the optimal Kalman filter with certain probabiliy
+%	\item In the presence of the attack, we provide a sufficient condition for stability
+%	\item For $A$ matrix whose unstable eigenvalues have geometric multiplicity of 1, the filter also achieves optimal security 
+%      \end{enumerate}
+%    \item Future directions: How to combine information security with system theory to provide defense in depth?
 %  \end{itemize}
 %\end{frame}
 %
 %\begin{frame}{Acknowledgement}
 %  \begin{itemize}
-%  \item Rohan Chabukswar, Sean Weerakkody, Hanxiao Liu, Jiaqi Yan
-%  \item Bruno Sinopoli, Lihua Xie, Karl H. Johansson
+%    \item Duo Han, Xinghua Liu, Zishuo Li
+%    \item Lihua Xie, Emanuele Garone 
+%    \item NTU Autonomous Driving Group: Danwei Wang, Jakub Tomasek, Qipeng Liu, Ehsan Mihankhah, Xiaoqiang Ren, Xiaoyu Mo 
 %  \end{itemize}
 %\end{frame}
-\begin{frame}[allowframebreaks]
-     \printbibliography
-\end{frame} 
+
+
+\begin{frame}{Towards a Science of CPS Security}
+  \begin{itemize}
+  \item We consider intrusion detection problem in adversarial environment and propose an active detection scheme.
+    \item We consider both the static and dynamic state estimation problem in adversarial environment 
+    \item For static estimation, we propose a convex optimization based estimator and derive necessary and sufficient condition for its stability
+  \item How to systematically design secure algorithms?
+  \item How to combine information security with system theory to provide defense in depth?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Acknowledgement}
+  \begin{itemize}
+  \item Rohan Chabukswar, Sean Weerakkody, Hanxiao Liu, Jiaqi Yan, Zishuo Li
+  \item Bruno Sinopoli, Lihua Xie, Karl H. Johansson
+  \end{itemize}
+\end{frame}
+
+%\begin{frame}[allowframebreaks]
+%     \printbibliography
+%\end{frame} 
 
 \begin{frame}[standout]
   感谢聆听！请各位老师批评指正
 \end{frame}
 
 \end{document}
-
