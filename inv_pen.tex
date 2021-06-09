@@ -1,0 +1,143 @@
+
+
+
+%\tikzsetnextfilename{PIDBode}
+\begin{tikzpicture}[> = latex',%
+	scale = 0.9]
+	\tikzset{%
+		interface/.style={
+			% The border decoration is a path replacing decorator. 
+			% For the interface style we want to draw the original path.
+			% The postaction option is therefore used to ensure that the
+			% border decoration is drawn *after* the original path.
+			postaction={draw, decorate, decoration={border, angle=-45,
+					amplitude=0.3cm, segment length=2mm}}},
+		helparrow/.style={>=latex', blue, thick},
+		% helparrow/.style={>=latex', draw=blue, fill=blue, very thick},
+		helpline/.style={thin, black!90, opacity=0.5},
+		force/.style={>=stealth, draw=blue, fill=blue, ultra thick},
+	}
+	\def\ground{%
+		\fill [black!20] (0, 0) rectangle (49mm, -13mm);
+		\fill [black!20] (49mm, 0) rectangle (80mm, -5mm);
+		\draw [thick, black!80, interface] (0, 0) -- (80mm, 0);
+		\draw [thick, black!80] (49mm, 0) -- +(0, -13mm);
+		\draw [|->, helparrow] (49mm, -9mm) -- ++(10mm, 0) node [right] {\color{black} $x_1$ };
+	}
+	
+	\def\cart{
+		\filldraw [%thick,%
+		draw = black!80,%
+		fill = black!40,%
+		top color = black!30,%
+		bottom color = black!30,%
+		% pattern=horizontal lines gray,%
+		] (0,0) rectangle (30mm, 10mm);
+		\node at (15mm, 5mm) {$M=1$kg};
+		\draw[->, force] (-15mm, 5mm) node [above] {$u=\ensuremath{\vv{F}}$} -- (0, 5mm);
+		\node at (40mm, -2mm) {$b_x = 0.05$};
+	}
+	
+	\def\pendulum{%
+		\filldraw [%thick,%
+		draw = black!80,%
+		% fill = black!25,%
+		left color=black!30,%
+		bottom color=black!30,%
+		% pattern=horizontal lines gray,%
+		] (-0.8mm, 0) rectangle (0.8mm, 20mm);
+		\draw [|-|, helparrow] (2mm, 0mm) -- ++(0mm, 20mm);
+		\node at (15mm, 12mm) {$l=1$m};
+		\node at (-10mm, 0mm) {$b_\theta=0.1$}; 
+	}
+	
+	\def\joint{%
+		\filldraw [%thick,%
+		draw = black!80,%
+		fill = white,%
+		% pattern=horizontal lines gray,%
+		] (0, 0) circle (1mm);
+	}
+	
+	\def\wheel{%
+%		\fill [thin,%
+%		fill = black!70,%	path fading = south
+%	] (0, 0) circle (1.75mm);
+%		\begin{scope}
+%			\clip (0, 0) circle (1.75mm);
+%			\fill [fill=black!30,] (0, -1mm) circle (2mm);
+%		\end{scope}
+		\fill [fill=black!30,] (0, 0mm) circle (2mm);
+		\fill [fill=black!90] (0, 0) circle (0.5mm);
+		\draw [thin,%
+		double = black!20,%
+		double distance = 0.5mm] (0, 0) circle (2mm);
+	}
+
+	\begin{scope}
+		\wheel
+	\end{scope}
+	\begin{scope}[xshift=18mm]
+		\wheel
+	\end{scope}
+	\begin{scope}[xshift=-31mm, yshift=-2.4mm]
+		\ground
+	\end{scope}
+	\begin{scope}[shift = {(-6mm, 2.4mm)}]
+		\cart
+	\end{scope}
+	\begin{scope}[shift = {(9mm, 12.4mm)}]
+		\draw [helpline] (0, -20mm) -- (0, 25mm);
+		\draw [helpline] (70:20.5mm) -- (70:25mm);
+		\draw [|->, helparrow] (0, 23mm) 
+		arc [radius=23mm, start angle=90, delta angle=-20] ;
+		\node at (80:26mm) {$x_3$};
+%		\draw [|->, helparrow] (0, -9mm) 
+%		arc [radius=9mm, start angle=-90, delta angle=195] ;
+%		\node [above right] at (50:8.5mm) {$\theta$};
+		\draw [thin] (70:14mm) -- (10mm, 10mm) 
+		node [right] {$m=0.1$kg};
+	\end{scope}
+	\begin{scope}[shift = {(9mm, 12.4mm)}, rotate=-20]
+		\pendulum
+	\end{scope}
+	\begin{scope}[shift = {(9mm, 12.4mm)}]
+		\joint
+	\end{scope}
+\end{tikzpicture}
+
+
+%\begin{tikzpicture}[> = latex',%
+%	scale = 1,%
+%	text = blue]
+%	\begin{scope}
+%		\wheel
+%	\end{scope}
+%	\begin{scope}[xshift=18mm]
+%		\wheel
+%	\end{scope}
+%	\begin{scope}[xshift=-31mm, yshift=-2.4mm]
+%		\ground
+%	\end{scope}
+%	\begin{scope}[shift = {(-6mm, 2.4mm)}]
+%		\cart
+%	\end{scope}
+%	\begin{scope}[shift = {(9mm, 12.4mm)}]
+%		\draw [helpline] (0, -20mm) -- (0, 25mm);
+%		\draw [helpline] (110:20.5mm) -- (110:25mm);
+%		\draw [|->, helparrow] (0, 23mm) 
+%		arc [radius=23mm, start angle=90, delta angle=20] ;
+%		\node at (97:25mm) {$\theta'$};
+%		\draw [|->, helparrow] (0, -9mm) 
+%		arc [radius=9mm, start angle=-90, delta angle=195] ;
+%		\node [above right] at (50:8.5mm) {$\theta$};
+%		\draw [thin] (110:14mm) -- (-10mm, 10mm) 
+%		node [left] {$m$, $I$};
+%	\end{scope}
+%	\begin{scope}[shift = {(9mm, 12.4mm)}, rotate=20]
+%		\pendulum
+%	\end{scope}
+%	\begin{scope}[shift = {(9mm, 12.4mm)}]
+%		\joint
+%	\end{scope}
+%\end{tikzpicture}
