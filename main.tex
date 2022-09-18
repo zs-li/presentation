@@ -4,8 +4,8 @@
 \documentclass[10pt]{beamer}
 
 \usepackage{xeCJK}
-\setCJKmainfont{Noto Sans CJK SC}
-\xeCJKsetup{PunctStyle=kaiming,CJKspace=true,CheckSingle=true} 
+%\setCJKmainfont{Noto Sans CJK SC}
+%\xeCJKsetup{PunctStyle=kaiming,CJKspace=true,CheckSingle=true} 
 
 \usepackage{subfigure}
 \usepackage{amssymb, amsmath, amsfonts,verbatim}
@@ -38,8 +38,15 @@
 \newcommand{\tC}{\tilde C}
 \newcommand{\tP}{\tilde P}
 \newcommand{\Ic}{{\mathcal I^c}}
+\newcommand{\Nc}{{\mathcal N}}
+\newcommand{\Bc}{{\mathcal B}}
+\newcommand{\Ac}{{\mathcal A}}
+\newcommand{\Ica}{{\mathcal I}}
 \newcommand{\J}{{\mathcal J}}
+\newcommand{\Nb}{{\mathbb N}}
+\newcommand{\Cc}{{\mathcal C}}
 \newcommand{\K}{{\mathcal K}}
+\newcommand{\cx}{{\check{x}}}
 
 \DeclareMathOperator{\Smin}{Smin}
 \DeclareMathOperator{\Smid}{Smid}
@@ -1492,7 +1499,50 @@ In order to convert the dynamic estimation problem into a static one, we can use
   It is easy to certify the security of the estimator and compute the state estimate in real time. 
 \end{frame}
 
-\begin{frame}{Numerical Example: Inverted pendulum}
+\begin{frame}{Distributed secure estimation}
+	The estimation can be done on a digraph in distributed manner in \textbf{bounded noise case}. At each time step $k$, each sensor $i$ do the following 3 steps:
+	\begin{enumerate}
+		\item Calculate local estimation $\hat{\xi}_i$.
+		\item Malicious detection $\|\hat{\xi}_i(k)-G_i x(k)\|\geq \bar{\gamma}$.
+		\item Do $T$ times of optimization iterations:
+		\begin{itemize}
+			\item For benign sensors (consensus+prox-grad descent):
+			\begin{align*}
+				\cx_i^{(t+1)}=& \cx_i^{(t)}-\beta u_i^{(t)}-\frac{\beta \alpha}{|\Nc_i|}\sum_{j\in\Nc_i} \left[\cx_i^{(t)} -\cx_j^{(t)}\right] - \beta  \left(\text{prox-grad term}\right)\\
+				u_i^{(t+1)}=&u_i^{(t)}+\frac{\omega}{|\Nc_i|}\sum_{j\in\Nc_i} \left[\cx_i^{(t+1)} -\cx_j^{(t+1)}\right]. 
+			\end{align*}
+			\item For Malicious sensors (only consensus): 
+			\begin{align*}
+				\cx_i^{(t+1)}=& \cx_i^{(t)}-\beta u_i^{(t)}-\frac{\beta \alpha}{|\Nc_i|}\sum_{j\in\Nc_i} \left[\cx_i^{(t)} -\cx_j^{(t)}\right]\\
+				u_i^{(t+1)}=&u_i^{(t)}+\frac{\omega}{|\Nc_i|}\sum_{j\in\Nc_i} \left[\cx_i^{(t+1)} -\cx_j^{(t+1)}\right]. \hspace{85pt}
+			\end{align*}
+	\end{itemize}
+	\end{enumerate}
+
+\end{frame}
+
+\begin{frame}{Distributed secure estimation}
+
+	\begin{block}{Theorem}
+	In the presence of attack, if the previous security condition is satisfied, for arbitrary $\delta>0$, by choosing iteration number $T$ and detector threshold $\gamma$ as 
+	\begin{align}
+		T&\geq -2\log_{\rho}\left[ \frac{1}{\delta} \left( \|A\|_2(\delta+\Bc_{*})+\Bc_{w}+ \Bc_{*} \right)\right], \label{eq:chooseT}\\
+		\gamma&\triangleq\Bc_\epsilon + \left\|G_i\right\|_2 (\delta+\Bc_{*}), \label{eq:choose_gamma}
+	\end{align}
+	in Algorithm where $0<\rho<1$ is the linear convergence rate, the estimation error of our proposed algorithm is
+	\begin{align*}
+		\left\|\cx_i^{(T)}(k)-x(k)\right\|_2 \leq \Bc_{*}+\delta, \ \forall i\in\Ica, k\in\Nb,
+	\end{align*}
+	Moreover, benign sensors do not trigger the malicious detector.
+	
+	\end{block}
+
+
+	
+\end{frame}
+
+
+\begin{frame}{Numerical Example: 6 agent system}
   \centering
   \begin{columns}
     \begin{column}{0.5\textwidth}
