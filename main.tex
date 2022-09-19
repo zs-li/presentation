@@ -10,6 +10,7 @@
 \usepackage{subfigure}
 \usepackage{amssymb, amsmath, amsfonts,verbatim}
 \usepackage{tikz}
+\usepackage{makecell}
 \graphicspath{ {./} }
 \usetikzlibrary{matrix,arrows,fit,backgrounds,mindmap,plotmarks,decorations.pathreplacing}
 %\usepackage{tkz-euclide}
@@ -1541,77 +1542,89 @@ In order to convert the dynamic estimation problem into a static one, we can use
 	
 \end{frame}
 
-
 \begin{frame}{Numerical Example: 6 agent system}
-  \centering
+	\begin{columns}
+		\begin{column}{0.5\textwidth}
+				\begin{align*}
+				A=\begin{bmatrix}
+					1.1  &   1  &  0\\
+					0 & 1.1  &    0\\
+					0  &   0  &  0.9
+				\end{bmatrix},\  C=
+				\begin{bmatrix}
+					1 &0& 0\\
+					0& 1& 0\\
+					1& 1& 0\\
+					0 &1& 1\\
+					1& 0& 1\\
+					0 &0& 1
+				\end{bmatrix}.
+			\end{align*}
+		\end{column}
+	\begin{column}{0.5\textwidth}
+		\begin{figure}[htpb!]
+			\centering
+			\input{topo.tex}
+		\end{figure}
+	\end{column}
+	\end{columns}\vspace{20pt}
+Linear control feedback: $u_c(k)=-K_{\rm con}\hat{x}(k)$. $w(k)$, $v(k)$ are uniformly distributed on interval $[-0.005,0.005]$ and $[-0.01,0.01]$ respectively. Optimization parameters are $\alpha=0.5,\beta=0.2,\omega=0.1$.
+\end{frame}
+
+
+\begin{frame}{Estimation error in the absence of attack}
+	\begin{figure}[htpb!]
+		\centering
+		\input{no_attack_error.tex}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Estimation error linear convergence }
+\begin{figure}[htpb!]
+	\centering
+	\input{no_attack_converge.tex}
+	\caption{Convergence rate of average optimization error with different iteration number. Since the y-axis is in logarithm scale, the straight decreasing line segment at each time $k$ represent exponential convergence.} \label{fig:no_attack_converge}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Estimation performance under random signal attack}
   \begin{columns}
     \begin{column}{0.5\textwidth}
-      \scalebox{0.7}{\input{inv_pen.tex}}
+	\begin{figure}[htpb!]
+		\resizebox{0.8\textheight}{0.8\textheight}{%
+			\input{attack_error.tex}
+		}
+\end{figure}
     \end{column}
     \begin{column}{0.5\textwidth}
-      $x_1$: cart position
-
-      $x_2$: cart velocity
-
-      $x_3$: pendulum angle
-
-      $x_4$: pendulum angle velocity
-
-      Linearize at $x_3=x_4=0$, 
-
-      Sample with interval $T_s=0.02$.
+     \begin{figure}[htpb!]\vspace{90pt}
+     	\resizebox{0.5\textheight}{0.5\textheight}{	\input{attack_residue.tex}  }
+     \end{figure}
     \end{column}
   \end{columns}
 
-  \vspace{-1pt}
-  {\footnotesize
-    \begin{align*}
-      x(k+1)=\begin{bmatrix}
-	1  \hspace{-2pt}&\hspace{-2pt}   2.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-2}  \hspace{-2pt}&\hspace{-2pt}  -2.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-4}  \hspace{-2pt}&\hspace{-2pt}  1.9\hspace{-2pt}\cdot\hspace{-2pt} 10^{-5}\\
-	0  \hspace{-2pt}&\hspace{-2pt}   1.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{0}   \hspace{-2pt}&\hspace{-2pt} -2.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-2}  \hspace{-2pt}&\hspace{-2pt}   1.8\hspace{-2pt}\cdot\hspace{-2pt} 10^{-3}\\
-	0  \hspace{-2pt}&\hspace{-2pt}   1.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-5} \hspace{-2pt}&\hspace{-2pt}   1.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{0} \hspace{-2pt}&\hspace{-2pt}   2.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-2}\\
-	0  \hspace{-2pt}&\hspace{-2pt}   1.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-3}\hspace{-2pt}&\hspace{-2pt}  2.1\hspace{-2pt}\cdot\hspace{-2pt} 10^{-1}  \hspace{-2pt}&\hspace{-2pt}  9.8\hspace{-2pt}\cdot\hspace{-2pt} 10^{-1}
-	\end{bmatrix}x(k)+\begin{bmatrix}
-	2.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-4}\\
-	2.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-2}\\
-	-2.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-4}\\
-	-2.0\hspace{-2pt}\cdot\hspace{-2pt} 10^{-2}
-      \end{bmatrix}
-      u(k)+w(k).
-    \end{align*}
-    \begin{align*}
-      y(k)=
-      \begin{bmatrix}
-	1\hspace{-2pt}&\hspace{-2pt} 0 \hspace{-2pt}&\hspace{-2pt}0 \hspace{-2pt}&\hspace{-2pt}0\\
-	1\hspace{-2pt}&\hspace{-2pt} 0 \hspace{-2pt}&\hspace{-2pt}0 \hspace{-2pt}&\hspace{-2pt}0\\
-	1\hspace{-2pt}&\hspace{-2pt} 0 \hspace{-2pt}&\hspace{-2pt}0 \hspace{-2pt}&\hspace{-2pt}0\\
-	0\hspace{-2pt}&\hspace{-2pt} 0 \hspace{-2pt}&\hspace{-2pt}1 \hspace{-2pt}&\hspace{-2pt}0
-      \end{bmatrix}x(k)+v(k)+a(k).
-  \end{align*} }
-\end{frame}
-\begin{frame}{Performance without attack}
-  \begin{figure}[htpb!]
-    \centering
-    \scalebox{0.65}{\input{cl_no.tex}}
-  \end{figure}
 \end{frame}
 
-\begin{frame}{Performance under attack}
-  \vspace{-30pt}
-  \begin{figure}[ht]
-    \centering
-    \scalebox{0.65}{\input{at.tex}}
-  \end{figure}
-  \vspace{-10pt}
-  \small Attack signal and measurements of sensor 3. The attack signal is uniformly distributed in interval $(-1,1)$
-  \vspace{-10pt}
-  \begin{figure}[ht]
-    \centering
-    \scalebox{0.65}{\input{cl_at.tex}}
-  \end{figure}
-  \vspace{-10pt}
-  Estimation of states under attack on sensor 3.
+
+\begin{frame}{Estimation performance under slope signal attack}
+  \begin{columns}
+	\begin{column}{0.5\textwidth}
+		\begin{figure}[htpb!]
+			\resizebox{0.8\textheight}{0.8\textheight}{%
+				\input{attack_error2.tex}
+			}
+		\end{figure}
+	\end{column}
+	\begin{column}{0.5\textwidth}
+		\begin{figure}[htpb!]\vspace{90pt}
+			\resizebox{0.5\textheight}{0.5\textheight}{	\input{attack_residue2.tex}  }
+		\end{figure}
+	\end{column}
+\end{columns}
+	
 \end{frame}
+
+
 
 
 \begin{frame}{Secure Control of Autonomous Vehicle}
