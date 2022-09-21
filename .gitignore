@@ -8,3 +8,7 @@
 /main.snm
 /main.synctex.gz
 /main.toc
+*.bbl
+*.blg
+*.xml
+*.log
