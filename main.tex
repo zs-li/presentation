@@ -1509,9 +1509,11 @@ In order to convert the dynamic estimation problem into a static one, we can use
 		\begin{itemize}
 			\item For benign sensors (consensus+prox-grad descent):
 			\begin{align*}
-				\cx_i^{(t+1)}=& \cx_i^{(t)}-\beta u_i^{(t)}-\frac{\beta \alpha}{|\Nc_i|}\sum_{j\in\Nc_i} \left[\cx_i^{(t)} -\cx_j^{(t)}\right] - \beta  \left(\text{prox-grad term}\right)\\
+				\cx_i^{(t+1)}=& \cx_i^{(t)}-\beta u_i^{(t)}-\frac{\beta \alpha}{|\Nc_i|}\sum_{j\in\Nc_i} \left[\cx_i^{(t)} -\cx_j^{(t)}\right] -\\
+				&\qquad \beta H_i^\top W_i \left(H_i \cx_i^{(t)}-\eta_i -h_i(W_i(H_i\cx_i^{(t)}-\eta_i))\right) \\
 				u_i^{(t+1)}=&u_i^{(t)}+\frac{\omega}{|\Nc_i|}\sum_{j\in\Nc_i} \left[\cx_i^{(t+1)} -\cx_j^{(t+1)}\right]. 
 			\end{align*}
+		
 			\item For Malicious sensors (only consensus): 
 			\begin{align*}
 				\cx_i^{(t+1)}=& \cx_i^{(t)}-\beta u_i^{(t)}-\frac{\beta \alpha}{|\Nc_i|}\sum_{j\in\Nc_i} \left[\cx_i^{(t)} -\cx_j^{(t)}\right]\\
